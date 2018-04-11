@@ -29,13 +29,13 @@
 
 ## 比特币的交易流程
 比特币本身是没有实体存在的，只是交易的记录  
-![bitcoin transaction](/Users/bird/Documents/geek.black/blockchain_book/pic/bitcoin_transaction_chain.png)
+![bitcoin transaction](https://raw.githubusercontent.com/linkinbird/blockchain_book/master/pic/bitcoin_transaction_chain.png)
 
 1. 初始比特币来源于矿工每次认证新block的激励（会定期衰减，直到结束，总额为2100万枚，靠交易手续费维持网络服务激励）
 2. 发信人用自己的私钥（确认是自己发起） 加上公钥（确认花的是自己的币）进行签名，发给收信人的公钥地址  
 ![unlocking and locking scripts](http://orm-chimera-prod.s3.amazonaws.com/1234000001802/images/msbt_0501.png)
 3. 对堆栈进行scriptPubKey脚本操作，这里包含了收币人（可多人，币金额（可部分），以及更多开放的操作  
-![P2PKH](http://orm-chimera-prod.s3.amazonaws.com/1234000001802/images/msbt_0504.png)
+![P2PKH](/Users/bird/Documents/geek.black/blockchain_book/pic/msbt_0504.png)
 4. 确认input来源于不重复的上一个输出，并且input和output数量一致
 5. 交易的Hash值作为transaction identier (TXID)广播到整个网络
 6. 收信人以TXID加上网络最长链的延时认证，但是这里有个bug，所以最保险的是UTXO (unspent transaction output) 认证。
@@ -53,7 +53,7 @@
 为了完全理解这种加密方法，需要很深的数据功底。当然我们也可以通过一个小例子，让大家感受到数学的力量，同时尽量隐藏其中的推导细节
 
 #### 史上最贱的数学题
-![difficult math](https://pic3.zhimg.com/80/v2-ab3c7e44b0a033b804392c510d9518f5_hd.jpg)
+![difficult math](/Users/bird/Documents/geek.black/blockchain_book/pic/fun_math_problem.png)
 
 用a,b,c替换，去分母后：  
 $$
