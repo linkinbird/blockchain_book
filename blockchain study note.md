@@ -29,7 +29,7 @@
 
 ## 比特币的交易流程
 比特币本身是没有实体存在的，只是交易的记录  
-![bitcoin transaction](http://static.righto.com/images/bitcoin/bitcoin_transaction_chain.png)
+![bitcoin transaction](/Users/bird/Documents/geek.black/blockchain_book/pic/bitcoin_transaction_chain.png)
 
 1. 初始比特币来源于矿工每次认证新block的激励（会定期衰减，直到结束，总额为2100万枚，靠交易手续费维持网络服务激励）
 2. 发信人用自己的私钥（确认是自己发起） 加上公钥（确认花的是自己的币）进行签名，发给收信人的公钥地址  
