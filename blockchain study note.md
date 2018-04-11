@@ -306,7 +306,7 @@ IOTA 的MAM机制 Masked Authenticated Message
 网络节点以算力为基础，接受新的交易以后，寻找满足某个Hash条件（以N个0开头）的nonce，找到以后对交易验证并叠加最长的链条上。整个网络都可以验证这个nonce的有效性，并且在最长链条上继续叠加。
 
 新的block大概每10分钟生成一个，需要在产生新块之前，完成对旧块交易的确认。但是算力太高，生成太快也不行，因为网络可能还没来得及达成共识。所以每2016个块以后，都要调整认证算法的难度，极少数情况会降低，但是随着网络的扩大，大部分情况都是在上调难度  
-![Confirmation Time and difficulty](/Users/bird/Documents/geek.black/blockchain_book/pic/bitcoin-difficulty.png)
+![Confirmation Time and difficulty](https://raw.githubusercontent.com/linkinbird/blockchain_book/master/pic/bitcoin-difficulty.png)
 
 ### 算法扩展
 * litecoin(LTC 莱特币）：除了比特币默认的SHA256挖矿算法以外，使用了另外一种对CPU和内存资源要求更平衡的scrypt算法，力求避免GPU大矿池的垄断。同时也把块认证时间提升到了2.5分钟。目前有人统计，LTC已经成为暗网的[主流代币](https://www.recordedfuture.com/dark-web-currency/)。
@@ -374,7 +374,7 @@ Sharding算是大区自制，按照某种高效而随机的方式把节点分为
 ### 分叉树结构 Merkel Tree
 交易挂在Merkle Tree 只把Merkle Root加到block Header。
 历史交易验证的时候，从叶节点往上追溯，只要追到认证的Merkle Root即可  
-![merkle root](/Users/bird/Documents/geek.black/blockchain_book/pic/Bitcoinpaymentverification_merkeltree.png)
+![merkle root](https://raw.githubusercontent.com/linkinbird/blockchain_book/master/pic/Bitcoinpaymentverification_merkeltree.png)
 
 ### 账户快照 Snapshot
 BTC和ETH目前都是保留全纪录，但是iota的snapshot会清理空账户，只保留当前的账户余额。主要也是因为iota的一次性签名不能重复使用，会导致大量的弃用账户
@@ -413,7 +413,7 @@ BTC和ETH目前都是保留全纪录，但是iota的snapshot会清理空账户�
 * 比特大陆发起第二轮分叉，SegWit2x基于"[New York Agreement](https://medium.com/@DCGco/bitcoin-scaling-agreement-at-consensus-2017-133521fe9a77)"
 	- 主要目的还是将区块大小扩容到 2M，这样全网账簿的体积也会扩大
 	- 太多的政治思维，忽视中小玩家导致了最终分叉失败，但也再次证明了比特币去中心化不可篡改的能力
-* ![image](/Users/bird/Documents/geek.black/blockchain_book/pic/bitcoin_charts.png)
+* ![image](https://raw.githubusercontent.com/linkinbird/blockchain_book/master/pic/bitcoin_charts.png)
 
 虽然比特币的价值得到了认可和肯定，但是波动的价格和随之而来高额的交易手续费，使其在日常交易或者暗网交易里都变得不实际。最终比特币作为虚拟货币的入口和稳定等价物（黄金）存在着，人们用其储存价值，但是会先兑换更加便利的LTC和Dash来进行日常(暗网)交易。
 
@@ -533,7 +533,7 @@ NANO借助[Twitch](https://www.theusacommerce.com/nano-nano-this-cryptocurrency-
 ## 币权融资 ICO
 ICO不是必须的，比特币没有ICO过，IOTA、CarChain这类物联网项目也不需要ICO。  
 ICO的目的是以项目代币为权益单位的融资行为，IPO的对标版本。当区块链项目开发成本高，周期长，可以通过ICO来给开发团队融资激励，同时吸引更多的产业合作伙伴。好比你开了一个游乐场（赌场），进场全程用代币，那么喜欢来玩的人多，门票就贵，黄牛就多。  
-![top 10 icos](/Users/bird/Documents/geek.black/blockchain_book/pic/ico_ranking.png)  
+![top 10 icos](https://raw.githubusercontent.com/linkinbird/blockchain_book/master/pic/ico_ranking.png)  
 这个做法存在很多问题，Facebook和google都屏蔽了ICO的广告投放：
 * 估值全靠吹
 	- 还没有形成专业的估值体系，比风险投资更危险，大量拿了建筑图纸，就来融资了

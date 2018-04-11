@@ -42,7 +42,7 @@ BlockChain rebuild 重构区块链
 ## 可以验证的科学
 我们可以相信科学吗？如果你说中心化不可信，那我为什么要相信我无法理解的科学？要相信科学至少满足一个条件，就是科学预测的结果能够很容易的验证。
 ### 史上最贱的数学题
-![difficult math](https://pic3.zhimg.com/80/v2-ab3c7e44b0a033b804392c510d9518f5_hd.jpg)
+![difficult math](https://raw.githubusercontent.com/linkinbird/blockchain_book/master/pic/fun_math_problem.png)
 
 用a,b,c替换，去分母后：  
 $$
@@ -78,7 +78,7 @@ $$
 
 从一个很好的有理数点x=−100, y=260（不是正整数解）开始，做椭圆曲线加法：  
 相同点做切线，不同点做连线，取交点的垂足镜像，形成“有限加法循环群”  
-![oval plus](https://pic2.zhimg.com/80/5727792a481655052539f83dc3591eec_hd.jpg)
+![oval plus](https://raw.githubusercontent.com/linkinbird/blockchain_book/master/pic/Elliptic_function.png)
 
 直到我们计算到9P  
 ```
