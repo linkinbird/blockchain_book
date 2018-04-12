@@ -317,14 +317,20 @@ IOTA 的MAM机制 Masked Authenticated Message
 ### 硬件扩展
 因为Proof of work是高度依赖CPU资源的计算，所以比特币矿工都已经单独定制ASIC(application-specific integrated circuit)芯片来挖矿。虽然代码是开源的，但是速度优化的代码面临专利诉讼风险。
 * AsicBoost在2018年发起了最具争议的[专利行动](https://bitcoinmagazine.com/articles/there-bitcoin-patent-war-going-initiative-could-end-it/)
-	- 他们有提高哈希效率30%的专利，几乎所有矿工都会使用
-	- 开发者社区也提议绕过他们专利的挖矿算法和新协议
+  - 他们有提高哈希效率30%的专利，几乎所有矿工都会使用
+  - 开发者社区也提议绕过他们专利的挖矿算法和新协议
 * 中国矿机企业Bitmain也会面临这样的局面
-	- 一方面他可能已经在其销售的芯片里用了这个技术，但拒绝承认
-	- 另一方面前任设计总监Yang Zuoxing自己创立了Bitewei，Bitmain起诉其窃取了技术
+  - 一方面他可能已经在其销售的芯片里用了这个技术，但拒绝承认
+  - 另一方面前任设计总监Yang Zuoxing自己创立了Bitewei，Bitmain起诉其窃取了技术
 * Coinbase采取了防御性的DPL (Defensive Patent License)
   - William Ting和知识产权律师发起了升级版Blockchain Defensive Patent License ([BDPL](https://blockchaindpl.org))
   - AsicBoost 在2018-03-01宣布加入BDPL，改变了专利争议走向
+
+2018年4月Bitmain发布针对[ETH的ASIC矿机](https://blockonomi.com/bitmain-asic-ethereum-miner/)，引发了ETH社区的[激烈讨论](https://www.reddit.com/r/ethereum/comments/8bkkv1/asic_resistant_hard_fork_discussion_overview/)，甚至已经发起了Hard Fork的提议。其中主要分为两派：
+* Pro ASIC Resistance (PAR) 
+  * 直接升级抗ASIC的POW算法，但是技术细节存疑，而且会面临攻守双方的技术追逐
+* Pro Doing Nothing (PDN)
+  * 重心放在加速Casper POS协议的实施，节奏比较慢，但是相对彻底的解决问题
 
 ## 网络共识
 consensus是经常提到的词，因为除了证明你的工作能力以外，还需要团队协作以达成一致的决策和目标。这里还要面对恶意节点的攻击，所以抽象化为BFT consensus (Byzantine fault tolerance)。在去中心化的世界里，解决的方案也逃不出人类的历史，分为民主派和集权派：
