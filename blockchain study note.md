@@ -403,7 +403,9 @@ BTC和ETH目前都是保留全纪录，但是iota的snapshot会清理空账户�
 * [EOS](https://eos.io)声称解决多核并行，并结合了前面的空间扩展，目标做成分布式的操作系统(EOSIO)
   * 从最初的ERC-20标准衍生而来，可以说是ETH的继承者
   * 但是他背后的[block.one](https://block.one)公司可以直接拿走融资当做盈利，又摆脱了后续维护的工作，为这么项目的前景蒙上了一层阴影
-  * 其为期1年的ICO到2018年6月26号截止，每天固定发币量，按照充值金额等比分配，价格波动比较剧烈。
+    * 其为期1年的ICO到2018年6月26号截止，每天固定发币量，按照充值金额等比分配，价格波动比较剧烈。
+    * 2018年首先代码发布，然后主网络发布，而主网络并不是基金会负责的，而是从市场自发的网络里进行选择。
+    * 直到最终2018年6月主网络确定以后，token才真正意义上流通
 * ELA ([Elastos](https://www.elastos.org)) 联合NEO和Bitmain的[G3](https://neonewstoday.com/events/g3-summit-event-report/)联盟
   * NEO的POS协议逐渐成熟了，但是Elastos的所谓区块链操作系统还不见踪影
   * Elastos声称将主链（用于交易确认）和侧链（用于执行智能合约）分离，而且Runtime支持OS, EM 和 SDK
