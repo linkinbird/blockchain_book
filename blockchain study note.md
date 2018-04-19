@@ -265,6 +265,26 @@ Atomic Swap: 跨币种的交易可由[Lightning Network](https://lightning.netwo
 
 Hyperledger的[chaincode](http://hyperledger-fabric.readthedocs.io/en/release-1.0/chaincode.html)也是类似的概念，但是聚焦在智能账本合约的发起和执行，运行在docker上的三合一结构：APP通过Peers节点唤起chaincode执行下单，并更新ledger。他还平行的做了成员管理的协议，以支持交易撮合过程中的消息和状态管理
 
+### 虚拟机的匿名性
+交易的匿名扩展只实现了匿名验证，但在虚拟机环境里，计算的复杂度更高，简称为[secure MPC](https://en.wikipedia.org/wiki/Secure_multi-party_computation)的问题(Multiparty Computation)。通用的解决方案包括了保密数据分享已经零知识证明等等。但即使看似简单的计算，也需要定制化的协议设计：
+* Two-party computation (2PC) 
+  * 证明a >b 又称Millionaires' problem
+    * The protocol of Hsiao-Ying Lin and Wen-Guey Tzeng
+    * The protocol of Ioannidis & Ananth
+* Multiparty computation (MPC)
+  * 证明数据拥有 [Verifiable secret sharing](https://en.wikipedia.org/wiki/Verifiable_secret_sharing) (VSS)
+    * Shamir's Secret Sharing
+    * Additive Secret Sharing
+
+通用协议在不同安全等级下还有不同的容错效果：
+* 通讯是不安全的
+* 中间人是恶意的
+  * 恶意的程度 t < n/2
+  * 非计划的恶意 Semi-Honest (Passive) Security
+  * 计划的恶意 Semi-Honest (Passive) Security
+  * 顾忌惩罚的恶意 Covert security
+* 直接参与方是恶意的
+
 ## 状态通道 State Channel
 除了链上的交易协议外，为了提升效率，还有一种离线的状态通道来支持快速的点对点交易和智能合约。跨币种交易使用的lightning network也是一种state channel。这一层被认为是**Layer2**的上层扩展
 
