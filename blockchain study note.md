@@ -306,16 +306,21 @@ hyperledger fabric 就是使用相对传统的身份注册的消息通道，主�
 * 通过gossip protocol在组员间传递消息
 
 IOTA 的MAM机制 Masked Authenticated Message
-* 公开通道 Public channel
-	* root自己就是加解码地址，公开的
-* 私人通道 Private channel
-	* address=hash(root)，只有自己知道root能解读
-* 受限模式 Restricted
-	* 也是用address=hash(root)发送，但是需要sideKey解码
-* Message Chain
-	* 新的消息接在老的消息后面，老消息解码以后，可以看到新消息的nextRoot
-	* 所以无法回溯老消息，但是一旦开始监听，就可以一直听下去
-	* 受限模式下，nextRoot也可以找到address，需要sideKey配合root一起解码
+* 基于Verifiable Claims的身份认证（也可以直接通过智能合约实现）
+  * 把verifiable claim公布给使用方
+  * 把Claim Hash后的 attesthash以限制模式储存在tangle网络
+  * 通过扫描二维码，结合两者进行验证
+* 多种形式的权限管道
+  * 公开通道 Public channel
+    * root自己就是加解码地址，公开的
+  * 私人通道 Private channel
+    * address=hash(root)，只有自己知道root能解读
+  * 受限模式 Restricted
+    * 也是用address=hash(root)发送，但是需要sideKey解码
+* Message Chain的订阅机制
+  * 新的消息接在老的消息后面，老消息解码以后，可以看到新消息的nextRoot
+  * 所以无法回溯老消息，但是一旦开始监听，就可以一直听下去
+  * 受限模式下，nextRoot也可以找到address，需要sideKey配合root一起解码
 
 # 网络与协作
 因为交易本身是完全匿名的，所以网络也是设计成unstructured overlay 通过addr消息部分的广播其友邻网络，通过DNS bootstrapping 来寻找友邻。
