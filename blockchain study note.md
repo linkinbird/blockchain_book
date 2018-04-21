@@ -357,6 +357,11 @@ IOTA 的MAM机制 Masked Authenticated Message
 * Pro Doing Nothing (PDN)
   * 重心放在加速Casper POS协议的实施，节奏比较慢，但是相对彻底的解决问题
 
+#### 浏览器扩展
+完整的挖矿需要保存和同步全节点，对硬件要求比较高。为了进一步整合空闲计算资源，还有很多轻矿机，不进行交易验证，只计算POW。其中浏览器插件是门槛最低的装备，比如[nimiq](https://nimiq.com)，现在应用在[天池](https://nimiq.skypool.org)这个项目里，开发者包括了上海交大软院的熊伟伦[azard](https://github.com/azard)。
+
+当然门槛低带来的结果也就是收益低，但不排除之后IOTA这类免手续费“完全互助”协议的流行，会带来超低成本的普及型区块链，这时浏览器扩展就会发挥其人海战术的优势了。
+
 ## 网络共识
 consensus是经常提到的词，因为除了证明你的工作能力以外，还需要团队协作以达成一致的决策和目标。这里还要面对恶意节点的攻击，所以抽象化为BFT consensus (Byzantine fault tolerance)。在去中心化的世界里，解决的方案也逃不出人类的历史，分为民主派和集权派：
 
