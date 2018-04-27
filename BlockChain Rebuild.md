@@ -235,6 +235,74 @@ spark等等，如何结合
 
 那么机器人由谁来建造？机器人是否真的可以信赖？
 
+# 在透明和匿名之间
+上述所有的推导，都是在信息公开透明的情况下实现的，那有没有可能既保证信息的可验证，又实现信息的匿名化？这里需要介绍另外一位可信的科学家
+## Layer1 的匿名协议
+### Zero knowledge proof
+单笔交易本身只记录了address，已经是高度匿名的了，但是通过地址的追踪，还是可以观测到每个币的流向。这个时候在协议层可以通过[zero-knowledge proof](https://en.wikipedia.org/wiki/Zero-knowledge_proof)的进化版 [Non-interactive zero-knowledge proof](https://en.wikipedia.org/wiki/Non-interactive_zero-knowledge_proof) 将交易验证过程匿名化，区块链里的应用叫做[zkSNARKs](https://blog.ethereum.org/2016/12/05/zksnarks-in-a-nutshell/)。基础原理是多项式同态（[中文原理](https://www.jianshu.com/p/b6a14c472cc1)）：
+* 加法同态，乘法同态，全同态
+  - 对于E(x)函数，难以求得反函数，及无法从E(x)反推x
+  - 单调函数，及x≠y,，则E(x)≠E(y)
+  - 通过E(x)和E(y)，可以计算E(x+y) 加法同态，计算E(xy) 乘法同态...
+* 加法盲验证——用于交易和账本验证
+  1. A计算E(x)，E(y)，并发送给B
+  1. 因为函数E(x)满足加法同态，B可以通过E(x)，E(y)计算E(x+y)
+  1. B独立计算E(7)，并验证E(x+y)=E(7)
+     - 但也无法保障x,y没有从原来的[1,6] 篡改为[2,5]
+* 多项式盲验证——已知输入，未知EVM代码，验证结果准确性  
+$$
+P(X) = a_0 + a_1 \cdot X + a_2 \cdot X^2 + ... + a_d \cdot X^d
+$$
+
+  - A知道需要验证的多项式P
+    - 其中a为计算参数，可以代表某种计算过程
+  - B想要验证对应某个不公开s的E(P(s))，及验证某个输入的计算结果是否准确
+    1. A和B可以共同选择基于椭圆函数的α对 x⋅g作为E(x)
+    1. B计算g, s⋅g , … , sd⋅g和α⋅g , αs⋅g , … , αsd⋅g并发送给A，相当于之前的E(x),E(y)
+    1. A同态性计算a=P(s)⋅g，b=αP(s)⋅g并回传
+    1. B验证a,b为α对，则A真的知道P，且a值即为B所需校验的E(P(s))结果
+      - 存在一种可能，A使用另外的一个P'多项式，也可以找到符合α的a,b对，这种情况叫做“d-power knowledge of exponent assumption”
+* 任意计算验证
+  - 把任意计算转换为门电路向量
+  - 把向量转化为多项式
+    - QAP (Quadratic Arithmetic Programs)
+
+### 匿名交易协议
+区块链里的应用很多：
+* 2016年10月发布的[ZCash](https://z.cash)也是使用类似技术，优化了交易速度，弥补了部分这个技术的短板
+* 2017年9月ETH 的Byzantium版本[支持](https://www.reddit.com/r/ethereum/comments/712idt/ethereum_testnet_just_verified_a_zcash_transaction/)了zk-snark proof
+* 2018年2月底从比特币[分叉](https://www.reddit.com/r/BitcoinPrivate/comments/7todw0/historical_bitcoin_private_hard_fork_snapshot/)出了[Bitcoin Private](https://btcprivate.org/) (BTCP) 就是merge了ZClassicCoin (ZCL)和BTC主链的一个分叉，采用的也是zkSNARKs
+* JPMorgan的[Quorum](https://www.jpmorgan.com/country/US/EN/Quorum)链是基于ETH的金融应用改造，也加入了zkproof和对特定监管节点透明的功能
+* ING也有相同道路的项目[zkrangeproof](https://github.com/ing-bank/zkrangeproof)，但看起来有些凉了
+
+## Layer2 的匿名通道和中间方
+另一种简单的layer2的方法是一种mixing service中间商服务：把多个付款人，和多个收款人打乱，付款先付到资金池，然后随机轮转之后打乱支付给给收款方。
+* Dash的[PrivateSend](https://dashpay.atlassian.net/wiki/spaces/DOC/pages/1146924/PrivateSend)就是这种形式，其隐私性促使其成为暗网的流行交易代币。
+* 支付宝在银行的中间账户也可以扮演类似角色，对于央行来说直接隔离了资金流向的明细，所以现在央行要推网联，直接监管每一笔交易。
+
+同样在Layer2的状态通道也可以在交易双方透明的情况下，保持对外部的匿名
+* Hyperledger Fabric的private channel就是类似原理
+
+## 算力的匿名化
+交易的匿名扩展只实现了匿名验证，但在虚拟机环境里，计算的复杂度更高，简称为[secure MPC](https://en.wikipedia.org/wiki/Secure_multi-party_computation)的问题(Multiparty Computation)。通用的解决方案包括了保密数据分享已经零知识证明等等。但即使看似简单的计算，也需要定制化的协议设计：
+* Two-party computation (2PC) 
+  * 证明a >b 又称Millionaires' problem
+    * The protocol of Hsiao-Ying Lin and Wen-Guey Tzeng
+    * The protocol of Ioannidis & Ananth
+* Multiparty computation (MPC)
+  * 证明数据拥有 [Verifiable secret sharing](https://en.wikipedia.org/wiki/Verifiable_secret_sharing) (VSS)
+    * Shamir's Secret Sharing
+    * Additive Secret Sharing
+
+通用协议在不同安全等级下还有不同的容错效果：
+* 通讯是不安全的
+* 中间人是恶意的
+  * 恶意的程度 t < n/2
+  * 非计划的恶意 Semi-Honest (Passive) Security
+  * 计划的恶意 Semi-Honest (Passive) Security
+  * 顾忌惩罚的恶意 Covert security
+* 直接参与方是恶意的
+
 # 我们在重构谁
 如果有一天机器控制了人类，机器之间是否还需要区块链？三体人的世界是否会出现区块链？  
 区块链不是自然科学，是应对人类思维的定向技术，是社会科学
