@@ -240,7 +240,7 @@ $$
 * Dash的[PrivateSend](https://dashpay.atlassian.net/wiki/spaces/DOC/pages/1146924/PrivateSend)就是这种形式，其隐私性促使其成为暗网的流行交易代币。
 * 支付宝在银行的中间账户也可以扮演类似角色，对于央行来说直接隔离了资金流向的明细，所以现在央行要推网联，直接监管每一笔交易。
 
-同样在Layer2的状态通道也可以在交易双方透明的情况下，保持对外部的匿名
+同样在Layer2的状态通道也可以在交易双方透明的情况下，保持对外部的匿名。但这里会存在double spending的风险，需要在绝对匿名和中心化第三方之间[寻找平衡](https://blockapps.net/multichains-and-privacy/)
 * Hyperledger Fabric的private channel就是类似原理
 
 ## 跨币种的交易
