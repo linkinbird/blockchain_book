@@ -483,16 +483,17 @@ BTC和ETH目前都是保留全纪录，但是iota的snapshot会清理空账户�
 ### 以太坊架构扩展
 ETH从2016年开始也计划着类似的分叉（升级）EIPs (Ethereum Improvement Proposal) 代号"Metropolis"，2017年完成了第一步[Byzantium](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-609.md)，2018计划完成第二步Constantinople聚焦在两个方向，一起解决共识机制和算力的扩展问题：
 * [carsper](https://github.com/ethereum/casper) POS
-	- FFG (Friendly Finality Gadget) partial consensus mechanism combining proof-of-stake algorithm by Vitalik
-		- Hybrid POW/POS, every 50th block is going to be a POS
-		- Bet on block discover, failed(malicious) ones will get their stake slashed off
-	- CBC (Correct By Construction) partially specified protocol by Vlad
-		- 部分定义的动态协议，通过"ideal adversay"来最终达到平衡的完整协议
-		- 还是一种理想化的概念设计，有点像GAN神经网络的训练思路
-* sharding 分布式扩展，来源于数据库技术
+  - FFG (Friendly Finality Gadget) partial consensus mechanism combining proof-of-stake algorithm by Vitalik
+  	- Hybrid POW/POS, every 50th block is going to be a POS
+  	- Bet on block discover, failed(malicious) ones will get their stake slashed off
+  - CBC (Correct By Construction) partially specified protocol by Vlad
+  	- 部分定义的动态协议，通过"ideal adversay"来最终达到平衡的完整协议
+  	- 还是一种理想化的概念设计，有点像GAN神经网络的训练思路
+* [sharding](https://ethresear.ch/c/sharding) 分布式扩展，来源于数据库技术
   - 但最近的core team会议里（2018-02），parallelization安全问题太多，可能不纳入到Constantinople分叉
   - Prysmatic团队提出了一个两步走的[sharding方案](https://medium.com/@rauljordan/ethereum-sharding-update-prysmatic-labs-implementation-roadmap-c625cd013aeb)（2018-03-07）
   - 新加坡的[Zilliqa](https://www.zilliqa.com)团队基于新加坡国立研究的[Secure Sharding protocol](https://dl.acm.org/citation.cfm?id=2978389)，扩容的同时只可以承受25%的恶意节点，和Vitalik也在合作
+  - 分布式依赖的随机生成RNG会用到[RANDAO](https://ethresear.ch/t/rng-exploitability-analysis-assuming-pure-randao-based-main-chain/1825)方案，经过一些预防串通和预防懒节点的优化，似乎可以应用了
   - Telegram的区块项目TON里明确了sharding的计划
 
 此外L4 Research提出的[Layer 2](https://medium.com/l4-media/making-sense-of-ethereums-layer-2-scaling-solutions-state-channels-plasma-and-truebit-22cb40dcc2f4) 解决方案也很有价值：
