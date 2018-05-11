@@ -249,7 +249,7 @@ Else If 卖方终止交易 then 退回所有支付款项到原账号 and 由卖�
 
 除了专利问题，还有一个更严重的浪费资源问题。随着比特币挖矿竞争日益激烈，工作量证明难度日益加强。为了抢夺那相对简单的账本验证权，矿工要在无用的随机题上消耗百倍的资源。就好像为了抢一个包子，大家要比赛跑一场马拉松。为了解决这个问题，大家又想出很多创意。比如为了让计算资源有意义，有人开发了Primecoin ([XPM](http://primecoin.io))。这里认证算法是要求找出连续的质数链Cunningham chains，为数学做点贡献。其中最为成功的要数litecoin(LTC 莱特币）。除了比特币默认的SHA256挖矿算法以外，使用了另外一种对CPU和内存资源要求更平衡的scrypt算法，力求避免GPU大矿池的垄断。同时也把块认证时间提升到了2.5分钟。目前有人统计，LTC已经替代比特币成为暗网的[潜力代币](https://www.recordedfuture.com/dark-web-currency/)。
 
-不论POW算法如何改进，总有人可以发明高效的矿机来垄断算力。另外一种更加彻底的解决方法，叫做Proof of Stake，一种基于累计持币(coin age)的激励算法。我们不需要这么频繁的每次都考试，将大量精力浪费在机械的备考上。我们把历史上的考试结果积累起来，平时成绩好的，投票权就大。这更像社会中的能力证书。因为从经济角度讲，持币多的人，在这个系统里付出也多，他作恶的投入产出就小，导致没有作恶动机。那些靠挖矿买币，短线赚钱的人，话语权会受到限制。在2018年4月Bitmain发布针对[ETH的ASIC矿机](https://blockonomi.com/bitmain-asic-ethereum-miner/)后，引发ETH社区的[激烈讨论](https://www.reddit.com/r/ethereum/comments/8bkkv1/asic_resistant_hard_fork_discussion_overview/)，其中以太坊创始人Vitalik Buterin的选择，就是加速Casper POS协议的实施。
+不论POW算法如何改进，总有人可以发明高效的矿机来垄断算力。另外一种更加彻底的解决方法，叫做Proof of Stake，一种基于累计持币(coin age)的激励算法。我们不需要这么频繁的每次都考试，将大量精力浪费在机械的备考上。我们把历史上的考试结果积累起来，平时成绩好的，投票权就大。这更像社会中的能力证书。因为从经济角度讲，持币多的人，在这个系统里付出也多，他作恶的投入产出就小，导致没有作恶动机。那些靠挖矿卖币，短线赚钱的人，话语权会受到限制。但是矿挖的好，又长期持有的会被欢迎。在2018年4月Bitmain发布针对[ETH的ASIC矿机](https://blockonomi.com/bitmain-asic-ethereum-miner/)后，引发ETH社区的[激烈讨论](https://www.reddit.com/r/ethereum/comments/8bkkv1/asic_resistant_hard_fork_discussion_overview/)，其中以太坊创始人Vitalik Buterin的[选择](http://www.coinfox.info/news/9221-ethereum-not-to-fork-against-asic-mining)，就是加速Casper POS协议的实施。
 
 ## 权益投票公平 POS
 DPOS委托权益证明 代理人攻击：假装承诺，骗取选票。或者配合黑脸白脸
