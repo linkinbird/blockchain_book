@@ -247,11 +247,31 @@ Else If 卖方终止交易 then 退回所有支付款项到原账号 and 由卖�
 
 中国矿机企业Bitmain也面临同样的局面，但他不够开放，拒绝加入BDPL。一方面他可能已经在其销售的芯片里用了这个技术，但拒绝承认。另一方面前任设计总监Yang Zuoxing自己创立了Bitewei，却遭Bitmain起诉其窃取了技术。Bitmain的Antpool矿池曾占据超过17%的比特币矿力([hashrate](https://blockchain.info/pools))，但这种能力却被社区所排斥。2018年3月Halong Mining（BDPL的成员）发布了其新款DragonMint miner series，短暂抢下了部分Bitmain的[矿力份额](http://bitcoinist.com/halongs-dragonmint-bitmain-monopoly/)。很多人期待Halong利用AsicBoost的技术对Bitmain带来进一步打击，以倒逼Bitmain加入BDPL，但似乎也徒劳无功。区块链不是空中楼阁，一整套区块链系统还是要运行在物理世界里。物理世界和人类社会的公平程度，最终都会反过来体现的区块链上。
 
-除了专利问题，还有一个更严重的浪费资源问题。随着比特币挖矿竞争日益激烈，工作量证明难度日益加强。为了抢夺那相对简单的账本验证权，矿工要在无用的随机题上消耗百倍的资源。就好像为了抢一个包子，大家要比赛跑一场马拉松。为了解决这个问题，大家又想出很多创意。比如为了让计算资源有意义，有人开发了Primecoin ([XPM](http://primecoin.io))。这里认证算法是要求找出连续的质数链Cunningham chains，为数学做点贡献。其中最为成功的要数litecoin(LTC 莱特币）。除了比特币默认的SHA256挖矿算法以外，使用了另外一种对CPU和内存资源要求更平衡的scrypt算法，力求避免GPU大矿池的垄断。同时也把块认证时间提升到了2.5分钟。目前有人统计，LTC已经替代比特币成为暗网的[潜力代币](https://www.recordedfuture.com/dark-web-currency/)。
+除了专利问题，还有一个更严重的浪费资源问题。随着比特币挖矿竞争日益激烈，工作量证明难度日益加强。为了抢夺那相对简单的账本验证权，矿工要在无用的随机题上消耗百倍的资源。就好像为了抢一个包子，大家要比赛跑一场马拉松。为了解决这个问题，大家又想出很多创意。比如为了让计算资源有意义，有人开发了Primecoin ([XPM](http://primecoin.io))。这里认证算法是要求找出连续的质数链Cunningham chains，为数学做点贡献。其中最为成功的要数litecoin(LTC 莱特币）。除了比特币默认的SHA256挖矿算法以外，使用了另外一种对CPU和内存资源要求更平衡的scrypt算法，力求避免ASIC大矿池的垄断。同时也把块认证时间提升到了2.5分钟。这样算力的恶意争夺被大大弱化，资源浪费得到缓解，而交易转账的验证时间大大加快。目前有人统计，LTC已经替代比特币成为暗网的[潜力代币](https://www.recordedfuture.com/dark-web-currency/)。
 
-不论POW算法如何改进，总有人可以发明高效的矿机来垄断算力。另外一种更加彻底的解决方法，叫做Proof of Stake，一种基于累计持币(coin age)的激励算法。我们不需要这么频繁的每次都考试，将大量精力浪费在机械的备考上。我们把历史上的考试结果积累起来，平时成绩好的，投票权就大。这更像社会中的能力证书。因为从经济角度讲，持币多的人，在这个系统里付出也多，他作恶的投入产出就小，导致没有作恶动机。那些靠挖矿卖币，短线赚钱的人，话语权会受到限制。但是矿挖的好，又长期持有的会被欢迎。在2018年4月Bitmain发布针对[ETH的ASIC矿机](https://blockonomi.com/bitmain-asic-ethereum-miner/)后，引发ETH社区的[激烈讨论](https://www.reddit.com/r/ethereum/comments/8bkkv1/asic_resistant_hard_fork_discussion_overview/)，其中以太坊创始人Vitalik Buterin的[选择](http://www.coinfox.info/news/9221-ethereum-not-to-fork-against-asic-mining)，就是加速Casper POS协议的实施。
+不论POW算法如何改进，总有人可以发明高效的矿机来垄断算力。另外一种更加彻底的解决方法，叫做Proof of Stake，一种基于累计持币的激励算法。我们不需要这么频繁每次都考试，将大量精力浪费在机械的备考上。我们把历史上的考试结果积累起来，平时成绩好的，投票权就大。这更像社会中的能力证书。因为从经济角度讲，持币多的人，在这个系统里付出也多，他作恶的投入产出就小，导致没有作恶动机。那些靠挖矿卖币，短线赚钱的人，话语权会受到限制。但是矿挖的好，又长期持有的会被欢迎。在2018年4月Bitmain发布针对[ETH的ASIC矿机](https://blockonomi.com/bitmain-asic-ethereum-miner/)后，引发ETH社区的[激烈讨论](https://www.reddit.com/r/ethereum/comments/8bkkv1/asic_resistant_hard_fork_discussion_overview/)，其中以太坊创始人Vitalik Buterin的[选择](http://www.coinfox.info/news/9221-ethereum-not-to-fork-against-asic-mining)，就是加速Casper POS协议的实施。
 
-## 权益投票公平 POS
+## 累计权益公平 POS
+Proof of Stake(POS) 可以说是区块链里面最重要的共识机制。所谓共识机制要承担两个职责：第一是对于记账达成统一正确的验证结论，第二是确保矿工工作的公平高效。所有共识机制都要面对恶意节点的攻击，抵抗攻击的能力分为不同等级。中心化系统的抗攻击能力最弱，分布式系统可以容易一定节点的失效，但是大量串通节点的攻击会导致数据丢失或篡改。区块链共识系统设计的标准是要满足**拜占庭容错** BFT consensus ([Byzantine fault tolerance](https://en.wikipedia.org/wiki/Byzantine_fault_tolerance))：
+
+> 一组拜占庭将军分别各率领一支军队共同围困一座城市。为了简化问题，将各支军队的行动策略限定为进攻或撤离两种。因为部分军队进攻部分军队撤离可能会造成灾难性后果，因此各位将军必须通过投票来达成一致策略，即所有军队一起进攻或所有军队一起撤离。因为各位将军分处城市不同方向，他们只能通过信使互相联系。在投票过程中每位将军都将自己投票给进攻还是撤退的信息通过信使分别通知其他所有将军，这样一来每位将军根据自己的投票和其他所有将军送来的信息就可以知道共同的投票结果而决定行动策略。
+
+系统的问题在于，将军里可能有叛徒，他不仅会发送错误信息，而且可能选择性的两面派。比如对支持进攻的说他支持撤退，又对支持撤退的说他支持进攻。比特币的信任和公平机制，可以证明是满足拜占庭容错的。首先信息有数字签名不会被伪造，而且信息广播对所有人透明，一旦认证后不可篡改。所以只要叛徒将军的比例不超过50%，好将军还是可以达成一致的行动，并作出正确的选择。如果叛徒超过50%且相互串通，他们可以对所有好的将军说支持进攻，但其实内部达成不进攻的决议。这样以不到一半的兵力盲目进攻，会导致溃败。
+
+在一次性的拜占庭问题里，除了比特币这种高成本的方式，似乎别无他法。但是人类合作是一个长期的过程。以囚徒困境为例，单次实验的最佳策略是损人利己。但是同样两个人，如果要无限次玩下去的话，那最佳的策略就是合作共赢。学术界已经得出这个游戏的单方面最优解：1. 不首先作恶；2. 以彼之道还之彼身。就是别人合作你也合作，别人作恶，你也要报复。当玩游戏的一方直接对外公布这个策略时，他的对手别无选择，只有合作是最佳对策。这就是POS协议的设计思路，我们要做到合作者受益，捣乱者惩罚，最后促使所有玩家只有一个最优策略，就是合作。听上去就好像现在的社会制度，只不过这里的惩罚只有经济惩罚一种形式。所以归根到底，群体的信任还是要靠经济规律来维护。
+
+市面上POS协议的版本很多，从最简单的coin age模式，到以太坊的casper押注模式。
+
+ETH从2016年开始也计划着类似的分叉（升级）EIPs (Ethereum Improvement Proposal) 代号"Metropolis"，2017年完成了第一步[Byzantium](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-609.md)，2018计划完成第二步Constantinople聚焦在两个方向，一起解决共识机制和算力的扩展问题：
+
+- [carsper](https://github.com/ethereum/casper) POS
+  - FFG (Friendly Finality Gadget) partial consensus mechanism combining proof-of-stake algorithm by Vitalik
+    - Hybrid POW/POS, every 50th block is going to be a POS
+    - Bet on block discover, failed(malicious) ones will get their stake slashed off
+  - CBC (Correct By Construction) partially specified protocol by Vlad
+    - 部分定义的动态协议，通过"ideal adversay"来最终达到平衡的完整协议
+    - 还是一种理想化的概念设计，有点像GAN神经网络的训练思路
+
 DPOS委托权益证明 代理人攻击：假装承诺，骗取选票。或者配合黑脸白脸
 
 但不要为了去中心化而区块链，我们说了区块链是为了修复社会性缺陷。而经济学早就已经证明了，在经济规律面前，少数寡头，只要避免私下协作，就可以保证市场化效率。
