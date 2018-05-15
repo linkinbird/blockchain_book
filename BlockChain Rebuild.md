@@ -405,6 +405,12 @@ $$
   * 顾忌惩罚的恶意 Covert security
 * 直接参与方是恶意的
 
+所以解决算力安全的关键在于底层设备与通信。从独立IC芯片的Trusted Platform Module (TPM) 到在基本芯片上的隔离分区Trusted Execution Environment ([TEE](https://en.wikipedia.org/wiki/Trusted_execution_environment)) ，技术在不断普及。目前低cache的应用场景主要是保存了硬件的私钥，用来做安全隔离的签名验证，比如指纹登录。之后隔离区的内存逐渐扩大，可以做更加复杂的封装式安全计算。目前主流芯片厂商都在参与：
+
+* AMD Secure Execution Environment
+* ARM [TrustZone](https://en.wikipedia.org/wiki/TrustZone)
+* Intel [SGX Software Guard Extensions](https://en.wikipedia.org/wiki/Software_Guard_Extensions)
+
 # 我们在重构谁
 如果有一天机器控制了人类，机器之间是否还需要区块链？三体人的世界是否会出现区块链？  
 区块链不是自然科学，是应对人类思维的定向技术，是社会科学
