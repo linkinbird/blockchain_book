@@ -313,12 +313,29 @@ IOTA的第二个改造是一个可加密的消息广播通道。他的MAM (Maske
 这种链外的交易通道模式还可用来做跨链、跨币种的交易[Atomic Swap](https://www.cryptocompare.com/coins/guides/what-are-atomic-swaps/)，目前已经公布了测试网络[代码](https://github.com/decred/atomicswap/pull/37)。2017年底发布了Bitcoin到Litecoin的[测试版](https://blog.lightning.engineering/announcement/2017/11/16/ln-swap.html)，以及Bitcoin到Ethereum的智能合约版本。闪电网络本身的加速，加上转移到LTC的灵活性，使得区块链经济体的交易已经具备冷热层次。之后我们讨论区块链货币，就不只有比特币和现在热门的一些货币，更是一个完整的支付生态。比特币单价高、交易慢但是安全好比存折，LTC莱特币交易快、币值可靠好比银行卡，闪电网络好比网路银行，中心化交易所好比取款机只用于小额提现，甚至和现有移动微支付体系打通的话，就可以让区块链货币渗透到当下的移动支付场景里。这个从协议层到链外的通道层我们定义为从layer1 到 Layer2的扩展。[L4 Research](https://l4.ventures)基于此设计了一种更通用的[Generalized State Channels](https://medium.com/l4-media/generalized-state-channels-on-ethereum-de0357f5fb44)。根据Li Xuanji在2018年2月ETHDenver会议上分享的Counterfactual Instantiation：联合签名Multisig钱包，使用Registry接口注册counterfactual address，协议执行和签名只需在参与方的机器上执行即可。
 
 ## 空间的扩展
-proof of storage
-### 传统的分布式文件系统
-HDFS
+当交易越来越普及，区块链里的账本也会越来越大。为了保持系统的信任和公平，不能轻易删除这些信息。还好在比特币最早的设计里已经考虑到这种情况，设计了Merkel Tree的分叉树存储结构。交易挂在Merkle Tree的叶子节点，从叶子节点往上每一层的数值都是下面关联子节点的组合哈希值。一层一层最后所有的节点汇集到一起，最后得到的哈希值就是Merkle Root。比特币每10分钟一个的区块block只需将这个Merkle Root保存到区块头(block Header)即可。对历史交易复查验证的时候，将需要验证的交易信息从叶节点往上追溯，只要追到认证的Merkle Root即可。所以这种方式是一种用计算时间换空间的置换。  
+![merkle root](https://raw.githubusercontent.com/linkinbird/blockchain_book/master/pic/Bitcoinpaymentverification_merkeltree.png)
+
+配合这种树结构存储，加上全账本节点(Full nodes)和轻节点(lightweight nodes)的层次，可以缓解现在比特币系统的储存压力。上述分工中全账本节点需要保存所有交易明细，这个储存量从2016年初的50G，到2017年的100G，再到现在150G，在以每年50G的速度[增长](https://charts.bitcoin.com/chart/blockchain-size)，预计到2019年会超过200G。而轻节点使用上述Simplified Payment Verification ([SPV](https://bitcoin.org/en/developer-guide#simplified-payment-verification-spv))，只需自己储存空间很小的区块头，然后到全节点获取和某个交易相关的哈希路径，并计算Merkle Root就可以完成交易确认。
+
+而在所有的历史交易里，对未来有意义的只有那些没被花掉的余额Unspent Transaction Output ([UTXO](https://bitcoin.org/en/developer-reference#gettxoutsetinfo))。数量[5000多万](https://charts.bitcoin.com/chart/utxo-set-size)，dbSize不到3GB。如果可以定期对账户做快照Snapshot，就可以极大的清理储存空间。但这个过程相当于一个硬分叉，要在持续运行的同时保证一致可信相对困难。[QTUM](https://qtum.org/)是支持UTXO账户模式的智能合约平台，算是对比特币和以太坊的一次整合。另外还在进化中的IOTA也会相对频繁的快照清理空账户，主要还是因为他的一次性签名不能重复使用，导致大量的弃用地址。就交易数据本身而言，随着Layer2交易通道的开启，多元交易平台的组合，以及硬件设备本身的进化，他的数据储存并不是区块链社区的核心痛点。
+
+当所要储存的不单是账本，而是大文件或者数据资源时，区块链真正的痛点来了。让每个全节点重复保存所有文件显然不可能，这引申出两个方向的解决方案：
+
+- [filecoin](https://filecoin.io)的共享储存空间，2017-8的ICO 现在平台还没正式上线
+  - P2P文件系统IPFS 发明者Juan Benet 的项目
+  - 基于Proof-of-Replication (PoRep)的共识机制（Proof-of-Storage的升级）
+    - 使用MerkleCRH生成树的zk-SNARKs验证文件完整
+    - 维持PFT: Power Fault Tolerance以保证文件不丢失
+  - 储存和读取分为两个交易市场
+- carro的[blockchain on hadoop](https://github.com/linkinbird/CarChain/wiki)，2018年2月启动的项目
+  - 利用hadoop的分布式技术，上下夹了区块链的加密和共识，形成三明治的架构
+  - 区块链保证了数据所有权，HDFS保证了数据安全和高效存储
+  - EVM计划用来做数据代码执行的沙箱
+
 ## 算力的扩展
-### 传统的分布式计算
-spark等等，如何结合
+sharding，spark等等，如何结合
+
 ## 人工智能的进击
 
 当机器获得了意识，其计算的力量如何驾驭？
