@@ -310,19 +310,7 @@ IOTA的第二个改造是一个可加密的消息广播通道。他的MAM (Maske
 
 上述只是两个参与人的情况，如果是多方转移，且各方之间没有直接建立共同基金，而要从中间人的lightning network做跳转的话，需要类似区块链储物盒那样的中间人义务和回滚协议，称为Hashed timelock contract ([HTLC](https://en.bitcoin.it/wiki/Hashed_Timelock_Contracts))。比如A要支付给D，A和D不熟也没有直接建立闪电网络，但是A和B有闪电链接，B和C有闪电链接，C和D有闪电链接的话，支付仍然可以完成。回忆比特岛上带锁的盒子，这里使用类似的哈希加密，加密结果作为快递盒子广播到这些中间人，而且有时间限制。A用D和盒子，以及AB间闪电网络签名来完成第一步转移，逐层传递。盒子是透明的，所以ABCD之间的转移对外界可见，如果超时则逐层回退。D收到盒子之后，提供钥匙以确认和C的交易完成，C再把钥匙回传确认和B的交易，如此类推。除了广播通信延迟带来的风险外，可以认为这种链外的快速支付通道是安全的。
 
-除了链上的交易协议外，为了提升效率，还有一种离线的状态通道来支持快速的点对点交易和智能合约。跨币种交易使用的lightning network也是一种state channel。这一层被认为是**Layer2**的上层扩展
-
-[L4 Research](https://l4.ventures)(No.1 grant of Ethereum Foundation)在设计一种通用的[Generalized State Channels](https://medium.com/l4-media/generalized-state-channels-on-ethereum-de0357f5fb44)，根据Li Xuanji在2018年2月ETHDenver会议上的分享：
-
-- Counterfactual Instantiation
-  - 联合签名Multisig钱包，不区分是否是state channel
-  - 使用Registry接口注册counterfactual address
-  - 协议认证签名，本地执行代码部署（地址与上面关联）
-- 实际执行只在参与方的机器上执行
-- 注销协议需要双方签名，或者一方发起另一方超时
-  - 支持跨平台的payment channel
-
-atomic swap
+这种链外的交易通道模式还可用来做跨链、跨币种的交易[Atomic Swap](https://www.cryptocompare.com/coins/guides/what-are-atomic-swaps/)，目前已经公布了测试网络[代码](https://github.com/decred/atomicswap/pull/37)。2017年底发布了Bitcoin到Litecoin的[测试版](https://blog.lightning.engineering/announcement/2017/11/16/ln-swap.html)，以及Bitcoin到Ethereum的智能合约版本。闪电网络本身的加速，加上转移到LTC的灵活性，使得区块链经济体的交易已经具备冷热层次。之后我们讨论区块链货币，就不只有比特币和现在热门的一些货币，更是一个完整的支付生态。比特币单价高、交易慢但是安全好比存折，LTC莱特币交易快、币值可靠好比银行卡，闪电网络好比网路银行，中心化交易所好比取款机只用于小额提现，甚至和现有移动微支付体系打通的话，就可以让区块链货币渗透到当下的移动支付场景里。这个从协议层到链外的通道层我们定义为从layer1 到 Layer2的扩展。[L4 Research](https://l4.ventures)基于此设计了一种更通用的[Generalized State Channels](https://medium.com/l4-media/generalized-state-channels-on-ethereum-de0357f5fb44)。根据Li Xuanji在2018年2月ETHDenver会议上分享的Counterfactual Instantiation：联合签名Multisig钱包，使用Registry接口注册counterfactual address，协议执行和签名只需在参与方的机器上执行即可。
 
 ## 空间的扩展
 proof of storage
