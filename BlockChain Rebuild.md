@@ -318,20 +318,23 @@ IOTA的第二个改造是一个可加密的消息广播通道。他的MAM (Maske
 
 配合这种树结构存储，加上全账本节点(Full nodes)和轻节点(lightweight nodes)的层次，可以缓解现在比特币系统的储存压力。上述分工中全账本节点需要保存所有交易明细，这个储存量从2016年初的50G，到2017年的100G，再到现在150G，在以每年50G的速度[增长](https://charts.bitcoin.com/chart/blockchain-size)，预计到2019年会超过200G。而轻节点使用上述Simplified Payment Verification ([SPV](https://bitcoin.org/en/developer-guide#simplified-payment-verification-spv))，只需自己储存空间很小的区块头，然后到全节点获取和某个交易相关的哈希路径，并计算Merkle Root就可以完成交易确认。
 
-而在所有的历史交易里，对未来有意义的只有那些没被花掉的余额Unspent Transaction Output ([UTXO](https://bitcoin.org/en/developer-reference#gettxoutsetinfo))。数量[5000多万](https://charts.bitcoin.com/chart/utxo-set-size)，dbSize不到3GB。如果可以定期对账户做快照Snapshot，就可以极大的清理储存空间。但这个过程相当于一个硬分叉，要在持续运行的同时保证一致可信相对困难。[QTUM](https://qtum.org/)是支持UTXO账户模式的智能合约平台，算是对比特币和以太坊的一次整合。另外还在进化中的IOTA也会相对频繁的快照清理空账户，主要还是因为他的一次性签名不能重复使用，导致大量的弃用地址。就交易数据本身而言，随着Layer2交易通道的开启，多元交易平台的组合，以及硬件设备本身的进化，他的数据储存并不是区块链社区的核心痛点。
+而在所有的历史交易里，对未来有意义的只有那些没被花掉的余额Unspent Transaction Output ([UTXO](https://bitcoin.org/en/developer-reference#gettxoutsetinfo))。数量[5000多万](https://charts.bitcoin.com/chart/utxo-set-size)，dbSize不到3GB。如果可以定期对账户做快照Snapshot，就可以极大的清理储存空间。但这个过程相当于一个硬分叉，要在持续运行的同时保证一致可信相对困难。[QTUM](https://qtum.org/)是支持UTXO账户模式的智能合约平台，算是对比特币和以太坊的一次整合。另外还在进化中的IOTA也会相对频繁的快照清理空账户，主要还是因为他的一次性签名不能重复使用，导致大量的弃用地址。综合来看，就交易数据本身而言，随着Layer2交易通道的开启，多元交易平台的组合，以及硬件设备本身的进化，他们的数据储存并不是区块链社区的核心痛点。
 
-当所要储存的不单是账本，而是大文件或者数据资源时，区块链真正的痛点来了。让每个全节点重复保存所有文件显然不可能，这引申出两个方向的解决方案：
+当所要储存的不单是账本，而是大文件或者数据资源时，区块链真正的痛点来了。让每个全节点重复保存所有文件显然不可能，这里最简单粗暴的方法是文件仍然储存在云平台的云存储上，而文件内容的哈希特征值保存在区块链进行所有权记录和交易。知识产权验证的区块链项目都使用该方法，将图片或者文章转换为特征值上链。即使云平台的图片或原文丢失，只要有人能够补充提供，并且通过哈希特征检查，就可以确认作品的所有权。我们将这种模式概括为**双层结构的云上区块链**，其中对云并不是强依赖，所以整个系统仍然保持去中心化特性。
 
-- [filecoin](https://filecoin.io)的共享储存空间，2017-8的ICO 现在平台还没正式上线
-  - P2P文件系统IPFS 发明者Juan Benet 的项目
-  - 基于Proof-of-Replication (PoRep)的共识机制（Proof-of-Storage的升级）
-    - 使用MerkleCRH生成树的zk-SNARKs验证文件完整
-    - 维持PFT: Power Fault Tolerance以保证文件不丢失
-  - 储存和读取分为两个交易市场
-- carro的[blockchain on hadoop](https://github.com/linkinbird/CarChain/wiki)，2018年2月启动的项目
-  - 利用hadoop的分布式技术，上下夹了区块链的加密和共识，形成三明治的架构
-  - 区块链保证了数据所有权，HDFS保证了数据安全和高效存储
-  - EVM计划用来做数据代码执行的沙箱
+当要存储的是隐私文件时，可以将哈希特征上链，但文件本身不能直接上传云平台，需要在存储之前进行加密。这种先加密，再上传，最后记录区块并执行交易的方式概括为**三层结构的夹心区块链**。这就要求用户钱包app同时具备区块链账户交易和文件加密的功能，这种模式在大数据行业有广泛应用。以车联网为例，每辆行驶的汽车会产生大量行驶轨迹数据，该数据所有权归用户所有，并且可以直接定位到用户位置，非常敏感。用户需要在车机端就完成数据的加密，在数据使用时又需要用户客户端的解密和授权。[CarChain](http://carro.io)车链项目就是按此模式设计，通过手机钱包对车载系统进行绑定和设置，行驶数据以Key-Value模式推送到HBase这类分布式高性能数据库。其中Value进行RSA加密，私钥保存在用户手机钱包里。为了更好的保护隐私，用户钱包以“地址池”形式存在，不同日期的行驶轨迹被打散到不关联的多个地址，防止通过云平台单一地址的信息串联来反推用户。该项目完成了用户端的数据保护，是夹心结构的第一层。夹心结构的第二层分布式存储，以hadoop的HDFS为例，需要将其中NameNode改造为存储分配的账本和计费依据，而DataNode仍然作为数据存储块分发到存储网路里。夹心结构的第三层是数据权益和交易层，记录数据所有权简单，但是隐私数据的交易和使用仍然是一个遗留问题，需要在安全的计算区或者转化为零知识等价计算以防止数据原文泄露。我们会在后面章节重点讨论该问题。
+
+不论是双层还是三层的结构，都不是完整的区块链，文件存储的责任和激励难以直接植入到区块链经济体系当中。为了解决这个大难题，最早设计星际文件系统 InterPlanetary File System ([IPFS](https://zh.wikipedia.org/wiki/星际文件系统))的Juan Benet 发起了[filecoin](https://filecoin.io)项目，2017-8成为当时公开金额最大的ICO（除了私下发行的Telegram以外）：  
+![top 10 icos](https://raw.githubusercontent.com/linkinbird/blockchain_book/master/pic/ico_ranking.png)
+
+使用基于Proof-of-Replication (PoRep)的共识机制（Proof-of-Storage的升级）
+使用MerkleCRH生成树的zk-SNARKs验证文件完整
+
+维持PFT: Power Fault Tolerance以保证文件不丢失
+
+储存和读取分为两个交易市场
+
+
 
 ## 算力的扩展
 sharding，spark等等，如何结合
