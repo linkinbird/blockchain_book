@@ -322,22 +322,19 @@ IOTA的第二个改造是一个可加密的消息广播通道。他的MAM (Maske
 
 当所要储存的不单是账本，而是大文件或者数据资源时，区块链真正的痛点来了。让每个全节点重复保存所有文件显然不可能，这里最简单粗暴的方法是文件仍然储存在云平台的云存储上，而文件内容的哈希特征值保存在区块链进行所有权记录和交易。知识产权验证的区块链项目都使用该方法，将图片或者文章转换为特征值上链。即使云平台的图片或原文丢失，只要有人能够补充提供，并且通过哈希特征检查，就可以确认作品的所有权。我们将这种模式概括为**双层结构的云上区块链**，其中对云并不是强依赖，所以整个系统仍然保持去中心化特性。
 
-当要存储的是隐私文件时，可以将哈希特征上链，但文件本身不能直接上传云平台，需要在存储之前进行加密。这种先加密，再上传，最后记录区块并执行交易的方式概括为**三层结构的夹心区块链**。这就要求用户钱包app同时具备区块链账户交易和文件加密的功能，这种模式在大数据行业有广泛应用。以车联网为例，每辆行驶的汽车会产生大量行驶轨迹数据，该数据所有权归用户所有，并且可以直接定位到用户位置，非常敏感。用户需要在车机端就完成数据的加密，在数据使用时又需要用户客户端的解密和授权。[CarChain](http://carro.io)车链项目就是按此模式设计，通过手机钱包对车载系统进行绑定和设置，行驶数据以Key-Value模式推送到HBase这类分布式高性能数据库。其中Value进行RSA加密，私钥保存在用户手机钱包里。为了更好的保护隐私，用户钱包以“地址池”形式存在，不同日期的行驶轨迹被打散到不关联的多个地址，防止通过云平台单一地址的信息串联来反推用户。该项目完成了用户端的数据保护，是夹心结构的第一层。夹心结构的第二层分布式存储，以hadoop的HDFS为例，需要将其中NameNode改造为存储分配的账本和计费依据，而DataNode仍然作为数据存储块分发到存储网路里。夹心结构的第三层是数据权益和交易层，记录数据所有权简单，但是隐私数据的交易和使用仍然是一个遗留问题，需要在安全的计算区或者转化为零知识等价计算以防止数据原文泄露。我们会在后面章节重点讨论该问题。
+当要存储的是隐私文件时，可以将哈希特征上链，但文件本身不能直接上传云平台，需要在存储之前进行加密。这种先加密，再上传，最后记录区块并执行交易的方式概括为**三层结构的夹心区块链**。这就要求用户钱包app同时具备区块链账户交易和文件加密的功能，这种模式在大数据行业有广泛应用。以车联网为例，每辆行驶的汽车会产生大量行驶轨迹数据，该数据所有权归用户所有，并且可以直接定位到用户位置，非常敏感。用户需要在车机端就完成数据的加密，在数据使用时又需要用户客户端的解密和授权。[CarChain](http://carro.io)车链项目就是按此模式设计，通过手机钱包对车载系统进行绑定和设置，行驶数据以Key-Value模式推送到HBase这类分布式高性能数据库。其中Value进行RSA加密，私钥保存在用户手机钱包里。为了更好的保护隐私，用户钱包以“地址池”形式存在，不同日期的行驶轨迹被打散到不关联的多个地址，防止通过云平台单一地址的信息串联来反推用户。该项目完成了用户端的数据保护，是夹心结构的第一层。夹心结构的第二层是分布式存储，以hadoop的HDFS为例，需要将其中NameNode改造为存储分配的账本和计费依据，而DataNode仍然作为数据存储块分发到存储网路里。夹心结构的第三层是数据权益和交易层，记录数据所有权简单，但是隐私数据的交易和使用仍然是一个遗留问题，需要在安全的计算区或者转化为零知识等价计算以防止数据原文泄露。我们会在后面章节重点讨论该问题。
 
 不论是双层还是三层的结构，都不是完整的区块链，文件存储的责任和激励难以直接植入到区块链经济体系当中。为了解决这个大难题，最早设计星际文件系统 InterPlanetary File System ([IPFS](https://zh.wikipedia.org/wiki/星际文件系统))的Juan Benet 发起了[filecoin](https://filecoin.io)项目，2017-8成为当时公开金额最大的ICO（除了私下发行的Telegram以外）：  
 ![top 10 icos](https://raw.githubusercontent.com/linkinbird/blockchain_book/master/pic/ico_ranking.png)
 
-使用基于Proof-of-Replication (PoRep)的共识机制（Proof-of-Storage的升级）
-使用MerkleCRH生成树的zk-SNARKs验证文件完整
-
-维持PFT: Power Fault Tolerance以保证文件不丢失
-
-储存和读取分为两个交易市场
-
-
+区块链中为了保证文件的储存，需要存储方提供Proofs-of-Storage (PoS) 证明。为了实现计费，还需要进一步Proof-of-Spacetime (PoSt)  。在Filecoin里使用Proof-of-Replication (PoRep)的共识机制，让储存方提供复制存储证明，然后区块链节点验证该证明，中间经过挑战和响应的过程。通过序列化的PoRep，可以递归证明该文件累计的存储时间POSt。整个过程还依赖zk-SNARKs的匿名验证以及Seal操作。为了让这个复杂的流程在区块链上运行，交易过程分为储存和读取两个交易市场，以针对性的协调矿工合作。没有人怀疑这个项目的复杂性，所以该项目还在开发过程中，并且每季度会有官方博客的回顾小结。
 
 ## 算力的扩展
+在加速交易时用到的layer2的交易通道，可以做的事情有限，但是这个理念可以进一步推广。[Lisk](https://lisk.io)通过主链和侧链的分离，把简单的交易扩容，放大到了整体的算力扩容。更重要的是支持JavaScript等更大开发者支持的语言，**开发者是所有算力扩展的基础**。[Hero Node](https://heronode.io) 也是持类似概念的BAAS PLATFORM，帮助跨链开发，快速部署，兼容ETH, QTUM, IPFS等等。使用Javascript开发全端DApp，并提供统一API接口，类似React Native的思路。
+
 sharding，spark等等，如何结合
+
+有很多号称解决算力问题的大项目，比如Cardano 兼具POS、递归网络、分区（Partitioning）和侧链（SideChain）
 
 ## 人工智能的进击
 
@@ -364,6 +361,10 @@ sharding，spark等等，如何结合
 
 ## 比特人
 人的数字化，集信
+
+[steem](https://steem.io)网路行为激励，浏览、评论得积分，趣头条
+
+更多的行为激励earn
 
 DAO去中心化组织
 
@@ -405,6 +406,10 @@ $$
 ### 匿名交易协议
 区块链里的应用很多：
 * 2016年10月发布的[ZCash](https://z.cash)也是使用类似技术，优化了交易速度，弥补了部分这个技术的短板
+  * Komodo是SuperNET团队从ZCash做的分叉，使用Delayed Proof of Work (dPoW)把自己的账本和比特币主链对账，借用比特币的算力来做备份防护。
+* 2014年的[Monero](https://getmonero.org/)使用ring signature，可以做到更加彻底的隐私匿名
+  * 2016年末得到了主要的暗网市场AlphaBay的采用，市值飙升
+  * 2017年启用Gregory Maxwell的环形机密交易（Ring Confidential Transactions）算法，隐私性进一步加强
 * 2017年9月ETH 的Byzantium版本[支持](https://www.reddit.com/r/ethereum/comments/712idt/ethereum_testnet_just_verified_a_zcash_transaction/)了zk-snark proof
 * 2018年2月底从比特币[分叉](https://www.reddit.com/r/BitcoinPrivate/comments/7todw0/historical_bitcoin_private_hard_fork_snapshot/)出了[Bitcoin Private](https://btcprivate.org/) (BTCP) 就是merge了ZClassicCoin (ZCL)和BTC主链的一个分叉，采用的也是zkSNARKs
 * JPMorgan的[Quorum](https://www.jpmorgan.com/country/US/EN/Quorum)链是基于ETH的金融应用改造，也加入了zkproof和对特定监管节点透明的功能
