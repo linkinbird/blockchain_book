@@ -332,21 +332,9 @@ IOTA的第二个改造是一个可加密的消息广播通道。他的MAM (Maske
 ## 算力的扩展
 在加速交易时用到的layer2通道，还可以执行通用的EVM代码，是算力扩展的最简单方式。双方参与的交易不仅可以在闪电网络快速的执行，双方参与的应用程序也可以在Layer2通道运行，称为通用状态通道。比如有两个人要下一盘围棋，并且以1ETH为赌注。那么他们每人提取1ETH充值到通用状态通道的共同账本，总额为2ETH。同时围棋的代码也被加载到这个通道，只要双方对代码无疑义，就可以开始下棋。对弈结束以后，获胜的一方提取这2ETH并且同步到主链以完成确认。在单纯的交易场景下，如果一方反悔，交易金额会回退。但是在执行代码过程中反悔，情况要复杂一些，需要在特定执行步骤获取执行方签名以便最终仲裁。下围棋这种回合制的程序是非常合适的场景，因为每一步落子都可以进行签名和主链广播。主链有一个冲裁智能合约，对参与方的身份和执行流程进行验证，以便在出现分歧时做最终裁定。所以通用状态通道这种形式的算力扩展，主要适合离散的状态机代码，比如交易，回合制游戏等等。而且需要限制参与人数，并且对各参与方的网络链接稳定性有要求。
 
-上述理念还可以进一步推广，就是以太坊的[Plasma](https://plasma.io)项目。他使用MapReduce的机制从主链生出子链，子链还可以再生，子链以主链为root做中转。子链使用自己的高效共识模式，比如Proof of Authority(PoA)。资产必须先在主链生成再传递给子链，在子链完成复杂计算并同步回主链。这样子链的计算更快而且成本更低。如果发生恶意子节点，有两种防御：
+上述理念还可以进一步推广，就是以太坊的[Plasma](https://plasma.io)项目。他使用MapReduce的机制从主链生出子链，子链还可以再生，子链以主链为root做中转。子链使用自己的高效共识模式，比如Proof of Authority(PoA)。资产必须先在主链生成再传递给子链，在子链完成复杂计算并同步回主链。这样子链的计算更快而且成本更低。如果发生恶意子节点，有两层防御：首先任何人都可以先发起fraud proof，证明false block的存在，执行子链回滚，类似下围棋回到上一步。然后如果子链信息不全，无法证明fraud，那也可以直接发起Proof of Funds，把资产提回主链，类似这盘棋重赛。使用类似原理的还有独立项目[Lisk](https://lisk.io)，除了支持侧链以外，还支持JavaScript等开发者社区更加普及的语言，开发者也是算力扩展的基础。
 
-> 任何人都可以先发起fraud proof，证明false block的存在，最终子链回滚，类似下围棋回到上一步  
-> 如果子链信息不全，无法证明fraud，那就直接发起Proof of Funds，把资产提回主链，类似这盘围棋重赛
-
-[Lisk](https://lisk.io)作为一个独立区块链项目同样通过主链和侧链的分离，实现整体的算力扩容。更重要的是支持JavaScript等更大开发者支持的语言，**开发者是所有算力扩展的基础**。[Hero Node](https://heronode.io) 也是持类似概念的BAAS PLATFORM，帮助跨链开发，快速部署，兼容ETH, QTUM, IPFS等等。使用Javascript开发全端DApp，并提供统一API接口，类似React Native的思路。
-
-- Truebit 离线算力
-  - 当计算特别消耗资源的时候，邀请solver离线计算
-  - 利用verification game邀请全链验证结果，不是全部的结果，而是有争议的部分
-  - 
-
-不论对开发者多么友好，或者分裂更多的侧链，全网开放类型的EVM代码仍然要运行在每一台参与验证的矿机上。在基本协议层进行算力扩展，我们称其为Layer1的扩展。最终sharding，spark等等，如何结合
-
-有很多号称解决算力问题的大项目，比如Cardano 兼具POS、递归网络、分区（Partitioning）和侧链（SideChain）
+不论对开发者多么友好，或者分裂更多的侧链，最后仍然会面对主链的性能扩展。开放类型的EVM代码还是要运行在每一台参与验证的矿机上，我们称其为Layer1的扩展。其中[sharding](https://ethresear.ch/c/sharding) 分布式是目前探索最多的方向。该技术来源于数据库，将需要执行的计算或者数据进行分区。在区块链里，就是将需要验证的交易或者智能合约分配给不同的矿工群来负责。Prysmatic团队提出了一个两步走的[sharding方案](https://medium.com/@rauljordan/ethereum-sharding-update-prysmatic-labs-implementation-roadmap-c625cd013aeb)，新加坡的[Zilliqa](https://www.zilliqa.com)团队也有基于新加坡国立研究的BFT容错的[Secure Sharding protocol](https://dl.acm.org/citation.cfm?id=2978389)版本，但扩容的同时只能承受25%的恶意节点。sharding的难点有两个：第一个是保证分配过程的随机性，在区块链系统里，这个随机性需要整个分布式网络来保证，否则非常容易被恶意节点串通，定向攻击某些交易。目前有一套[RANDAO](https://ethresear.ch/t/rng-exploitability-analysis-assuming-pure-randao-based-main-chain/1825)方案，具有预防串通和懒节点的优化。第二个难点是分区管理和验证的机制，需要Validator验证节点来管理验收，而由可靠随机方案推选的Collator工作群来分工处理不同批次的交易。可以说所有大型商业项目都需要这种性能扩展，否则无法支持主流业务场景的大并发。月活2亿的Telegram发起的区块项目TON里也明确了sharding的计划。此外还有野心巨大的[Cardano](https://www.cardano.org/)（主要负责人 Charles Hoskinson是原以太坊联合创始人）声称兼具POS、递归网络、分区（Partitioning）和侧链（SideChain）等等的多级提升。
 
 ## 人工智能的进击
 
