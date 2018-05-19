@@ -334,11 +334,21 @@ IOTA的第二个改造是一个可加密的消息广播通道。他的MAM (Maske
 
 上述理念还可以进一步推广，就是以太坊的[Plasma](https://plasma.io)项目。他使用MapReduce的机制从主链生出子链，子链还可以再生，子链以主链为root做中转。子链使用自己的高效共识模式，比如Proof of Authority(PoA)。资产必须先在主链生成再传递给子链，在子链完成复杂计算并同步回主链。这样子链的计算更快而且成本更低。如果发生恶意子节点，有两层防御：首先任何人都可以先发起fraud proof，证明false block的存在，执行子链回滚，类似下围棋回到上一步。然后如果子链信息不全，无法证明fraud，那也可以直接发起Proof of Funds，把资产提回主链，类似这盘棋重赛。使用类似原理的还有独立项目[Lisk](https://lisk.io)，除了支持侧链以外，还支持JavaScript等开发者社区更加普及的语言，开发者也是算力扩展的基础。
 
-不论对开发者多么友好，或者分裂更多的侧链，最后仍然会面对主链的性能扩展。开放类型的EVM代码还是要运行在每一台参与验证的矿机上，我们称其为Layer1的扩展。其中[sharding](https://ethresear.ch/c/sharding) 分布式是目前探索最多的方向。该技术来源于数据库，将需要执行的计算或者数据进行分区。在区块链里，就是将需要验证的交易或者智能合约分配给不同的矿工群来负责。Prysmatic团队提出了一个两步走的[sharding方案](https://medium.com/@rauljordan/ethereum-sharding-update-prysmatic-labs-implementation-roadmap-c625cd013aeb)，新加坡的[Zilliqa](https://www.zilliqa.com)团队也有基于新加坡国立研究的BFT容错的[Secure Sharding protocol](https://dl.acm.org/citation.cfm?id=2978389)版本，但扩容的同时只能承受25%的恶意节点。sharding的难点有两个：第一个是保证分配过程的随机性，在区块链系统里，这个随机性需要整个分布式网络来保证，否则非常容易被恶意节点串通，定向攻击某些交易。目前有一套[RANDAO](https://ethresear.ch/t/rng-exploitability-analysis-assuming-pure-randao-based-main-chain/1825)方案，具有预防串通和懒节点的优化。第二个难点是分区管理和验证的机制，需要Validator验证节点来管理验收，而由可靠随机方案推选的Collator工作群来分工处理不同批次的交易。可以说所有大型商业项目都需要这种性能扩展，否则无法支持主流业务场景的大并发。月活2亿的Telegram发起的区块项目TON里也明确了sharding的计划。此外还有野心巨大的[Cardano](https://www.cardano.org/)（主要负责人 Charles Hoskinson是原以太坊联合创始人）声称兼具POS、递归网络、分区（Partitioning）和侧链（SideChain）等等的多级提升。
+不论对开发者多么友好，或者分裂更多的侧链，最后仍然会面对主链的性能扩展。开放类型的EVM代码还是要运行在每一台参与验证的矿机上，我们称其为Layer1的扩展。其中[sharding](https://ethresear.ch/c/sharding) 分布式是目前探索最多的方向。该技术来源于数据库，将需要执行的计算或者数据进行分区。在区块链里，就是将需要验证的交易或者智能合约分配给不同的矿工群来负责。Prysmatic团队提出了一个两步走的[sharding方案](https://medium.com/@rauljordan/ethereum-sharding-update-prysmatic-labs-implementation-roadmap-c625cd013aeb)，新加坡的[Zilliqa](https://www.zilliqa.com)团队也有基于新加坡国立研究的BFT容错的[Secure Sharding protocol](https://dl.acm.org/citation.cfm?id=2978389)版本，但扩容的同时只能承受25%的恶意节点。因为我们在分区时，削弱了全网认证的安全性，分区内的交易只被选取的一部分节点认证，如果分配不小心，碰巧这些节点有串通，那交易将面临风险。所以sharding的难点有两个：第一个是保证分配过程的随机性，在区块链系统里，这个随机性需要整个分布式网络来保证，否则非常容易被恶意节点操纵，定向攻击某些交易。目前有一套[RANDAO](https://ethresear.ch/t/rng-exploitability-analysis-assuming-pure-randao-based-main-chain/1825)方案，具有预防串通和懒节点的优化。第二个难点是分区管理和验证的机制，需要Validator验证节点来管理验收，而由可靠随机方案推选的Collator工作群来分工处理不同批次的交易。可以说所有大型商业项目都需要这种性能扩展，否则无法支持现实场景的大并发。月活2亿的Telegram发起的区块项目TON里也明确了sharding的计划。此外还有野心巨大的[Cardano](https://www.cardano.org/)（主要负责人 Charles Hoskinson是原以太坊联合创始人）声称兼具POS、递归网络、账本分区（Partitioning）和侧链（SideChain）等等的多级提升。
 
-## 人工智能的进击
+## 人工智能病毒
 
-当机器获得了意识，其计算的力量如何驾驭？
+从EVM说起，由代码选择矿工。
+
+cardano所说的第三代区块链其实还是第一代，因为他做的算力平台的扩展，最终释放的是虚拟机代码的能力。这个能力的探索，是第二代网络的延续。而将算力平台和虚拟机的交互打开，由虚拟机反向选择算力平台，才是第三代区块链。目前距离我们还很遥远，我们还在第一代的尾期和第二代的初期。所以我们重新定义区块链的发展进程：
+
+* 第一代：去中心化的算力和结算平台
+* 第二代：机械算力的分发和应用平台
+* 第三代：智能算力的“免疫传播”平台
+
+开发的智能合约就是计算机病毒，病毒会自己保证自己的一致性和计算有效性。
+
+当机器获得了意识，其计算的力量如何驾驭？深度学习是巨大的参数网络，之前是集中数据做训练，现在可以分散数据，利用区块链算力做训练。
 
 # 从移动比特到移动原子
 如何在物理世界实现区块链的效果？类似[reCAPTCHA](https://en.wikipedia.org/wiki/ReCAPTCHA)把识别人工字体的任务穿插到了验证码识别动作里。我们可以在区块链储物盒交易里做扩展：
@@ -371,7 +381,7 @@ IOTA的第二个改造是一个可加密的消息广播通道。他的MAM (Maske
 DAO去中心化组织
 
 # 透明和匿名之间
-隐私和信任同样重要，因为在前言里我们提到了一种思想实验，在思想透明的城市里，能否建立合作与信任？答案是否定的，因为没有了隐私。反过来也一样，完全的隐私保护，大家都不了解对方的过去，信用就无从说起，信任也无法建立。完全信息能达到的那种信任强度，能否通过部分信息来实现？在人类社会的信任需求和隐私需求间寻求平衡。
+隐私和信任同样重要，因为在前言里我们提到了一种思想实验，在思想透明的城市里，能否建立合作与信任？答案是否定的，因为没有了隐私。反过来也一样，完全的隐私保护，大家都不了解对方的过去，信用就无从说起，信任也无法建立。欧美隐私法规GDPR的发布导致区块链身份认证项目[PICOPS](https://paritytech.io/picops-discontinued-may-24th-2018/)的下线，引发了我们的问题：完全信息能达到的那种信任强度，能否通过部分信息来实现？在人类社会的信任需求和隐私需求间寻求平衡。
 
 上述所有的推导，都是在信息公开透明的情况下实现的，那有没有可能既保证信息的可验证，又实现信息的匿名化？这里需要介绍另外一位可信的科学家
 
