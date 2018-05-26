@@ -417,48 +417,62 @@ IOTA的第二个改造是一个可加密的消息广播通道。他的MAM (Maske
 比较遗憾的是欧盟隐私法规GDPR的发布导致PICOPS的[下线](https://paritytech.io/picops-discontinued-may-24th-2018/)，GDPR走到了保护隐私的又一个极端。在给予人民绝对安全的同时，我们在损失流通能力。只有信息和信任安全的流通起来，才能盘活整个经济体，形成大规模的社会协作。在大规模社会协作里，才有宏观优化的可能。这些年流行的大数据，人工智能，都受益于此。国家的宏观经济政策和社会调控也需要这样的数据视角。所以完全信息能达到的那种信任强度，能否通过部分信息来实现？在信息不完全公开的情况下，能否进行宏观计算？这些非常困难的问题，我们要回到科学的工具箱里，寻找答案。
 
 ## 蒙上眼睛的证明
-单笔交易本身只记录了address，已经是高度匿名的了，但是通过地址的追踪，还是可以观测到每个币的流向。这个时候在协议层可以通过[zero-knowledge proof](https://en.wikipedia.org/wiki/Zero-knowledge_proof)的进化版 [Non-interactive zero-knowledge proof](https://en.wikipedia.org/wiki/Non-interactive_zero-knowledge_proof) 将交易验证过程匿名化，区块链里的应用叫做[zkSNARKs](https://blog.ethereum.org/2016/12/05/zksnarks-in-a-nutshell/)。基础原理是多项式同态（[中文原理](https://www.jianshu.com/p/b6a14c472cc1)）：
-* 加法同态，乘法同态，全同态
-  - 对于E(x)函数，难以求得反函数，及无法从E(x)反推x
-  - 单调函数，及x≠y,，则E(x)≠E(y)
-  - 通过E(x)和E(y)，可以计算E(x+y) 加法同态，计算E(xy) 乘法同态...
-* 加法盲验证——用于交易和账本验证
-  1. A计算E(x)，E(y)，并发送给B
-  1. 因为函数E(x)满足加法同态，B可以通过E(x)，E(y)计算E(x+y)
-  1. B独立计算E(7)，并验证E(x+y)=E(7)
-     - 但也无法保障x,y没有从原来的[1,6] 篡改为[2,5]
-* 多项式盲验证——已知输入，未知EVM代码，验证结果准确性  
-$$
-P(X) = a_0 + a_1 \cdot X + a_2 \cdot X^2 + ... + a_d \cdot X^d
-$$
+回想“可验证的科学”章节里，我们通过椭圆函数的单向放大性，设计了椭圆函数签名。在不泄露私钥的情况下，也能够向对方证明该签名是我的私钥完成的。这就是我们需要的“信任的安全传递”。椭圆函数签名太过复杂，我们用相对简单的哈希变换，来实现同样的效果。哈希变换是一种将任意字符串随机转化为另外一种特定长度字符串的编码方式。编码是随机的，但也是固定的。从源码出发，永远都会得到相同的编码，而且不同的源码对应的编码也不冲突。但是从编码出发，却无法反推到源码。就好像一扇单向门，永远只能走一个方向。
 
-  - A知道需要验证的多项式P
-    - 其中a为计算参数，可以代表某种计算过程
-  - B想要验证对应某个不公开s的E(P(s))，及验证某个输入的计算结果是否准确
-    1. A和B可以共同选择基于椭圆函数的α对 x⋅g作为E(x)
-    1. B计算g, s⋅g , … , sd⋅g和α⋅g , αs⋅g , … , αsd⋅g并发送给A，相当于之前的E(x),E(y)
-    1. A同态性计算a=P(s)⋅g，b=αP(s)⋅g并回传
-    1. B验证a,b为α对，则A真的知道P，且a值即为B所需校验的E(P(s))结果
-      - 存在一种可能，A使用另外的一个P'多项式，也可以找到符合α的a,b对，这种情况叫做“d-power knowledge of exponent assumption”
-* 任意计算验证
-  - 把任意计算转换为门电路向量
-  - 把向量转化为多项式
-    - QAP (Quadratic Arithmetic Programs)
+现在小北基于这种编码，制作了一个迷宫。迷宫周边有26个向外开放的门口，用字母A~Z表示。迷宫里面有无数连接这些门的通道相互交错。通道上有很多单向门，如果不小心走错了，可能永远都走不出来。小北住在这个迷宫的某一个入口，但是没有人知道。一天小北放了一个信箱在Z出口，她说欢迎大家给她寄信。为了防止有人偷看，小北把Z的门锁上了，只留下投信的小缝，她说她会从住的地方走过来拿信的。小楠听了不相信，你怎么证明这个信箱是你的呢？于是小北把小楠带到了F入口，她说你进去右转右转再左转，就可以看到信箱了。小楠一试果然如此，但是这样F入口就暴露了，难道小北住在这里？小北微微一笑，从F入口到Z是单向门，但是从F入口到不了她家，这只是她取信时候途径的一个地方而已。
+
+其实小北住在S，这个**S**就是小北的私钥，**F**就是签名可以用于验证，**Z**是她的区块链地址。编码的生成过程是从S经过几十次哈希生成F，再从F经过几十次哈希生成Z。但显然这个F一旦用过一次以后，就不能再用了。所以这种基于哈希的签名方法，叫做一次性签名one-time signature 简称OTS。这种算法的一大优点是计算速度快，而且抗量子破解 [Quantum Resistant](https://en.wikipedia.org/wiki/Post-quantum_cryptography)，也就是发明了量子计算机也无法破解出私钥（椭圆函数签名可以被量子破解）。但缺点也很明显了，每一次签名验证，都会暴露哈希链条里的一段，从F到Z的所有点都会一起暴露。当然链条足够长，几十个哈希点可以再往上选出一个来做签名。OTS签名也经过了很长的发展历程，现在IOTA项目里使用的就是相对成熟的[winternitz OTS](https://cryptoservices.github.io/quantum/2015/12/04/one-time-signatures.html) 版本：
+
+```
+用户生成SEED
+基于SEED和编号ID一起生成10个区块链私钥
+私钥经过26次哈希得到公钥
+    公钥发布到网络用于收款
+取款时进行签名
+    将交易内容的文本，映射到0~26之间的数值N
+    根据该数值对私钥进行N次哈希(N不能为0，否则泄露私钥)得到签名
+矿工对签名验证以确认交易
+    同样基于交易内容，映射到26~0之间的数值M，M+N=26
+    矿工对签名进行M次哈希，数值结果和公钥（经过26次哈希）一致则验证成功
+    如果交易内容被篡改，M就会出错，或者签名有问题都无法算出公钥，导致验证失败
+```
+
+这种方便快捷的签名方法，要反复使用也可以。比如IOTA官方节点[milestone的签名](https://www.reddit.com/r/Iota/comments/7gsd3t/why_are_coordinator_signatures_still_secure/dqo9b9r/)就使用了[Merkle Trees](https://cryptoservices.github.io/quantum/2015/12/07/many-times-signatures.html)的方案，在保证官方节点地址不变的情况下，还可以反复支付和签名：
+
+```
+milestone节点生成大量私钥，并关联在一棵Merkle Tree上
+milestone公布Merkle Root，并且始终不变
+交易时随机选择Merkle Trees某个叶子节点对应的私钥来生成签名和公钥
+    公钥不直接提供，只提供对应的authentication path
+矿工对签名进行验证
+    先计算M，做哈希变换，得到待验证的公钥
+    结果按照验证路径，逐一和路径上的节点编码组合哈希，并一路向上传递
+    最后获得Merkle Root则验证成功
+```
+
+这类编码方式还可以用在**数据资产的验证**上，[CarChain](http://carro.io)项目里，我们就是把车辆行驶轨迹的隐私数据，经过多层哈希压缩后，登记在区块链智能合约里。这样在数据交易和授权使用时，就可以通过OTS签名，在不泄露隐私的情况下，完成蒙上眼睛的证明。但显然只有两方参与的验证太局限了，区块链是交易双方和矿工共同维护的多方验证平台。我们需要一种在不泄露交易双方金额明细的情况下，能够完成区块验证的证明方式。幸运的是密码学里早已有了这样的工具，叫做零知识证明[zero-knowledge proof](https://en.wikipedia.org/wiki/Zero-knowledge_proof)，他的进化版 [Non-interactive zero-knowledge proof](https://en.wikipedia.org/wiki/Non-interactive_zero-knowledge_proof) 是无交互的零知识证明。我们还是用小北的迷宫来举例：
+
+小楠觉得小北的迷宫很神奇，所以打算搬过来和小北一起住。她的母亲不放心，想来照看她。但小楠正值无拘无束的年纪，她不想让母亲知道她的房间，但又要让母亲放心。所以小北帮她重新设计了迷宫。这一次A~Z的门之间，不是路径串联的关系，而是配对映射的关系。从任何一个门进去，都会穿到另外一个门出来。对应关系是未知的，但可以保证，如果从相邻两个门进去，也会从相邻两个门出来。小楠让母亲转过身，她和小北分别回到各自迷宫的入口。大家准备好以后，母亲回过身来，小楠和小北从各自房间穿过迷宫。当他们分别出现在J、K两个出口时，小楠向母亲解释说，她和小北是住在隔壁门的，平时相互照应生活很好，不用家里太担心。
+
+这个证明原理应用在交易领域就好比我不知道你们两个人分别有多少钱，但是我知道你们加起来一共有50元钱。背后用到了数学中的加法同态，以及推广到乘法同态和更加通用的[多项式同态](https://www.jianshu.com/p/b6a14c472cc1)：
+
+```
+对于E(x)函数有以下属性：
+  1、难求反函数，及无法从E(x)反推x
+  2、单调函数，及x≠y,，则E(x)≠E(y)
+  3、通过E(x)和E(y)，可以计算E(x+y) 的加法同态
+     常用的的非对称加密方式RSA和ECC都支持加法同态
+C对于A、B两人账户的加法盲证明：
+  A计算自己账户余额E(A)，B计算自己的E(B)
+  结果发给C，C通过E(A)和E(B) 计算E(A+B)
+  交易前的E(A+B)和交易后的E(A'+B')保持一致，则交易没有作弊
+  A、B对各自隐私的收款金额无异议后，区块可以认证该交易
+```
+
+区块链里已经有不少该原理的应用，2016年10月发布的[ZCash](https://z.cash)，优化了交易速度，弥补了部分这个技术的短板，使其更具有实用性。同年以太坊的提案[zkSNARKs](https://blog.ethereum.org/2016/12/05/zksnarks-in-a-nutshell/)，目前还在[测试](https://www.reddit.com/r/ethereum/comments/712idt/ethereum_testnet_just_verified_a_zcash_transaction/)阶段，并没有落地。[Komodo](https://komodoplatform.com)是SuperNET团队从ZCash做的[分叉](https://steemit.com/komodo/@komodoplatform/a-guide-to-better-understand-komodo)，使用Delayed Proof of Work (dPoW)把自己的账本和比特币主链对账，借用比特币的算力来做备份防护。[Monero](https://getmonero.org/)使用Gregory Maxwell的环形机密交易（Ring Confidential Transactions）算法，隐私性进一步加强。最近2018年初又从比特币[分叉](https://www.reddit.com/r/BitcoinPrivate/comments/7todw0/historical_bitcoin_private_hard_fork_snapshot/)出了[Bitcoin Private](https://btcprivate.org/) (BTCP) 就是合并了ZClassicCoin (ZCL)和BTC主链的一个分叉，采用的也是zkSNARKs。可见该证明机制飞速的在区块链领域普及，在保护隐私的同时，免去了混合交易的中间商，免去了对泄露身份资产的担忧，也就加强了信任的流通传递。
 
 ## 隐私交易所
-区块链里的应用很多：
-* 2016年10月发布的[ZCash](https://z.cash)也是使用类似技术，优化了交易速度，弥补了部分这个技术的短板
-  * Komodo是SuperNET团队从ZCash做的分叉，使用Delayed Proof of Work (dPoW)把自己的账本和比特币主链对账，借用比特币的算力来做备份防护。
-* 2014年的[Monero](https://getmonero.org/)使用ring signature，可以做到更加彻底的隐私匿名
-  * 2016年末得到了主要的暗网市场AlphaBay的采用，市值飙升
-  * 2017年启用Gregory Maxwell的环形机密交易（Ring Confidential Transactions）算法，隐私性进一步加强
-* 2017年9月ETH 的Byzantium版本[支持](https://www.reddit.com/r/ethereum/comments/712idt/ethereum_testnet_just_verified_a_zcash_transaction/)了zk-snark proof
-* 2018年2月底从比特币[分叉](https://www.reddit.com/r/BitcoinPrivate/comments/7todw0/historical_bitcoin_private_hard_fork_snapshot/)出了[Bitcoin Private](https://btcprivate.org/) (BTCP) 就是merge了ZClassicCoin (ZCL)和BTC主链的一个分叉，采用的也是zkSNARKs
-* JPMorgan的[Quorum](https://www.jpmorgan.com/country/US/EN/Quorum)链是基于ETH的金融应用改造，也加入了zkproof和对特定监管节点透明的功能
-* ING也有相同道路的项目[zkrangeproof](https://github.com/ing-bank/zkrangeproof)，但看起来有些凉了
-
-carchain的加密数据交易流程
-
+零知识交易
 ## 匿名的算力
 交易的匿名扩展只实现了匿名验证，但在虚拟机环境里，计算的复杂度更高，简称为[secure MPC](https://en.wikipedia.org/wiki/Secure_multi-party_computation)的问题(Multiparty Computation)。通用的解决方案包括了保密数据分享已经零知识证明等等。但即使看似简单的计算，也需要定制化的协议设计：
 * Two-party computation (2PC) 
