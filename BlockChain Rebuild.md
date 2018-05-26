@@ -472,34 +472,46 @@ C对于A、B两人账户的加法盲证明：
 区块链里已经有不少该原理的应用，2016年10月发布的[ZCash](https://z.cash)，优化了交易速度，弥补了部分这个技术的短板，使其更具有实用性。同年以太坊的提案[zkSNARKs](https://blog.ethereum.org/2016/12/05/zksnarks-in-a-nutshell/)，目前还在[测试](https://www.reddit.com/r/ethereum/comments/712idt/ethereum_testnet_just_verified_a_zcash_transaction/)阶段，并没有落地。[Komodo](https://komodoplatform.com)是SuperNET团队从ZCash做的[分叉](https://steemit.com/komodo/@komodoplatform/a-guide-to-better-understand-komodo)，使用Delayed Proof of Work (dPoW)把自己的账本和比特币主链对账，借用比特币的算力来做备份防护。[Monero](https://getmonero.org/)使用Gregory Maxwell的环形机密交易（Ring Confidential Transactions）算法，隐私性进一步加强。最近2018年初又从比特币[分叉](https://www.reddit.com/r/BitcoinPrivate/comments/7todw0/historical_bitcoin_private_hard_fork_snapshot/)出了[Bitcoin Private](https://btcprivate.org/) (BTCP) 就是合并了ZClassicCoin (ZCL)和BTC主链的一个分叉，采用的也是zkSNARKs。可见该证明机制飞速的在区块链领域普及，在保护隐私的同时，免去了混合交易的中间商，免去了对泄露身份资产的担忧，也就加强了信任的流通传递。
 
 ## 隐私交易所
-零知识交易
+于2018年5月21日发布的欧盟GDPR通用数据保护条例，像一座墙挡在所有大数据技术的公司面前。中国在5月1日提前发布的《个人信息安全规范》也是与其对标的国家标准。现在我们有了保护隐私的工具，还需要数据资产所有权的明确。在GDPR和中国的信息安全法规里，将这种权利返还给了消费者，赋予以下几个方面的权利：
+
+> 授权过程要清晰明了，满足最小可用性  
+> 数据保持完整性，保密性，不可联结性  
+> 用户对其隐私数据具有转移权，修正权和删除权(遗忘权)
+
+在这样的要求之下，隐私得到了保护，但是流通收到了限制。还好数据产权逐渐明确，在找到了数据管理主体之后，我们就可以使用上述隐私保护工具设计一个不对外泄露原始数据情况下的，三方可验证数据交易。首先数据在产生的同时就需要上链登记，比防止被篡改。登记形式可以是一个将数据原文多次哈希压缩的结果dHash。哈希结果只是用来登记所有权和验证数据准确，数据源文件一般较大，需要用用户的私钥进行RSA加密，然后储存到云平台。在交易的时候，基于智能合约，矿工不接触原文，而完成双方的交易和验证，流程如下：
+
+```
+1. 交易金额由双方确认，共同签名，以确认交易意愿
+   - 数据提供方为A，数据接收方和资金提供方为B
+   - 启动智能合约，B的资金转移到合约地址下，并根据下面验证流程进行自动分配
+2. 输出方A提供原文，使用B的公钥RSA加密给B，由接收方B解码后通过dHash确认，并签名接收
+   - 如果签名成功，执行资金转移
+   - 如果B不承认接收，可能A没给，也可能B收到了不承认，就需要A和矿工C先进行zk proof验证
+   - C创建验证数据对，A计算dHash的prf值，C验证prf
+     - 如果C验证失败，说明A没有数据，交易终止，B资金退回
+     - 如果C验证成功，说明A确实拥有原文，A再一次传递数据给B
+     - 如果B仍然没收到，C投票选择中间节点验证原文，执行资金操作
+       - 这里A没有作恶动机，因为资金已经锁定，如果要反悔交易应该在数据传递之前反悔
+       - 这里B没有作恶动机，因为资金会被强制转移，如果数据通过C中间节点泄露，对B的采购价值反而有折损
+       - 除非B报复性采购并公开数据。但这也可以交易完成后公开，并不影响交易本身
+3. B把接收的数据再用自己的RSA秘钥加密，提交到云存储网络
+   - C区块链确保dHash一致，以及确认B是否有二次授权权限
+   - B自己会保证密文结果一致，否则该数据他也无法使用
+```
+
+看似简单的交易，但是在区块链拜占庭容错的要求下，需要考虑到所有可能的作恶情况。现在又加上了数据保密，所以异常繁琐。但所幸在经济规律的约束下，这样的协议基本足够应用。但即使完成了隐私数据的安全转移，还是无法保证数据接收方没有二次传播和滥用。在Facebook和Cambridge Analytica（CA）的[数据丑闻](https://en.wikipedia.org/wiki/Facebook–Cambridge_Analytica_data_scandal)中，正充分体现了这一风险。几年前一款由剑桥大学研究人员开发并提供给CA公司的叫做*thisisyourdigitallife*的小应用在Facebook流传开。按照当时的隐私条款，这款应用以公益为名，除了收集用户的调查问卷外，还获取了这些用户的个人信息，以及他们好友的社交信息。最终这些信息除了用来做小应用的分析结果展示给用户，还被二次利用到了美国大选的社会营销活动里。
+
+假设我们先把Facebook区块链化，这样我们获得了社区的自主权。然后利用加密工具把通讯记录和社交关系加密保存，只有我们自己能解密。当第三方需要申请授权数据的时候，无法绕过用户，保证了用户的知情权和修正权。但在最终将数据转移给第三方之前，我们还需要另外一层虚拟ID的保护以使数据脱敏。第三方看到的不是我的Facebook身份，而是一个虚拟甚至动态的临时ID。就像在医疗领域，其实不需要知道具体病人的个人信息，只记录病例相关信息就足够用于科研。在Facebook这里，同一个人给不同第三方提供数据时，使用的虚拟ID也不同，保证这个数据无法拿来二次关联。苹果手机的IDFV (identifierForVendor) 就是这样一种，同一用户在不同APP开发商那里会登记不同数值的ID。显然CA公司拿到了这个数据之后，无法再在美国大选的营销活动里定向用户了。但这也会导致一些交叉画像的精准广告失效，所以苹果手机预留了另外一个IDFA (advertisingIdentifier)的通用广告ID，这个设置是需要用户授权，可以被关闭的。
+
 ## 匿名的算力
-交易的匿名扩展只实现了匿名验证，但在虚拟机环境里，计算的复杂度更高，简称为[secure MPC](https://en.wikipedia.org/wiki/Secure_multi-party_computation)的问题(Multiparty Computation)。通用的解决方案包括了保密数据分享已经零知识证明等等。但即使看似简单的计算，也需要定制化的协议设计：
-* Two-party computation (2PC) 
-  * 证明a >b 又称Millionaires' problem
-    * The protocol of Hsiao-Ying Lin and Wen-Guey Tzeng
-    * The protocol of Ioannidis & Ananth
-* Multiparty computation (MPC)
-  * 证明数据拥有 [Verifiable secret sharing](https://en.wikipedia.org/wiki/Verifiable_secret_sharing) (VSS)
-    * Shamir's Secret Sharing
-    * Additive Secret Sharing
 
-通用协议在不同安全等级下还有不同的容错效果：
-* 通讯是不安全的
-* 中间人是恶意的
-  * 恶意的程度 t < n/2
-  * 非计划的恶意 Semi-Honest (Passive) Security
-  * 计划的恶意 Semi-Honest (Passive) Security
-  * 顾忌惩罚的恶意 Covert security
-* 直接参与方是恶意的
+在动态临时ID的框架内，我们已经可以避免数据的滥用和隐私保护。但是为了更大范围的将数据进行关联，创造新的商业，我们还需要在IDFA这类通用ID的使用上，进一步匿名化。数据可以流通和计算，但是需要限制在某种“安全区”的范围内。并在计算完毕之后，原始数据自动解体，只将计算结果脱敏后返回给用户。这种匿名计算流程，简称为安全多方计算[secure MPC](https://en.wikipedia.org/wiki/Secure_multi-party_computation)的问题，非常适合在区块链的智能合约 虚拟机环境里实施。但虚拟机通用计算的复杂度高，软件的解决方案包括了保密数据分享和零知识证明等等，所以即使看似简单的计算，也需要定制化设计。
 
-所以解决算力安全的关键在于底层设备与通信。从独立IC芯片的Trusted Platform Module (TPM) 到在基本芯片上的隔离分区Trusted Execution Environment ([TEE](https://en.wikipedia.org/wiki/Trusted_execution_environment)) ，技术在不断普及。目前低cache的应用场景主要是保存了硬件的私钥，用来做安全隔离的签名验证，比如指纹登录。之后隔离区的内存逐渐扩大，可以做更加复杂的封装式安全计算。目前主流芯片厂商都在参与：
+与算法层并列配合的，是底层设备的计算与通信安全。从独立IC芯片的Trusted Platform Module (TPM) 到在基本芯片上的隔离分区Trusted Execution Environment ([TEE](https://en.wikipedia.org/wiki/Trusted_execution_environment)) ，技术在不断普及。目前低cache的应用场景主要是保存硬件的私钥，用来做安全隔离的签名验证，比如指纹登录。之后隔离区的内存逐渐扩大，可以做更加复杂的封装式安全计算。目前主流芯片厂商都在参与：
 
 * AMD Secure Execution Environment
 * ARM [TrustZone](https://en.wikipedia.org/wiki/TrustZone)
 * Intel [SGX Software Guard Extensions](https://en.wikipedia.org/wiki/Software_Guard_Extensions)
-
-数据的匿名化和授权，IOTA的物联网方案里，有隐私数据通道，但是无法对单一数据进行保护，也无法阻止二次传播。这就需要向carro这样的用户数据钱包来提数据的所有方加密和管理授权。
 
 ## 信任的传递
 
