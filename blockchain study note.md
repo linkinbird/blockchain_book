@@ -437,11 +437,13 @@ Sharding算是大区自制，按照某种高效而随机的方式把节点分为
 * 在进行网络攻击的时候，攻防的胜负是概率事件，防御理论尚未完善。
 
 ## 空间扩展
-从协议层到平行的储存策略，也有一个发展历程
+从协议层到平行的储存策略，也有一个发展历程。
 ### 分叉树结构 Merkel Tree
 交易挂在Merkle Tree 只把Merkle Root加到block Header。
 历史交易验证的时候，从叶节点往上追溯，只要追到认证的Merkle Root即可  
 ![merkle root](https://raw.githubusercontent.com/linkinbird/blockchain_book/master/pic/Bitcoinpaymentverification_merkeltree.png)
+
+轻节点利用这种储存结构可以基于较小的文件来进行交易判断。Cardano进一步进化提出了Non-Interactive Proofs-Of-Work ([NIPoPoWs](https://nipopows.com))，NIPoPoW钱包只需下载差不多250个区块头的采样就可以运行，比常规SPV轻钱包加载所有Merkle root要少很多。原理就是利用了nonce产生额外头0的概率分布，原本只需要10个0开头的哈希，有均匀的概率获得11，12个0，这些额外的区块组成了超级区块。加上区块间的interlinking，通过velvet fork生效。
 
 ### 账户快照 Snapshot
 BTC和ETH目前都是保留全纪录，但是iota的snapshot会清理空账户，只保留当前的账户余额。主要也是因为iota的一次性签名不能重复使用，会导致大量的弃用账户
