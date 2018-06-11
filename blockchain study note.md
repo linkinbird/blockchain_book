@@ -599,6 +599,10 @@ NANO借助[Twitch](https://www.theusacommerce.com/nano-nano-this-cryptocurrency-
   - 尽管监管限制，但是JPMoragan在2018年2月已经改变立场，开始[推荐比特币ETF](http://www.businessinsider.de/jpmorgan-explains-why-a-bitcoin-etf-is-a-holy-grail-2018-2?r=US&IR=T)
 * 存款合约
 
+芝加哥的Chicago Board Options Exchange ([Cboe](http://www.cboe.com/))有着最早的比特币期货交易所，但随之而来的也是交易监管。2017年12月起，Coinbase、Bitstamp、itBit和Kraken等交易平台需要将与期货合约有关的交易数据分享给芝商所，但目前已经提供的都不满足要求，导致美国商品期货交易委员会(CFTC)介入并传唤这些交易所。
+
+国内火币网以及关联的金色财经，从年初的[杜均黑幕](http://www.pingwest.com/dujun-the-banker/)炒作到6月11日大跌下的砸盘，充分暴露了这一法外市场被恶意操纵的必然。
+
 ## 资产登记
 除了以代币形式记录交易外，还可以把物权的转移记录在区块链上：
 * 固定资产登记
