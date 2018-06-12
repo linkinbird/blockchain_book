@@ -370,6 +370,8 @@ IOTA 的MAM机制 Masked Authenticated Message
 
 当然门槛低带来的结果也就是收益低，但不排除之后IOTA这类免手续费“完全互助”协议的流行，会带来超低成本的普及型区块链，这时浏览器扩展就会发挥其人海战术的优势了。
 
+浏览器的潜力还很大，耶鲁归来的张旋创立[Cloudacc](http://www.cloudacc-inc.com/)，使用web P2P技术来加速流媒体分发。通过flash/html5即可运行，无需任何客户端或插件，是睡莲网络的理想载体。他的另一个新项目[闪电盒子](http://www.jobui.com/company/14000595/)把战场转移到移动端，通过应用层虚拟化MAV（Mobile App Application-level Virtualization）无需下载，在远端直接运行原生的Android应用程序。通过借鉴趣头条的激励模式，融合积分墙打入应用分发和流量入口的领域。
+
 ## 网络共识
 consensus是经常提到的词，因为除了证明你的工作能力以外，还需要团队协作以达成一致的决策和目标。这里还要面对恶意节点的攻击，所以抽象化为BFT consensus (Byzantine fault tolerance)。在去中心化的世界里，解决的方案也逃不出人类的历史，分为民主派和集权派：
 
