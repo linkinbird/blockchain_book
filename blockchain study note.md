@@ -200,7 +200,11 @@ PubKHash经过Hase58Check 得到公钥地址，去除了容易混淆的0、o、l
 
 ## 匿名强化
 ### Layer1 匿名协议
-单笔交易本身只记录了address，已经是高度匿名的了，但是通过地址的追踪，还是可以观测到每个币的流向。这个时候在协议层可以通过[zero-knowledge proof](https://en.wikipedia.org/wiki/Zero-knowledge_proof)的进化版 [Non-interactive zero-knowledge proof](https://en.wikipedia.org/wiki/Non-interactive_zero-knowledge_proof) 将交易验证过程匿名化，区块链里的应用叫做[zkSNARKs](https://blog.ethereum.org/2016/12/05/zksnarks-in-a-nutshell/)。基础原理是多项式同态（[中文原理](https://www.jianshu.com/p/b6a14c472cc1)）：
+单笔交易本身只记录了address，已经是高度匿名的了，但是通过地址的追踪，还是可以观测到每个币的流向。这个时候有两种隐私需要保护：第一是谁付的钱，第二是付了多少钱
+
+#### 支付金额匿名
+在协议层可以通过[zero-knowledge proof](https://en.wikipedia.org/wiki/Zero-knowledge_proof)的进化版 [Non-interactive zero-knowledge proof](https://en.wikipedia.org/wiki/Non-interactive_zero-knowledge_proof) 将交易验证过程匿名化，区块链里的应用叫做[zkSNARKs](https://blog.ethereum.org/2016/12/05/zksnarks-in-a-nutshell/)。基础原理是多项式同态（[中文原理](https://www.jianshu.com/p/b6a14c472cc1)）：
+
 * 加法同态，乘法同态，全同态
   - 对于E(x)函数，难以求得反函数，及无法从E(x)反推x
   - 单调函数，及x≠y,，则E(x)≠E(y)
@@ -235,6 +239,15 @@ $$
 * JPMorgan的[Quorum](https://www.jpmorgan.com/country/US/EN/Quorum)链是基于ETH的金融应用改造，也加入了[ZSL](https://github.com/jpmorganchase/quorum/wiki/ZSL) (zero-knowledge security layer) 和对特定监管节点透明的子版本
   * 子版本作者Simon Liu也是ZCash的贡献者，git上叫[bitcartel](https://github.com/bitcartel)，同时也是MultiChain背后公司[Coin Sciences](https://www.multichain.com/about-coin-sciences-ltd/)的区块链顾问，个人[博客](https://makebitcoingreatagain.wordpress.com/about/)非常低调
 * ING也有相同道路的项目[zkrangeproof](https://github.com/ing-bank/zkrangeproof)，但看起来有些凉了
+
+#### 支付关系匿名
+有管理员的版本是[群签名](https://en.wikipedia.org/wiki/Group_signature)，由群管理者生成群公钥（Group Public Key）、私钥（Group Private Key）。加入该群的成员获得群管理者颁发的群证书（Group Certificate），就可以生成群签名。利用群公钥可以做验证，但是无法定位到具体的签名者。在争议爆发的时候，就需要群私钥解开签名提取真正的签名者。
+
+加强版的[环签名](https://en.wikipedia.org/wiki/Ring_signature)则没有管理者，签名者利用自己的私钥和集合中其他成员的公钥就能独立完成签名，不需要其他人的帮助，集合中的其他成员可能都不知道自己被包含在其中：
+* 签名者用自己的私钥和任意n个环成员的公钥为消息m生成签名a
+* 验证者根据环签名和消息m，验证签名是否是环中成员所签
+
+最初设计者是用来保护wikileaks这类泄密者的，比如多名白宫官员通过环签名，公布棱镜门的秘密后，政府无法罪责到具体个人。现在[Monero](https://getmonero.org)使用该机制来保护数字货币的交易者隐私，加上key image对币的染色，矿工可以验证该数字币的唯一性（类似序列号，检查是否被注册过）并防止double spending。再加上RingCT对金额的加密，已经齐全了。
 
 ### Layer2 匿名通道
 另一种简单的layer2的方法是一种mixing service中间商服务：把多个付款人，和多个收款人打乱，付款先付到资金池，然后随机轮转之后打乱支付给给收款方。
