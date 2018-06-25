@@ -476,6 +476,13 @@ BTC和ETH目前都是保留全纪录，但是iota的snapshot会清理空账户�
   - 区块链保证了数据所有权，HDFS保证了数据安全和高效存储
   - EVM计划用来做数据代码执行的沙箱
 
+新的存储协议也带来了新的挖矿机会，但是类似filcoin(IPFS)这类的矿机，对硬盘和带宽要求的特别高的，核心的要素是单TB成本低，且IO和带宽稳定。矿工可以选择[自建](https://www.zhihu.com/question/264885361)，基于NAS类的硬盘管理做二次开发。厂商在主链上线前卖的矿机基本都是基于预测的，风险不小：
+* 做存储起家的StorSwift推[CX-MINNER](http://www.storswift.com/product/swiftminer.html)方案
+* 玛雅矿机[MayaMiner](https://www.maya.top) H1和H2
+* [星际大陆](http://www.ipfsmain.cn)拿自己和玛雅对标，号称性价比更高一些
+* 三角矿机[Acute Angle PC](http://www.acuteangle.com/home.html)有自己的主链网络Acute Angle Cloud(AAC)，他的逼格设备，更像是睡莲网络的节点
+* 朋友圈 杨明做的星空矿机，目前还没有上市
+
 ## 虚拟机的算力扩展
 现在几乎所有的智能合约平台都无法实现EVM虚拟机的并行化，开放的节点政策和恶意节点的存在，使这个问题异常复杂。目前有一些宣称往这个方向的项目，但是普遍都没有成型：
 * ELA ([Elastos](https://www.elastos.org)) 联合NEO和Bitmain的[G3](https://neonewstoday.com/events/g3-summit-event-report/)联盟
