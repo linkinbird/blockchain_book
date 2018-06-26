@@ -344,7 +344,7 @@ IOTA 的MAM机制 Masked Authenticated Message
   * 受限模式下，nextRoot也可以找到address，需要sideKey配合root一起解码
 
 # 网络与协作
-因为交易本身是完全匿名的，所以网络也是设计成unstructured overlay 通过addr消息部分的广播其友邻网络，通过DNS bootstrapping 来寻找友邻。
+因为交易本身是完全匿名的，所以网络也是设计成unstructured overlay 通过addr消息部分的广播其友邻网络，通过DNS bootstrapping 来寻找友邻。当然也有人把区块链1.0看成是寻找广播的最优路径，但是在不信任状况下的广播，必然涉及容错和共识，所以关于广播结构放在网络共识章节介绍。
 
 2014年某次实验37天发现了872,648 个IP地址，但是高度不稳定，在线的一般几千个 [比特币实时网络节点](https://bitnodes.earn.com/nodes/live-map/)
 
@@ -417,6 +417,8 @@ POS 前面提到过的Proof of Stake 机制是按照财富进行了权利分配�
         * 攻击方甚至可以两面派，以防御的口号实施攻击的意图，唱个双簧
         * 实际上贿选攻击者是在以投票者所持EOS为代价进行杠杆攻击，而且对防御者有直接伤害，所以系统抵抗力远低于标准POS，和POW
     * 直到ICO结束也就是主网络supernodes确定以后，token才真正意义上流通 
+
+DPOS是一种综合机制，其实现的方法也有很多数据结构，阿里移动总架构师创业的快付FPay项目，使用DMT (Dynamic Multi Tree:动态多叉树) 来通过树状投票执行DPOS的过程。最终的root节点相当于supernode，但是信息广播有层级。看似解决了不可能三角，但是当面临攻击的时候，仍然需要多轮的共识。层级结构本身就蕴含了信息，或者信用，而这种结构的优点是在稳定后可以获得很高的效率，但在建设期或者被攻击重构的时候，需要很长的时间。相比而言DAG的重构会更加迅速，但是结构不够稳定，所以终态的确定会延迟。这里不可能三角仍然存在。
 
 ### 议会制共识-分权
 [NEO](https://neo.org)更加彻底的财富与权力分离：区块链里面，NEO代表投票权，GAS代表流通币。采用dBFT（一种改进的拜占庭容错算法）[迭代共识](http://docs.neo.org/zh-cn/node/consensus/consensus.html)方法更快达成共识。诚实节点越多，共识越快，而给EVM更多算力和激励。节点分为三总：
