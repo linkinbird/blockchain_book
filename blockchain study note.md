@@ -234,6 +234,7 @@ $$
 
 区块链里的应用很多：
 * 2016年10月发布的[ZCash](https://z.cash)也是使用类似技术，优化了交易速度，弥补了部分这个技术的短板
+  * Sapling的升级版本用了特指的elliptic curve椭圆函数：[Jubjub](https://z.cash/technology/jubjub.html)，据[测试](https://blog.z.cash/cultivating-sapling-faster-zksnarks/)节省了80%的运行时间
 * 2017年9月ETH 的Byzantium版本[支持](https://www.reddit.com/r/ethereum/comments/712idt/ethereum_testnet_just_verified_a_zcash_transaction/)了zk-snark proof
 * 2018年2月底从比特币[分叉](https://www.reddit.com/r/BitcoinPrivate/comments/7todw0/historical_bitcoin_private_hard_fork_snapshot/)出了[Bitcoin Private](https://btcprivate.org/) (BTCP) 就是merge了ZClassicCoin (ZCL)和BTC主链的一个分叉，采用的也是zkSNARKs
 * JPMorgan的[Quorum](https://www.jpmorgan.com/country/US/EN/Quorum)链是基于ETH的金融应用改造，也加入了[ZSL](https://github.com/jpmorganchase/quorum/wiki/ZSL) (zero-knowledge security layer) 和对特定监管节点透明的子版本
