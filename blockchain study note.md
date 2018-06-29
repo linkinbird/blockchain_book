@@ -538,6 +538,30 @@ ETH从2016年开始也计划着类似的分叉（升级）EIPs (Ethereum Improve
   * 当计算特别消耗资源的时候，邀请solver离线计算
   * 利用verification game邀请全链验证结果，不是全部的结果，而是有争议的部分
 
+### 智能算力扩展
+在《[重构区块链](http://bcrb.io)》一书中提及的应用反向选择算力，市场上已经有项目在实践：
+* [Golem](https://golem.network) 闲置算力的共享市场，基于以太的激励系统，今年4月上线。后续陆续支持GPU
+  * 还有[Joanna Rutkowska](https://blog.invisiblethings.org/about/)配合集成安全计算服务[SGX](https://blog.golemproject.net/introducing-graphene-ng-running-arbitrary-payloads-in-sgx-enclaves-a03f219447a5)。她是安全操作系统Qubes OS的创立者，目前还有[Graphene LibOS](https://github.com/oscarlab/graphene/wiki)支持这一实现，他们Fork的新版本会在2018年暑假发布。
+  * 对比之下 Intel以前的Trusted Execution Technology (TXT)是从业务侧反过来检查计算核心做[自我保护](https://blog.invisiblethings.org/2011/12/13/trusted-execution-in-untrusted-cloud.html)的，但是无法实现对环境的完全监控，可以被镜像攻击。
+* [SingularityNET](https://singularitynet.io)  是专做人工智能算力的
+
+  * 用区块链实现AI智能民主化，实现AI agent之间的自主合作，还有数据和模型共享
+  * 但他们似乎没有很好的区分训练和应用，如果只是应用的话，并不需要这么复杂的体系
+  * 最终还是会走向综合算力
+* 深脑链[DeepbrainChain](https://www.deepbrainchain.org) 也是国内的人工智能算力平台
+
+  * 由之前的深度学习云平台演化而来，基于以太发工资
+  * 2018年6月宣布和SingularityNET建立了[合作](http://www.cointime.com/blockchain/10744.html)，使奇点的AI agent可以选择调用深脑链的算力。
+* 迅雷的玩客云OneCloud号称类似方向，但实际只做了存储
+  * 基于共享硬件，500块卖设备，其实是类似共享NAS的概念
+* [Cortex AI](http://www.cortexlabs.ai)是清华系做的项目，自己定义了一种链
+  * 上面运行的叫Cortex Virtual Machine，支持深度模型的应用
+  * 代码合约叫Smart AI Contract，有独立的类似Gas的结算机制
+* Ray [RLlib](https://ray.readthedocs.io/en/latest/rllib.html): Scalable Reinforcement Learning
+  * 非区块链的分布式AI架构，类似的就罗列了
+
+还有不少像[difinity](https://dfinity.org)和Cardano这样的layer1 扩展项目，以及Danku这样layer2的扩展项目，静待发展吧
+
 # 弱点与攻防
 ## 操纵交易
 * Double spending: 占有超过1/2的算力，就可以同时发布两个冲突的交易，先让欺骗性的那个领先，然后再让对自己有利的隐藏块赶超取而代之
