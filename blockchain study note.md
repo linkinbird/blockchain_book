@@ -421,7 +421,7 @@ POS 前面提到过的Proof of Stake 机制是按照财富进行了权利分配�
 
 DPOS是一种综合机制，其实现的方法也有很多数据结构，阿里移动总架构师创业的快付FPay项目，使用DMT (Dynamic Multi Tree:动态多叉树) 来通过树状投票执行DPOS的过程。最终的root节点相当于supernode，但是信息广播有层级。看似解决了不可能三角，但是当面临攻击的时候，仍然需要多轮的共识。层级结构本身就蕴含了信息，或者信用，而这种结构的优点是在稳定后可以获得很高的效率，但在建设期或者被攻击重构的时候，需要很长的时间。相比而言DAG的重构会更加迅速，但是结构不够稳定，所以终态的确定会延迟。这里不可能三角仍然存在。
 
-### 议会制共识-分权
+### dBFT议会制共识-分权
 [NEO](https://neo.org)更加彻底的财富与权力分离：区块链里面，NEO代表投票权，GAS代表流通币。采用dBFT（一种改进的拜占庭容错算法）[迭代共识](http://docs.neo.org/zh-cn/node/consensus/consensus.html)方法更快达成共识。诚实节点越多，共识越快，而给EVM更多算力和激励。节点分为三总：
 
 * 议长 负责向系统发送一个新的区块的提案
@@ -433,6 +433,11 @@ DPOS是一种综合机制，其实现的方法也有很多数据结构，阿里�
   - 投票节点间的delegation process也约束了节点数量，在2018年3月3日的宕机也引来了[对dBFT的不少质疑](https://ethereumworldnews.com/neos-consensus-failure-spreading-fud/)
 * 中期GAS作为交易货币随着交易量上升持续升值，共识网络激励是直接支付GAS的。NEO因为供需关系的原因，不一定会等比升值，反而可能形成trade NEO-> for GAS逆流
 * 长期NEO每22年生出一个GAS，最终NEO和GAS都是1亿枚。交易支付GAS，运行计算支付GAS然后再按NEO重分配，是可以平衡的
+
+### VBFT匿名委任共识
+源自于图灵奖得主Silvio Micali在2017年发表的一篇论文 “[Algorand: Scaling Byzantine Agreements for Cryptocurrencies](https://eprint.iacr.org/2017/454)”。提出了基于可验证随机数Verifiable random function [VRFs](https://en.wikipedia.org/wiki/Verifiable_random_function)的代理人选举方式，当然VRF的概念他们早在1999年就提出了。区块链委任共识里，按照VRF选出的区块见证者，是匿名确认自己当选的，而且单次有效，所以无法形成多人的串通或者保留权力。[Algorand](https://www.algorand.com)的本质，就是通过密码学的方法，来做一个随机数发生器来随机决定下一个区块的生成者是谁。如果这个随机数发生器是完全随机的，不需要广播，不需要见证，仅凭验证函数就能达成共识。那也就是说，任何人（包括上个区块的发布者）都无法预测下一个的发布者是谁，那么其实这就是一个可用的共识算法了。这个现在也是一个币来着。
+
+模仿这个设计，2018年4月Ontology就发布了他们的[VBFT共识](https://medium.com/ontologynetwork/ontology-launches-vbft-a-next-generation-consensus-mechanism-becoming-one-of-the-first-vrf-based-91f782308db4)项目，是POS和VRF的合体。在VRF确保了随机性、匿名性、和瞬时性的基础上，可以大大加快共识过程就保证安全性不受损害。Cardano和Dfinity也都使用这个思想，可以说更加接近机器控制的共识，每个节点参与的操控力被大大限制了。
 
 ### 区域自治共识
 Sharding算是大区自制，按照某种高效而随机的方式把节点分为不同的自治区，每个区处理分派给自己的任务  
