@@ -241,6 +241,8 @@ $$
   * 子版本作者Simon Liu也是ZCash的贡献者，git上叫[bitcartel](https://github.com/bitcartel)，同时也是MultiChain背后公司[Coin Sciences](https://www.multichain.com/about-coin-sciences-ltd/)的区块链顾问，个人[博客](https://makebitcoingreatagain.wordpress.com/about/)非常低调
 * ING也有相同道路的项目[zkrangeproof](https://github.com/ing-bank/zkrangeproof)，但看起来有些凉了
 
+考虑到“可信启动”，“椭圆曲线”这些重度假设，最近两年有了新版本的尝试ZK-STARKs。详情可以看V神博客的翻译版本（[Part1](https://ethfans.org/posts/starks_part_1)，[Part2](https://ethfans.org/posts/starks_part_2))。当然，这也是有代价的：一个证明的大小将从 288 字节（b）上升到几百 千字节（kb）。
+
 #### 支付关系匿名
 有管理员的版本是[群签名](https://en.wikipedia.org/wiki/Group_signature)，由群管理者生成群公钥（Group Public Key）、私钥（Group Private Key）。加入该群的成员获得群管理者颁发的群证书（Group Certificate），就可以生成群签名。利用群公钥可以做验证，但是无法定位到具体的签名者。在争议爆发的时候，就需要群私钥解开签名提取真正的签名者。
 
