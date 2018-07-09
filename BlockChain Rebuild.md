@@ -394,6 +394,7 @@ IOTA的第二个改造是一个可加密的消息广播通道。他的MAM (Maske
 眼花缭乱的操作背后，是[Ben Goertzel](https://en.wikipedia.org/wiki/Ben_Goertzel)的手段高明。除了作为SingularityNET的CEO，他也是人行机器人[Sophia][1]背后公司Hanson Robotics的首席科学家。被AI领袖[Yann LeCun](http://yann.lecun.com)大肆[批评](https://twitter.com/ylecun/status/949029930976862209)的Sophia，和AlphaGo相比甚至和自动翻译软件比起来，都算不上高科技。但奈何其抓住了观众的G点，在市场上收获颇丰。所以SingularityNET项目很可能不是作为完整的算力平台在设计，而只是AI模型间的协作平台，更简单说其实是智能接口串联应用平台。而这些模型的核心，训练的数据和算法，并不一定要运行在该平台上，可以像以太的Oraclize一样做外部接口封装。最后AI应用，AI agent串联平台，AI基础模型和数据形成一个三层弱耦合关系，倒也对应了Ben的主张。可见Ben真是一个整合高手，带着上下游一起圈钱。
 
 真正意义上的区块链3.0算力平台更像是[Golem](https://golem.network) 这种闲置算力的共享市场。2018年4月上线，基于以太交易系统提供激励生态。初期运行CPU算力，后续陆续支持GPU。但正如之前推演的，这种算力的最大难点在安全。所以项目邀请了[Joanna Rutkowska](https://blog.invisiblethings.org/about/)配合集成安全计算服务[SGX](https://blog.golemproject.net/introducing-graphene-ng-running-arbitrary-payloads-in-sgx-enclaves-a03f219447a5)，从计算核心向外建立起安全环境保护应用。Joanna是安全操作系统Qubes OS的创立者，此外还有[Graphene LibOS](https://github.com/oscarlab/graphene/wiki)支持这一实现，他们Fork的新版本在2018年暑假发布。对比之下 Intel以前的Trusted Execution Technology (TXT)是从业务侧反过来检查计算核心做[自我保护](https://blog.invisiblethings.org/2011/12/13/trusted-execution-in-untrusted-cloud.html)的，但是无法实现对环境的完全监控，可能被镜像攻击。所以完整的智能算力要从业务侧和核心侧进行双向防护，以规避平台方和用户方的多重威胁。国内像360这样的安全公司似乎更加擅长这个领域。期待操作系统，网络安全，区块链技术的融合在这一领域取得突破性进展。
+
 [1]:https://en.wikipedia.org/wiki/Sophia_(robot)
 
 
@@ -601,6 +602,8 @@ C对于A、B两人账户的加法盲证明：
 * 单位信托，具有投资价值
   * 小米借助俄罗斯区块链公司Blackmoon发行与股票表现锚定的[代币](https://www.sohu.com/a/239062372_114774)，间接在区块链圈进行融资。
   * 由此可见，币圈吸金的背后也导致传统交易所和融资渠道的资金紧缺
+
+传统的一级、二级证券市场是相互依存的。二级市场的上市公司大股东，将个人股份抵押进行融资，结合传统LP基金，交由GP基金打理，回流到一级市场进行投资。一级市场的成功项目，通过IPO进入二级市场加速融资循环。但现在股市低迷，流动性被币圈吸收，反过来在币圈成功收割的大股东回流到一级市场完成逆袭。如此循环下去，币圈ICO将对传统证券市场造成沉重的打击。
 
 ## 新秩序新角色
 我们已经在现有社会体系里取得了不小的进展，通区块链Oracle链接实体数据，通过数字信用链接个人，通过区块链账本和传统银行系统互动，以及基于发币规则的社区激励。最终统一的数字身份可谓大势所趋，国内的微信和支付宝均与部分地方政府合作推出数字身份证，在公民身份信息库中存入生物信息非常普遍；国外有英国为中央政府推出在线身份认证服务[GOV.UK.Verify](https://www.gov.uk/government/publications/introducing-govuk-verify/introducing-govuk-verify)、爱沙尼亚利用[e-Residents](https://e-resident.gov.ee)项目为居民建立合法数字身份、新西兰推出[RealMe](https://www.realme.govt.nz)、印度则有Aadhaar-Unique Identity Card ([Uidai](https://www.uidai.gov.in))、加拿大区块链数字身份认证系统也将于2018年上线。
