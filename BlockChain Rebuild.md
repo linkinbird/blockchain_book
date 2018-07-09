@@ -387,15 +387,15 @@ IOTA的第二个改造是一个可加密的消息广播通道。他的MAM (Maske
 
 两轮释放后，智能算力已经可以用来训练人工智能的深度学习模型。传统意义上的机器学习训练需要集中大量数据集和参数，但通过“参数服务”的并行化和训练样本的分块化，并行训练的模型精度已经逼近和代替集中式训练。在三代区块链上，就可以将训练样本分开储存在IPFS，并将模型参数分开储存在不同节点上组成参数服务器来并行更新。在早年的“寻找外星人”项目里，其实已经在用类似的思维。给智能算力开放更多的存储和更多的外部资源调用就是第三次释放。这也是最危险的释放，因为恶意的智能合约就等于是计算机病毒。而人工智能的附能，使其可以成为自我进化的病毒。历史已经证明，精心设计的[Stuxnet](https://en.wikipedia.org/wiki/Stuxnet)病毒可以传播千里，直到进入伊朗核电离心机才苏醒，用加速设备老化的手段实施隐形攻击。如何管控这些自组织的算力，就是完成第三代区块链最后的门槛。
 
-### 智能算力的案例
+### 区块链3.0 智能算力平台
 
-- [Golem](https://golem.network) 闲置算力的共享市场，基于以太的激励系统，今年4月上线。后续陆续支持GPU
-  - 还有[Joanna Rutkowska](https://blog.invisiblethings.org/about/)配合集成安全计算服务[SGX](https://blog.golemproject.net/introducing-graphene-ng-running-arbitrary-payloads-in-sgx-enclaves-a03f219447a5)。她是安全操作系统Qubes OS的创立者，目前还有[Graphene LibOS](https://github.com/oscarlab/graphene/wiki)支持这一实现，他们Fork的新版本会在2018年暑假发布。
-  - 对比之下 Intel以前的Trusted Execution Technology (TXT)是从业务侧反过来检查计算核心做[自我保护](https://blog.invisiblethings.org/2011/12/13/trusted-execution-in-untrusted-cloud.html)的，但是无法实现对环境的完全监控，可以被镜像攻击。
-- [SingularityNET](https://singularitynet.io)  是专做人工智能算力的
-  - 用区块链实现AI智能民主化，实现AI agent之间的自主合作，还有数据和模型共享
-  - 但他们似乎没有很好的区分训练和应用，如果只是应用的话，并不需要这么复杂的体系
-  - 最终还是会走向综合算力
+在落实第三代区块链的时候，传统的交易需求并不强烈，反而是AI算力走在前面。[SingularityNET](https://singularitynet.io)  就是专做人工智能算力的平台项目，用区块链实现AI智能民主化，建立AI agent之间的自主合作，还有数据和模型共享。听起来是一个很诱人，很伟大的项目，但在区块链世界里是一个很复杂的问题。抛开实现的细节，单从神经网络需求方看的话，这种网络算力似乎没能很好的区分模型训练和应用。做过大数据集群就知道，在大规模并行计算，尤其是神经网络训练时，并行化算力之间也保持一定的相互依赖，一些节点的失效或者延迟会大大影响整个系统的速度。所以主流AI厂商都是用尽可能高性能的单机去组合一个紧凑的模型训练集群。这和“寻找外星人”项目里，大家分头找，说不定谁先找到的情况很不一样。反过来如果不是做训练，而是做模型应用（推断）的话，则会简单很多。但伴随着AI的持续热潮，同类项目一茬接着一茬，还在积极推进中。2018年5月Singularity宣布和[Ubex](https://www.ubex.com/)智能广告平台[合作](https://medium.com/ubex/ubex-and-singularity-projects-sign-memorandum-of-understanding-df3d1cfe3d0d)提供其智能算力。6月又宣布和深脑链[DeepbrainChain](https://www.deepbrainchain.org)建立[合作](http://www.cointime.com/blockchain/10744.html)，使Singularity的AI agent可以选择调用深脑链的算力。
+
+眼花缭乱的操作背后，是[Ben Goertzel](https://en.wikipedia.org/wiki/Ben_Goertzel)的手段高明。除了作为SingularityNET的CEO，他也是人行机器人[Sophia][1]背后公司Hanson Robotics的首席科学家。被AI领袖[Yann LeCun](http://yann.lecun.com)大肆[批评](https://twitter.com/ylecun/status/949029930976862209)的Sophia，和AlphaGo相比甚至和自动翻译软件比起来，都算不上高科技。但奈何其抓住了观众的G点，在市场上收获颇丰。所以SingularityNET项目很可能不是作为完整的算力平台在设计，而只是AI模型间的协作平台，更简单说其实是智能接口串联应用平台。而这些模型的核心，训练的数据和算法，并不一定要运行在该平台上，可以像以太的Oraclize一样做外部接口封装。最后AI应用，AI agent串联平台，AI基础模型和数据形成一个三层弱耦合关系，倒也对应了Ben的主张。可见Ben真是一个整合高手，带着上下游一起圈钱。
+
+真正意义上的区块链3.0算力平台更像是[Golem](https://golem.network) 这种闲置算力的共享市场。2018年4月上线，基于以太交易系统提供激励生态。初期运行CPU算力，后续陆续支持GPU。但正如之前推演的，这种算力的最大难点在安全。所以项目邀请了[Joanna Rutkowska](https://blog.invisiblethings.org/about/)配合集成安全计算服务[SGX](https://blog.golemproject.net/introducing-graphene-ng-running-arbitrary-payloads-in-sgx-enclaves-a03f219447a5)，从计算核心向外建立起安全环境保护应用。Joanna是安全操作系统Qubes OS的创立者，此外还有[Graphene LibOS](https://github.com/oscarlab/graphene/wiki)支持这一实现，他们Fork的新版本在2018年暑假发布。对比之下 Intel以前的Trusted Execution Technology (TXT)是从业务侧反过来检查计算核心做[自我保护](https://blog.invisiblethings.org/2011/12/13/trusted-execution-in-untrusted-cloud.html)的，但是无法实现对环境的完全监控，可能被镜像攻击。所以完整的智能算力要从业务侧和核心侧进行双向防护，以规避平台方和用户方的多重威胁。国内像360这样的安全公司似乎更加擅长这个领域。期待操作系统，网络安全，区块链技术的融合在这一领域取得突破性进展。
+[1]:https://en.wikipedia.org/wiki/Sophia_(robot)
+
 
 # 从移动比特到移动原子
 把所有区块链的力量从线上扩展到线下是最重要，也是最难的一步。如果说区块链账本记录了无形的信息比特，那么现实世界我们要调动的就是由原子组成的物质。我们已经举过区块链盒子为例来展示比特和原子的差异，问题停留在区块链上链前的物权验证上。为了将这个验证去中心化，以苹果为例我重新设计下述流程：
