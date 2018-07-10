@@ -145,7 +145,7 @@ c=437361267792869725786125260237139015281653755816161361862143799337842346777203
 ## 去中心化的进击
 我们自己发明的“**透明保险箱签名记账余额开放协议**”，已经完全可以应用在现有的交易系统里，即使这个系统是中心化的也没问题。因为我们在开头已经说了，区块链只是用于修复社会性缺陷。以银行会计为例，据统计有[27.5%](https://www.accountingweb.com/aa/auditing/human-errors-the-top-corporate-tax-and-accounting-mistakes)的会计从业者都曾在系统中录入错误的数据。只要在交易和授权这一层用上区块链的加密协议，再加上一个三方见证，就可以修复这种人为因素导致的社会交易缺陷。另外从经济学角度讲，银行和国家的政策也是博弈平衡的结果，在大经济环境的约束下，银行对个人有意作恶的投入产出太低，也就失去了作恶动机。所以最早的区块链金融应用比如[Ripple](https://ripple.com)，被很多人批评过于中心化，是一种误解。但不可否认区块链确实蕴含着更大的野心，这个野心不是改造银行交易业务那么简单。在全球化的视角里，中心化最大的风险是超越国家的系统性风险，也就是国家遭受重大打击，金融体系崩溃，记账系统瘫痪，交易无法进行。面对这种情况，简单的分布式，多机房可以解决硬件问题，但是仍然解决不好人的问题。所以区块链索性彻底放开账户管理的权限，所有人都可以参与见证。这些见证者是超越国界的，但却被赋予了非常土的名字：矿工。银行业的区块链项目，没有甘于做矿工的，都想打造自己的平台。但银行不可能推出真正去中心化的产品，因为他们是旧体系的受益者，这是经济规律决定的。所以去中心化的进击主力，将会是另外一群人。
 
-### 比特岛的矿工事件
+### 比特岛矿工事件
 
 去中心化可以理解为对于人类社会缺陷的更深层修复，我们还是以比特岛为例来推演和放大这种缺陷。今天“比特岛”上发生了大事件，有一种恶意病毒肆意的传播。感染的人会记忆模糊，分不清敌友。他们疯疯癫癫，时而胡说八道，时而思维清晰，导致整个岛上没有一个人是可信的，包括阿稳和阿北。这时能够依赖的只有科学，所以钥匙和锁，以及数字签名都还正常工作。感染了病毒的阿北，开始胡乱记账：
 > 2018年5月1日 17:30:00 阿稳支付给阿北1元，阿稳账户余额-3，阿北账户余额为3 ;  
@@ -465,38 +465,48 @@ IOTA的第二个改造是一个可加密的消息广播通道。他的MAM (Maske
 ## 蒙上眼睛的证明
 回想“可验证的科学”章节里，我们通过椭圆函数的单向放大性，设计了椭圆函数签名。在不泄露私钥的情况下，也能够向对方证明该签名是我的私钥完成的。这就是我们需要的“信任的安全传递”。椭圆函数签名太过复杂，我们用相对简单的哈希变换，来实现同样的效果。哈希变换是一种将任意字符串随机转化为另外一种特定长度字符串的编码方式。编码是随机的，但也是固定的。从源码出发，永远都会得到相同的编码，而且不同的源码对应的编码也不冲突。但是从编码出发，却无法反推到源码。就好像一扇单向门，永远只能走一个方向。
 
+### One-time Signature 单次签名
+
 现在小北基于这种编码，制作了一个迷宫。迷宫周边有26个向外开放的门口，用字母A~Z表示。迷宫里面有无数连接这些门的通道相互交错。通道上有很多单向门，如果不小心走错了，可能永远都走不出来。小北住在这个迷宫的某一个入口，但是没有人知道。一天小北放了一个信箱在Z出口，她说欢迎大家给她寄信。为了防止有人偷看，小北把Z的门锁上了，只留下投信的小缝，她说她会从住的地方走过来拿信的。小楠听了不相信，你怎么证明这个信箱是你的呢？于是小北把小楠带到了F入口，她说你进去右转右转再左转，就可以看到信箱了。小楠一试果然如此，但是这样F入口就暴露了，难道小北住在这里？小北微微一笑，从F入口到Z是单向门，但是从F入口到不了她家，这只是她取信时候途径的一个地方而已。
 
 其实小北住在S，这个**S**就是小北的私钥，**F**就是签名可以用于验证，**Z**是她的区块链地址。编码的生成过程是从S经过几十次哈希生成F，再从F经过几十次哈希生成Z。但显然这个F一旦用过一次以后，就不能再用了。所以这种基于哈希的签名方法，叫做一次性签名one-time signature 简称OTS。这种算法的一大优点是计算速度快，而且抗量子破解 [Quantum Resistant](https://en.wikipedia.org/wiki/Post-quantum_cryptography)，也就是发明了量子计算机也无法破解出私钥（椭圆函数签名可以被量子破解）。但缺点也很明显了，每一次签名验证，都会暴露哈希链条里的一段，从F到Z的所有点都会一起暴露。当然链条足够长，几十个哈希点可以再往上选出一个来做签名。OTS签名也经过了很长的发展历程，现在IOTA项目里使用的就是相对成熟的[winternitz OTS](https://cryptoservices.github.io/quantum/2015/12/04/one-time-signatures.html) 版本：
 
 ```
 用户生成SEED
-基于SEED和编号ID一起生成10个区块链私钥
-私钥经过26次哈希得到公钥
+基于SEED和编号ID一起生成10个区块链私钥:PriKey
+私钥经过26次哈希得到公钥: PubKey = Hash^26(PriKey)
     公钥发布到网络用于收款
 取款时进行签名
-    将交易内容的文本，映射到0~26之间的数值N
-    根据该数值对私钥进行N次哈希(N不能为0，否则泄露私钥)得到签名
+    将交易内容的文本，映射到0~26之间的数值: N = f(TxContent)
+    根据该数值对私钥进行N次哈希(N不能为0，否则泄露私钥) 得到签名Sign = Hash^N(PriKey)
 矿工对签名验证以确认交易
-    同样基于交易内容，映射到26~0之间的数值M，M+N=26
-    矿工对签名进行M次哈希，数值结果和公钥（经过26次哈希）一致则验证成功
+    基于相同的交易内容，映射到26~0之间的数值: M = 26-f(TxContent)
+    	可见：M+N=26
+    矿工对签名进行M次哈希，数值结果和公钥（一共经过26次哈希）一致则验证成功
+    	Hash^M(Sign) = Hash^M( Hash^N(PriKey) )
+    				 = Hash^(M+N)(PriKey)
+    				 = PubKey
     如果交易内容被篡改，M就会出错，或者签名有问题都无法算出公钥，导致验证失败
 ```
 
 这种方便快捷的签名方法，要反复使用也可以。比如IOTA官方节点[milestone的签名](https://www.reddit.com/r/Iota/comments/7gsd3t/why_are_coordinator_signatures_still_secure/dqo9b9r/)就使用了[Merkle Trees](https://cryptoservices.github.io/quantum/2015/12/07/many-times-signatures.html)的方案，在保证官方节点地址不变的情况下，还可以反复支付和签名：
 
 ```
-milestone节点生成大量私钥，并关联在一棵Merkle Tree上
-milestone公布Merkle Root，并且始终不变
-交易时随机选择Merkle Trees某个叶子节点对应的私钥来生成签名和公钥
-    公钥不直接提供，只提供对应的authentication path
+milestone节点生成大量私钥，并关联在一棵 Merkle Tree上
+milestone公布 Merkle Root，并且始终不变
+交易时随机选择 Merkle Trees某个叶子节点对应的私钥来生成签名和公钥
+    公钥不直接提供，只提供对应的 authentication path
 矿工对签名进行验证
     先计算M，做哈希变换，得到待验证的公钥
     结果按照验证路径，逐一和路径上的节点编码组合哈希，并一路向上传递
-    最后获得Merkle Root则验证成功
+    最后获得 Merkle Root则验证成功
 ```
 
-这类编码方式还可以用在**数据资产的验证**上，[CarChain](http://carro.io)项目里，我们就是把车辆行驶轨迹的隐私数据，经过多层哈希压缩后，登记在区块链智能合约里。这样在数据交易和授权使用时，就可以通过OTS签名，在不泄露隐私的情况下，完成蒙上眼睛的证明。但显然只有两方参与的验证太局限了，区块链是交易双方和矿工共同维护的多方验证平台。我们需要一种在不泄露交易双方金额明细的情况下，能够完成区块验证的证明方式。幸运的是密码学里早已有了这样的工具，叫做零知识证明[zero-knowledge proof](https://en.wikipedia.org/wiki/Zero-knowledge_proof)，他的进化版 [Non-interactive zero-knowledge proof](https://en.wikipedia.org/wiki/Non-interactive_zero-knowledge_proof) 是无交互的零知识证明。我们还是用小北的迷宫来举例：
+这类编码方式还可以用在**数据资产的验证**上，[CarChain](http://carro.io)项目里，我们可以把车辆行驶轨迹的隐私数据，经过多层哈希压缩后，登记在区块链智能合约里。这样在数据交易和授权使用时，就可以通过OTS签名，在不泄露隐私的情况下，完成蒙上眼睛的证明。
+
+### Zero-knowledge Proof 零知识证明
+
+显然只有两方参与的验证太局限了，区块链是交易双方和矿工共同维护的多方验证平台。我们需要一种在不泄露交易双方金额明细的情况下，能够完成区块验证的证明方式。幸运的是密码学里早已有了这样的工具，叫做零知识证明[zero-knowledge proof](https://en.wikipedia.org/wiki/Zero-knowledge_proof)，他的进化版 [Non-interactive zero-knowledge proof](https://en.wikipedia.org/wiki/Non-interactive_zero-knowledge_proof) 是无交互的零知识证明。我们还是用小北的迷宫来举例：
 
 小楠觉得小北的迷宫很神奇，所以打算搬过来和小北一起住。她的母亲不放心，想来照看她。但小楠正值无拘无束的年纪，她不想让母亲知道她的房间，但又要让母亲放心。所以小北帮她重新设计了迷宫。这一次A~Z的门之间，不是路径串联的关系，而是配对映射的关系。从任何一个门进去，都会穿到另外一个门出来。对应关系是未知的，但可以保证，如果从相邻两个门进去，也会从相邻两个门出来。小楠让母亲转过身，她和小北分别回到各自迷宫的入口。大家准备好以后，母亲回过身来，小楠和小北从各自房间穿过迷宫。当他们分别出现在J、K两个出口时，小楠向母亲解释说，她和小北是住在隔壁门的，平时相互照应生活很好，不用家里太担心。
 
@@ -515,7 +525,15 @@ C对于A、B两人账户的加法盲证明：
   A、B对各自隐私的收款金额无异议后，区块可以认证该交易
 ```
 
-区块链里已经有不少该原理的应用，2016年10月发布的[ZCash](https://z.cash)，优化了交易速度，弥补了部分这个技术的短板，使其更具有实用性。同年以太坊的提案[zkSNARKs](https://blog.ethereum.org/2016/12/05/zksnarks-in-a-nutshell/)，目前还在[测试](https://www.reddit.com/r/ethereum/comments/712idt/ethereum_testnet_just_verified_a_zcash_transaction/)阶段，并没有落地。[Komodo](https://komodoplatform.com)是SuperNET团队从ZCash做的[分叉](https://steemit.com/komodo/@komodoplatform/a-guide-to-better-understand-komodo)，使用Delayed Proof of Work (dPoW)把自己的账本和比特币主链对账，借用比特币的算力来做备份防护。[Monero](https://getmonero.org/)使用Gregory Maxwell的环形机密交易（Ring Confidential Transactions）算法，隐私性进一步加强。最近2018年初又从比特币[分叉](https://www.reddit.com/r/BitcoinPrivate/comments/7todw0/historical_bitcoin_private_hard_fork_snapshot/)出了[Bitcoin Private](https://btcprivate.org/) (BTCP) 就是合并了ZClassicCoin (ZCL)和BTC主链的一个分叉，采用的也是zkSNARKs。可见该证明机制飞速的在区块链领域普及，在保护隐私的同时，免去了混合交易的中间商，免去了对泄露身份资产的担忧，也就加强了信任的流通传递。
+区块链里已经有不少该原理的应用，2016年10月发布的[ZCash](https://z.cash)，优化了交易速度，弥补了部分这个技术的短板，使其更具有实用性。同年以太坊的提案[zkSNARKs](https://blog.ethereum.org/2016/12/05/zksnarks-in-a-nutshell/)，目前还在[测试](https://www.reddit.com/r/ethereum/comments/712idt/ethereum_testnet_just_verified_a_zcash_transaction/)阶段，并没有落地。其依赖 “可信启动”，“椭圆曲线”这些重度假设是最大的短板。所以最近两年有了新的尝试ZK-STARKs，详情可以看Vtalik博客的翻译版本（[Part1](https://ethfans.org/posts/starks_part_1)，[Part2](https://ethfans.org/posts/starks_part_2))。当然这个优化也是有代价的：一个zk证明的大小将从 288 bytes 上升到几百kb。此外[Komodo](https://komodoplatform.com)是SuperNET团队从ZCash做的[分叉](https://steemit.com/komodo/@komodoplatform/a-guide-to-better-understand-komodo)，使用Delayed Proof of Work (dPoW)把自己的账本和比特币主链对账，借用比特币的算力来做备份防护。最近2018年初又从比特币[分叉](https://www.reddit.com/r/BitcoinPrivate/comments/7todw0/historical_bitcoin_private_hard_fork_snapshot/)出了[Bitcoin Private](https://btcprivate.org/) (BTCP)，就是合并了ZClassicCoin (ZCL)和BTC主链的一个分叉，采用的也是zkSNARKs。可见该证明机制已在区块链领域广泛应用，在保护隐私的同时，免去了混合交易的中间商，也就加强了信任的流通传递。
+
+### Ring signature 环签名&群签名
+
+零知识证明主要保护交易金额的匿名，但交易双方的地址是公开的。以[Monero](https://getmonero.org/)为代表的隐私链使用Gregory Maxwell的环形机密交易（Ring Confidential Transactions）算法，把交易双方进一步隐藏起来，实现完全的隐私。这种签名机制其实有两个版本：
+
+有管理员的版本是群签名（[Group signature](https://en.wikipedia.org/wiki/Group_signature)），由群管理者生成群公钥（Group Public Key）、私钥（Group Private Key）。加入该群的成员获得群管理者颁发的群证书（Group Certificate），就可以生成群签名。利用群公钥可以对签名做验证，但是无法定位到具体的签名者。在争议爆发的时候，就需要群私钥解开签名提取真正的签名者。
+
+加强版的环签名（[Ring signature](https://en.wikipedia.org/wiki/Ring_signature)）则没有管理者。签名者利用自己的私钥和集合中其他成员的公钥就能独立完成签名，不需要其他人的帮助，集合中的其他成员可能都不知道自己被包含在其中。具体过程：签名者用自己的私钥和任意n个环成员的公钥为消息m生成签名a；验证者根据环签名和消息m，验证签名是否是环中成员所签。最初这种设计是用来保护wikileaks这类泄密者的。比如多名白宫官员通过环签名，公布棱镜门的秘密后，政府无法罪责到具体个人。现在[Monero](https://getmonero.org)使用该机制来保护数字货币的交易者隐私：加上key image对币的染色，矿工可以验证该数字币的唯一性（类似序列号，检查是否被注册过）并防止double spending。再加上RingCT对金额的加密，功能已经齐全了。加拿大滑铁卢大学团队搞的[Iotex](https://iotex.io)项目也是同时使用了零知识证明和环签名，该技术正在逐渐成为区块链隐私保护的主流。
 
 ## 隐私交易所
 于2018年5月21日发布的欧盟GDPR通用数据保护条例，像一座墙挡在所有大数据技术的公司面前。中国在5月1日提前发布的《个人信息安全规范》也是与其对标的国家标准。现在我们有了保护隐私的工具，还需要数据资产所有权的明确。在GDPR和中国的信息安全法规里，将这种权利返还给了消费者，赋予以下几个方面的权利：
