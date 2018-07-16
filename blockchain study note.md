@@ -253,9 +253,15 @@ $$
 最初设计者是用来保护wikileaks这类泄密者的，比如多名白宫官员通过环签名，公布棱镜门的秘密后，政府无法罪责到具体个人。现在[Monero](https://getmonero.org)使用该机制来保护数字货币的交易者隐私，加上key image对币的染色，矿工可以验证该数字币的唯一性（类似序列号，检查是否被注册过）并防止double spending。再加上RingCT对金额的加密，已经齐全了。加拿大滑铁卢大学团队搞的[Iotex](https://iotex.io)也是同时使用了零知识证明和环签名，知乎[贾超](https://zhuanlan.zhihu.com/p/37041797)也在帮他们招聘。
 
 #### 协议内容匿名
-支付本身的匿名只能用在交易上，但智能合约承载的是合约内容，如何将合约或者内容文字匿名本身并不难，但要实现去中心化的验证，和机密环境下的搜索，是一个难题。
-
-Searchable Encryption Database (SEDB) ，网上有一些PHP和SQL的[实现](https://paragonie.com/blog/2017/05/building-searchable-encrypted-databases-with-php-and-sql)，但相关内容并不多。在lifeCODE.ai的基因组区块链里提到是通过tag标注来实现可搜索的，综合形成了一个Genomic Ordered Relational (GOR) 的数据管理系统。
+支付本身的匿名只能用在交易上，但智能合约承载的是合约内容，如何将合约或者内容文字匿名本身并不难，但要实现去中心化的验证、转移和加密环境下的搜索，是一个难题。有几个技术还在探索中，没有定型：
+* 代理重加密([Proxy re-encryption](https://en.wikipedia.org/wiki/Proxy_re-encryption))，通过授权一个不知道密文代理执行转移操作，将基于A秘钥的密文，转移到B的秘钥版本
+  * 最早在数字版权管理(DRM, digital rights management)领域，由DRM服务器来管理音乐的授权，[重加密方案](http://html.rhhz.net/buptjournal/html/20130602.htm)通过一个半可信的代理者实现密文转移
+  * 云平台有基于同态加密的[版本](http://jst.tsinghuajournals.com/CN/rhhtml/20180205.htm)
+  * 还有一份[专利](https://patents.google.com/patent/CN104639319A/zh)，写的比较清楚，最早是在Blaze, Bleumer Strauss的书《[Divertible protocols and atomic proxy cryptography](https://archive.is/20130212115133/http://link.springer.de/link/service/series/0558/bibs/1403/14030127.htm#selection-367.0-367.50)》里研究的
+* Searchable Encryption Database (SEDB) ，网上有一些PHP和SQL的[实现](https://paragonie.com/blog/2017/05/building-searchable-encrypted-databases-with-php-and-sql)，但相关内容并不多
+  * 基于blind indexing实现全匹配：将搜索条件变换后进行匹配，但加密key和nonce与encryption key区分开
+  * 把原文进行多种预变化（大小写，去掉空格，同音字等等）生成多列blind indexing就可以实现弱的模糊匹配
+  * 在lifeCODE.ai的基因组区块链里提到是通过tag标注来实现可搜索的，综合形成了一个Genomic Ordered Relational (GOR) 的数据管理系统。
 
 ### Layer2 匿名通道
 另一种简单的layer2的方法是一种mixing service中间商服务：把多个付款人，和多个收款人打乱，付款先付到资金池，然后随机轮转之后打乱支付给给收款方。
