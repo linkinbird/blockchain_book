@@ -252,6 +252,11 @@ $$
 
 最初设计者是用来保护wikileaks这类泄密者的，比如多名白宫官员通过环签名，公布棱镜门的秘密后，政府无法罪责到具体个人。现在[Monero](https://getmonero.org)使用该机制来保护数字货币的交易者隐私，加上key image对币的染色，矿工可以验证该数字币的唯一性（类似序列号，检查是否被注册过）并防止double spending。再加上RingCT对金额的加密，已经齐全了。加拿大滑铁卢大学团队搞的[Iotex](https://iotex.io)也是同时使用了零知识证明和环签名，知乎[贾超](https://zhuanlan.zhihu.com/p/37041797)也在帮他们招聘。
 
+#### 协议内容匿名
+支付本身的匿名只能用在交易上，但智能合约承载的是合约内容，如何将合约或者内容文字匿名本身并不难，但要实现去中心化的验证，和机密环境下的搜索，是一个难题。
+
+Searchable Encryption Database (SEDB) ，网上有一些PHP和SQL的[实现](https://paragonie.com/blog/2017/05/building-searchable-encrypted-databases-with-php-and-sql)，但相关内容并不多。在lifeCODE.ai的基因组区块链里提到是通过tag标注来实现可搜索的，综合形成了一个Genomic Ordered Relational (GOR) 的数据管理系统。
+
 ### Layer2 匿名通道
 另一种简单的layer2的方法是一种mixing service中间商服务：把多个付款人，和多个收款人打乱，付款先付到资金池，然后随机轮转之后打乱支付给给收款方。
 * Dash的[PrivateSend](https://dashpay.atlassian.net/wiki/spaces/DOC/pages/1146924/PrivateSend)就是这种形式，其隐私性促使其成为暗网的流行交易代币。
