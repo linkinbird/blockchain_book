@@ -702,6 +702,8 @@ fcoin将激励机制放到了交易所里，分享总计51%的FT币，每月按�
 
 国内火币网以及关联的金色财经，从年初的[杜均黑幕](http://www.pingwest.com/dujun-the-banker/)炒作到6月11日大跌下的砸盘，充分暴露了这一法外市场被恶意操纵的必然。
 
+2018年7月coinbase终于获得了美国证券监管的[认可](https://techcrunch.com/2018/07/16/coinbase-reportedly-gets-approval-from-u-s-regulators-to-start-listing-tokenized-securities/)，将数字货币以有价证券(deemed securities)形式交易。但哪些数字币可以定义为证券，需要参考豪威测试(Howey test)。后续的监管细则还没有出。
+
 ## 资产登记
 除了以代币形式记录交易外，还可以把物权的转移记录在区块链上：
 * 固定资产登记
