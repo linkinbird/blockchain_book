@@ -521,10 +521,15 @@ BTC和ETH目前都是保留全纪录，但是iota的snapshot会清理空账户�
 
 ## 虚拟机的算力扩展
 现在几乎所有的智能合约平台都无法实现EVM虚拟机的并行化，开放的节点政策和恶意节点的存在，使这个问题异常复杂。目前有一些宣称往这个方向的项目，但是普遍都没有成型：
+* [COSMOS](https://cosmos.network)是基于多链并行项目
+  * 第一条链是Hub，作为中心链和管理员，类似master节点，但本身有去中心化保证
+  * 其余的Zone是子链，重要性和Hub是不平等的
+  * IBC是Zone和Hub间交互的协议，Hub不限制Zone的实现，只要是通过IBC协议和Hub交互就是一个合法的Zone
 * ELA ([Elastos](https://www.elastos.org)) 联合NEO和Bitmain的[G3](https://neonewstoday.com/events/g3-summit-event-report/)联盟
   * NEO的POS协议逐渐成熟了，但是Elastos的所谓区块链操作系统还不见踪影
   * Elastos声称将主链（用于交易确认）和侧链（用于执行智能合约）分离，而且Runtime支持OS, EM 和 SDK
     * 实际上侧链就是一个state channel
+* Telegram的TON也是多链和sharding公用的方案
 
 ## 综合算力扩展
 ### 比特币架构扩展
@@ -742,10 +747,22 @@ ETH也是可以挖矿的，因为[Ethash](https://github.com/ethereum/wiki/wiki/
 目前Dapp里最多的就是彩票机，比较公平，但更有想象力的是预测市场，就是变相赌博，美其名曰群体智慧：
 * [Augur](https://app.augur.net/) 最早的预测市场，还在Beta版本，区块货币为REP目前交易还比较少
 * [GNOSIS](https://gnosis.pm/)是以Augur为对标的项目，预测市场专家Martin Koppelmann和Stefan George带领，顾问团队更是星光璀璨，包括以太坊创始人Vitalik Buterin和ConsenSys创始人Joe Lubin。也是以太坊平台上第一个众筹的应用，在2015年一共众筹到500万美元
-### 大数据
-本质上区块链是分布式技术的一种特例，分布式数据技术已经证明创造了非常多的价值。区块链交易和智能合约做一定改造，就有可能创造更加去中心化，又高效的大数据平台。这里说的数据库和Hyperledger Fabirc里在交易端点间储存交易状态的[CouchDB](http://hyperledger-fabric.readthedocs.io/en/release-1.1/couchdb_as_state_database.html)不同，是更通用的和区块链协议平行的数据架构，比如“空间扩展”里讨论的filecoin或者blockchain on hadoop这样的夹心结构。这样之前大数据的应用几乎都可以移植到区块链里，存储效率不变，但是所有权去中心化和数据产权保护可以做的更好。
 
-大数据区块链在IoT领域最早尝试，目前在IoV这个领域已经有几家2017年起步的项目
+## 数据市场
+本质上区块链是分布式技术的一种特例，数据也是一种独特的资产。目前分布式数据技术已经证明创造了非常多的价值，而区块链交易和智能合约做一定改造，就有可能创造更加去中心化，又高效的大数据平台。这里说的数据库和Hyperledger Fabirc里在交易端点间储存交易状态的[CouchDB](http://hyperledger-fabric.readthedocs.io/en/release-1.1/couchdb_as_state_database.html)不同，是更通用的和区块链协议平行的数据架构，比如“空间扩展”里讨论的filecoin或者blockchain on hadoop这样的夹心结构。这样之前大数据的应用几乎都可以移植到区块链里，存储效率不变，但是所有权去中心化和数据产权保护可以做的更好。
+
+数据市场按照数据来源和应用领域可以分为很多行业，但问题最后抽象下来，都是一个数据安全流通和交易使用的问题。其中包含了区块链智能合约的资产认证，IPFS的分布式存储，还有安全多方计算。技术方向上是相通的，在不同应用领域开花：
+* 车联网还是以[carro.io](http://carro.io)项目为代表，完成了设备端、钱包端的加密控制和智能合约的资产登记。下一阶段是落实IPFS的存储
+* 基因数据领域的[药明明码](https://wuxinextcode.cn)去年融资2亿多美元，扶持了一个区块链[基因数据](http://lifecode.org.cn/)平台。其中不以算力挖矿，是以数据换数据，有点像“文库”。
+* 2018年新成立的项目[OasisLabs](https://www.oasislabs.com)，上来就是$45M的A轮，后续不知道是否会ICO
+
+### IoT 物联网
+一般物联网数据比较琐碎，单位价值不高，所以基于POW的区块链技术带来额外的成本是难以接受的。目前主要应用在IoT领域的项目还是IOTA和加拿大滑铁卢大学团队搞的[Iotex](https://iotex.io)。他们通过DAG网络的资源共享，达成零手续费的数据交易通道。将成千上万的城市传感器链接在一起。
+
+入门开发者可以选择[ARDUINO](https://www.arduino.cc)这种开发版子，有[教程](https://www.youtube.com/watch?v=T2b5WZDfg3c)叫你如何将ARDUINO UNO的温度数据上传到Tangle。
+
+### IoV 车联网
+作为物联网的一个细分领域，汽车在成为第二大移动终端（第一大是手机），而汽车深厚的产业链集群，使这些数据的价值远超一般物联网领域。所以大数据区块链在IoV这个领域起步很早，已经有几家2017年起步的项目。同时2018年的博世开发者大会上，包括保时捷，大众在内的主流厂家都纷纷加入。
 * [CyberCar](http://www.cybercar.io/)，原来做通讯业务的团队创新项目
 * 阿尔法车链 是整合了很多技术的综合体，但也没有主页，据说要上韩国交易市场
   * 基于Hyperledger Fabric的Alphaledger交易链
@@ -753,10 +770,6 @@ ETH也是可以挖矿的，因为[Ethash](https://github.com/ethereum/wiki/wiki/
   * 通过以太坊发行 ERC20 代币 ACAR（Alpha Car）Toke来和积分兑换
 * 据说有SIGMA团队的无名车联网项目，但是主页都还没有
 
-业务问题最后抽象下来，都是一个数据安全流通和交易使用的问题，其中包含了区块链智能合约的资产认证，IPFS的分布式存储，还有安全多方计算。技术方向上是相通的，在不同应用领域开花：
-* 车联网还是以[carro.io](http://carro.io)项目为代表，完成了设备端、钱包端的加密控制和智能合约的资产登记。下一阶段是落实IPFS的存储
-* 基因数据领域的[药明明码](https://wuxinextcode.cn)去年融资2亿多美元，扶持了一个区块链[基因数据](http://lifecode.org.cn/)平台。其中不以算力挖矿，是以数据换数据，有点像“文库”。
-* 2018年新成立的项目[OasisLabs](https://www.oasislabs.com)，上来就是$45M的A轮，后续不知道是否会ICO，
 
 ## 自由之城
 在比特币规模不大的时候，作为交易记录和中间件是比较轻的存在，并不影响现在社会的秩序。但是极限情况，如果比特币的总规模可以达到一座城市甚至一个国家的GDP，那么完全有可能成立以比特币为法币的国家主权。一旦主权化，“比特国”内部的比特币交易就不受通货规模，不受政府、央行的影响，成为稳定的代币。而所谓比特币的价格也只是本国货币对外币的汇率。
