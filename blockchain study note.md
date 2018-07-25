@@ -757,6 +757,9 @@ ETH也是可以挖矿的，因为[Ethash](https://github.com/ethereum/wiki/wiki/
 * 车联网还是以[carro.io](http://carro.io)项目为代表，完成了设备端、钱包端的加密控制和智能合约的资产登记。下一阶段是落实IPFS的存储
 * 基因数据领域的[药明明码](https://wuxinextcode.cn)去年融资2亿多美元，扶持了一个区块链[基因数据](http://lifecode.org.cn/)平台。其中不以算力挖矿，是以数据换数据，有点像“文库”。
 * 2018年新成立的项目[OasisLabs](https://www.oasislabs.com)，上来就是$45M的A轮，后续不知道是否会ICO
+* 2018年新成立的项目[covalent.ai](http://covalent.ai/)，海外留学生做的，技术包括可信执行环境（TEE），完全同态加密(FHE)和零知识证明(ZKP 具体是sk STARK版本)。类比IPFS定义了完全分布式存储，他们也想定义去中心化数据交易的标准
+  * 6月获千万美元投资，投资者包括FBG Capital、真格基金、大都会资本、IOST、节点资本等。
+  * 链上第一个应用预计是交易医疗数据的medata
 
 ### IoT 物联网
 一般物联网数据比较琐碎，单位价值不高，所以基于POW的区块链技术带来额外的成本是难以接受的。目前主要应用在IoT领域的项目还是IOTA和加拿大滑铁卢大学团队搞的[Iotex](https://iotex.io)。他们通过DAG网络的资源共享，达成零手续费的数据交易通道。将成千上万的城市传感器链接在一起。
