@@ -496,7 +496,8 @@ BTC和ETH目前都是保留全纪录，但是iota的snapshot会清理空账户�
 ### 去中心化的分布式文件系统
 除了扩展账本空间，当储存的不单是账本，而是大文件或者数据资源时，全节点将不可能储存所有的资料。引申出两个方向的解决方案：
 * [filecoin](https://filecoin.io)的共享储存空间，2017-8的ICO 现在平台还没正式上线
-  - P2P文件系统IPFS 发明者Juan Benet 的项目
+  - P2P文件系统IPFS 发明者Juan Benet 的项目，解决IPFS没有储存激励，导致文件有效时间短的问题
+    - 当然也有贡献自己存储空间，换来[永久储存](https://medium.com/@merunasgrincalaitis/how-to-host-your-ipfs-files-online-forever-f0c56b9b5398)的方法。
   - 基于Proof-of-Replication (PoRep)的共识机制（Proof-of-Storage的升级）
     - 使用MerkleCRH生成树的zk-SNARKs验证文件完整
     - 维持PFT: Power Fault Tolerance以保证文件不丢失
