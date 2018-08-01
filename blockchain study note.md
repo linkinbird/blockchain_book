@@ -508,6 +508,9 @@ BTC和ETH目前都是保留全纪录，但是iota的snapshot会清理空账户�
   * 有storage proof的环节，但主要支持冷备份，热存储的提取保证还有待加强
   * 利用存储“市场”来交易储存空间，其激励原理更加简洁一些
   * 陈钢测试发现，上传文件前要先同步好多G的区块账本...
+* [SWARM](http://swarm-gateways.net/bzz:/theswarm.eth/) 是基于以太的分布式存储和内容分发服务
+  * 其中包括[wolk](https://www.wolk.com)开发的NoSQL数据库[SWARMDB](https://github.com/wolkdb/swarmdb)
+  * 性能问题存疑
 * carro的[blockchain on hadoop](https://github.com/linkinbird/CarChain/wiki)，2018年2月启动的项目
   - 利用hadoop的分布式技术，上下夹了区块链的加密和共识，形成三明治的架构
   - 区块链保证了数据所有权，HDFS保证了数据安全和高效存储
@@ -593,9 +596,14 @@ ETH从2016年开始也计划着类似的分叉（升级）EIPs (Ethereum Improve
   * 2018年6月宣布和SingularityNET建立了[合作](http://www.cointime.com/blockchain/10744.html)，使奇点的AI agent可以选择调用深脑链的算力。
 * 迅雷的玩客云OneCloud号称类似方向，但实际只做了存储
   * 基于共享硬件，500块卖设备，其实是类似共享NAS的概念
+* 2018年新成立的项目[OasisLabs](https://www.oasislabs.com)，主打安全计算
+  * University of California, Berkeley and 
+    MIT的明星团队
+  * 上来就是$45M的A轮，后续不知道是否会ICO
 * [Cortex AI](http://www.cortexlabs.ai)是清华系做的项目，自己定义了一种链
   * 上面运行的叫Cortex Virtual Machine，支持深度模型的应用
   * 代码合约叫Smart AI Contract，有独立的类似Gas的结算机制
+* 上海交大团队的TEEX 可信计算区块链
 * Ray [RLlib](https://ray.readthedocs.io/en/latest/rllib.html): Scalable Reinforcement Learning
   * 非区块链的分布式AI架构，类似的就罗列了
 
@@ -757,10 +765,10 @@ ETH也是可以挖矿的，因为[Ethash](https://github.com/ethereum/wiki/wiki/
 数据市场按照数据来源和应用领域可以分为很多行业，但问题最后抽象下来，都是一个数据安全流通和交易使用的问题。其中包含了区块链智能合约的资产认证，IPFS的分布式存储，还有安全多方计算。技术方向上是相通的，在不同应用领域开花：
 * 车联网还是以[carro.io](http://carro.io)项目为代表，完成了设备端、钱包端的加密控制和智能合约的资产登记。下一阶段是落实IPFS的存储
 * 基因数据领域的[药明明码](https://wuxinextcode.cn)去年融资2亿多美元，扶持了一个区块链[基因数据](http://lifecode.org.cn/)平台。其中不以算力挖矿，是以数据换数据，有点像“文库”。
-* 2018年新成立的项目[OasisLabs](https://www.oasislabs.com)，上来就是$45M的A轮，后续不知道是否会ICO
 * 2018年新成立的项目[covalent.ai](http://covalent.ai/)，海外留学生做的，技术包括可信执行环境（TEE），完全同态加密(FHE)和零知识证明(ZKP 具体是sk STARK版本)。类比IPFS定义了完全分布式存储，他们也想定义去中心化数据交易的标准
   * 6月获千万美元投资，投资者包括FBG Capital、真格基金、大都会资本、IOST、节点资本等。
   * 链上第一个应用预计是交易医疗数据的medata
+  * 在智能算力（包括Caffe RNN这样的深度学习算力）也有涉及，但缺少详情
 
 ### IoT 物联网
 一般物联网数据比较琐碎，单位价值不高，所以基于POW的区块链技术带来额外的成本是难以接受的。目前主要应用在IoT领域的项目还是IOTA和加拿大滑铁卢大学团队搞的[Iotex](https://iotex.io)。他们通过DAG网络的资源共享，达成零手续费的数据交易通道。将成千上万的城市传感器链接在一起。
