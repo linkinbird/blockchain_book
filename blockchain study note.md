@@ -263,6 +263,10 @@ $$
   * 把原文进行多种预变化（大小写，去掉空格，同音字等等）生成多列blind indexing就可以实现弱的模糊匹配
   * 在lifeCODE.ai的基因组区块链里提到是通过tag标注来实现可搜索的，综合形成了一个Genomic Ordered Relational (GOR) 的数据管理系统。
 * 匿名智能合约[Origo](https://origo.network)，通过编译层的优化，利用零知识证明来加密计算并保持效率
+  * 对交易双方，交易金额和合约输入、输出都做了匿名处理
+  * 计算过程通过off-chain的privacy-preserving application platform(PPAP)来保证效率和安全
+  * 将智能合约转化为Arithmetic circuit 的算数电路结构在运营零知识证明时有额外优势
+  * 匿名石头剪刀布
 
 ### Layer2 匿名通道
 另一种简单的layer2的方法是一种mixing service中间商服务：把多个付款人，和多个收款人打乱，付款先付到资金池，然后随机轮转之后打乱支付给给收款方。
