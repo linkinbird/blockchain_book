@@ -252,8 +252,8 @@ $$
 
 最初设计者是用来保护wikileaks这类泄密者的，比如多名白宫官员通过环签名，公布棱镜门的秘密后，政府无法罪责到具体个人。现在[Monero](https://getmonero.org)使用该机制来保护数字货币的交易者隐私，加上key image对币的染色，矿工可以验证该数字币的唯一性（类似序列号，检查是否被注册过）并防止double spending。再加上RingCT对金额的加密，已经齐全了。加拿大滑铁卢大学团队搞的[Iotex](https://iotex.io)也是同时使用了零知识证明和环签名，知乎[贾超](https://zhuanlan.zhihu.com/p/37041797)也在帮他们招聘。
 
-#### 协议内容匿名
-支付本身的匿名只能用在交易上，但智能合约承载的是合约内容，如何将合约或者内容文字匿名本身并不难，但要实现去中心化的验证、转移和加密环境下的搜索，是一个难题。有几个技术还在探索中，没有定型：
+#### 内容计算匿名
+支付本身的匿名只能用在交易上，但智能合约承载的是合约内容，如何将合约或者内容文字匿名本身并不难，但要实现去中心化的验证、转移和加密环境下的搜索计算，是一个难题。有几个技术还在探索中，没有定型：
 * 代理重加密([Proxy re-encryption](https://en.wikipedia.org/wiki/Proxy_re-encryption))，通过授权一个不知道密文代理执行转移操作，将基于A秘钥的密文，转移到B的秘钥版本
   * 最早在数字版权管理(DRM, digital rights management)领域，由DRM服务器来管理音乐的授权，[重加密方案](http://html.rhhz.net/buptjournal/html/20130602.htm)通过一个半可信的代理者实现密文转移
   * 云平台有基于同态加密的[版本](http://jst.tsinghuajournals.com/CN/rhhtml/20180205.htm)
@@ -262,6 +262,7 @@ $$
   * 基于blind indexing实现全匹配：将搜索条件变换后进行匹配，但加密key和nonce与encryption key区分开
   * 把原文进行多种预变化（大小写，去掉空格，同音字等等）生成多列blind indexing就可以实现弱的模糊匹配
   * 在lifeCODE.ai的基因组区块链里提到是通过tag标注来实现可搜索的，综合形成了一个Genomic Ordered Relational (GOR) 的数据管理系统。
+* 匿名智能合约[Origo](https://origo.network)，通过编译层的优化，利用零知识证明来加密计算并保持效率
 
 ### Layer2 匿名通道
 另一种简单的layer2的方法是一种mixing service中间商服务：把多个付款人，和多个收款人打乱，付款先付到资金池，然后随机轮转之后打乱支付给给收款方。
@@ -510,7 +511,8 @@ BTC和ETH目前都是保留全纪录，但是iota的snapshot会清理空账户�
   * 陈钢测试发现，上传文件前要先同步好多G的区块账本...
 * [SWARM](http://swarm-gateways.net/bzz:/theswarm.eth/) 是基于以太的分布式存储和内容分发服务
   * 其中包括[wolk](https://www.wolk.com)开发的NoSQL数据库[SWARMDB](https://github.com/wolkdb/swarmdb)
-  * 性能问题存疑
+  * 存储原理和Kademlia类似，加上带宽和存储的双重激励机制
+  * 有自己的swarm accounting protocol (SWAP)
 * carro的[blockchain on hadoop](https://github.com/linkinbird/CarChain/wiki)，2018年2月启动的项目
   - 利用hadoop的分布式技术，上下夹了区块链的加密和共识，形成三明治的架构
   - 区块链保证了数据所有权，HDFS保证了数据安全和高效存储
@@ -720,8 +722,11 @@ fcoin将激励机制放到了交易所里，分享总计51%的FT币，每月按�
 * 车辆登记
   - 有德国大学项目，利用3个节点的私有链，帮政府做[车辆交易登记](https://github.com/dfherr/carchain)。一秒钟一个block，兼顾了数据安全和性能，也是在ETH平台上
 * 生产供应链
-	- 以整车生产为例，从供货商进的货，到装配在成品车上，目前是用VIN码做关联
-	- 以后市场为例，二手配件和维保记录，都可以作为资产登记的一种形式记录到区块链上
+  - 以整车生产为例，从供货商进的货，到装配在成品车上，目前是用VIN码做关联
+  - 以后市场为例，二手配件和维保记录，都可以作为资产登记的一种形式记录到区块链上
+* 数字资产，类似虚拟物品
+  - 常用的资产标记是ERC721标准的资产币ID
+  - 也有基于monero的侧链项目[tari](https://www.tari.com)来做更复杂的数字资产
 
 ## 币权融资 ICO
 ICO不是必须的，比特币没有ICO过，IOTA、CarChain这类物联网项目也不需要ICO。  

@@ -638,7 +638,10 @@ C对于A、B两人账户的加法盲证明：
 * ARM [TrustZone](https://en.wikipedia.org/wiki/TrustZone)
 * Intel [SGX Software Guard Extensions](https://en.wikipedia.org/wiki/Software_Guard_Extensions)
 
-2018年有大量的行业应用在这个领域爆发。
+2018年有大量的行业应用在这个领域爆发：
+* 智能合约的匿名计算有[Origo](https://origo.network)
+* 数据流通的安全计算有[covalent.ai](http://covalent.ai/)
+* 综合计算的匿名系统有Golem和Oasislabs
 
 ### 黑盒攻击
 
