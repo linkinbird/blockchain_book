@@ -327,7 +327,8 @@ Hyperledger的[chaincode](http://hyperledger-fabric.readthedocs.io/en/release-1.
 
 ### 状态机的验证
 
-以太里的EVM虽然是状态机，但是区块记录的实际上是状态转移log，和记录交易日志一样。那UTXO的账户余额模式，也可以移植到状态机里，[Nervos](https://www.nervos.org/)项目就是基于状态结果而非日志事件的以太升级项目。其创始人Jan的[访谈](http://www.8btc.com/conversation-nervos)里可以看出，他们虽然从以太坊开发者社区来，但是对比特币的基础和能力推崇至极。项目底层Commom Knowledge Base (CKB) 的目标是可以运行在轻设备甚至移动设备上，并基于Cell, Validator, Generator等分工来优化并行
+以太里的EVM虽然是状态机，但是区块记录的实际上是状态转移log，和记录交易日志一样。那UTXO的账户余额模式，也可以移植到状态机里，[Nervos](https://www.nervos.org/)项目就是基于状态结果而非日志事件的以太升级项目。其创始人Jan的[访谈](http://www.8btc.com/conversation-nervos)里可以看出，他们虽然从以太坊开发者社区来，但是对比特币的POW基础和能力推崇至极。项目底层Commom Knowledge Base (CKB) 的目标是分级客户端，可以运行在轻设备甚至light client运行在移动设备上。基于Cell（类似UTXO的不可修改状态，更新需要先复制再修改）, Validator, Generator等分工来优化并行，遵循新的混合共识机制。基于这样的事实，计算出答案和验证答案的复杂度差异很大。比如排序复杂度在$$O(NlogN)$$，而验证结果的复杂度只有$$O(N)$$。当计算和验证分工解耦之后，其对应的计算关系需要事先建立。对于任意计算的操作，需要自动生成验证计算。  
+![state-focus](https://raw.githubusercontent.com/linkinbird/blockchain_book/master/pic/state-focus-design.png)
 
 ## 状态通道 State Channel
 除了链上的交易协议外，为了提升效率，还有一种离线的状态通道来支持快速的点对点交易和智能合约。跨币种交易使用的lightning network也是一种state channel。这一层被认为是**Layer2**的上层扩展
