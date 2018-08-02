@@ -325,6 +325,10 @@ Hyperledger的[chaincode](http://hyperledger-fabric.readthedocs.io/en/release-1.
   * 顾忌惩罚的恶意 Covert security
 * 直接参与方是恶意的
 
+### 状态机的验证
+
+以太里的EVM虽然是状态机，但是区块记录的实际上是状态转移log，和记录交易日志一样。那UTXO的账户余额模式，也可以移植到状态机里，[Nervos](https://www.nervos.org/)项目就是基于状态结果而非日志事件的以太升级项目。其创始人Jan的[访谈](http://www.8btc.com/conversation-nervos)里可以看出，他们虽然从以太坊开发者社区来，但是对比特币的基础和能力推崇至极。项目底层Commom Knowledge Base (CKB) 的目标是可以运行在轻设备甚至移动设备上，并基于Cell, Validator, Generator等分工来优化并行
+
 ## 状态通道 State Channel
 除了链上的交易协议外，为了提升效率，还有一种离线的状态通道来支持快速的点对点交易和智能合约。跨币种交易使用的lightning network也是一种state channel。这一层被认为是**Layer2**的上层扩展
 
