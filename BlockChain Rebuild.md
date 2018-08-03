@@ -570,7 +570,36 @@ C对于A、B两人账户的加法盲证明：
   A、B对各自隐私的收款金额无异议后，区块可以认证该交易
 ```
 
-区块链里已经有不少该原理的应用，2016年10月发布的[ZCash](https://z.cash)，优化了交易速度，弥补了部分这个技术的短板，使其更具有实用性。同年以太坊的提案[zkSNARKs](https://blog.ethereum.org/2016/12/05/zksnarks-in-a-nutshell/)，目前还在[测试](https://www.reddit.com/r/ethereum/comments/712idt/ethereum_testnet_just_verified_a_zcash_transaction/)阶段，并没有落地。其依赖 “可信启动”，“椭圆曲线”这些重度假设是最大的短板。所以最近两年有了新的尝试ZK-STARKs，详情可以看Vtalik博客的翻译版本（[Part1](https://ethfans.org/posts/starks_part_1)，[Part2](https://ethfans.org/posts/starks_part_2))。当然这个优化也是有代价的：一个zk证明的大小将从 288 bytes 上升到几百kb。此外[Komodo](https://komodoplatform.com)是SuperNET团队从ZCash做的[分叉](https://steemit.com/komodo/@komodoplatform/a-guide-to-better-understand-komodo)，使用Delayed Proof of Work (dPoW)把自己的账本和比特币主链对账，借用比特币的算力来做备份防护。最近2018年初又从比特币[分叉](https://www.reddit.com/r/BitcoinPrivate/comments/7todw0/historical_bitcoin_private_hard_fork_snapshot/)出了[Bitcoin Private](https://btcprivate.org/) (BTCP)，就是合并了ZClassicCoin (ZCL)和BTC主链的一个分叉，采用的也是zkSNARKs。可见该证明机制已在区块链领域广泛应用，在保护隐私的同时，免去了混合交易的中间商，也就加强了信任的流通传递。
+区块链里已经有不少该原理的应用，2016年10月发布的[ZCash](https://z.cash)，优化了交易速度，弥补了部分这个技术的短板，使其更具有实用性。同年以太坊的提案[zkSNARKs](https://blog.ethereum.org/2016/12/05/zksnarks-in-a-nutshell/)，目前还在[测试](https://www.reddit.com/r/ethereum/comments/712idt/ethereum_testnet_just_verified_a_zcash_transaction/)阶段，并没有落地。其依赖 “可信启动”，“椭圆曲线”这些重度假设是最大的短板。此外[Komodo](https://komodoplatform.com)是SuperNET团队从ZCash做的[分叉](https://steemit.com/komodo/@komodoplatform/a-guide-to-better-understand-komodo)，使用Delayed Proof of Work (dPoW)把自己的账本和比特币主链对账，借用比特币的算力来做备份防护。最近2018年初又从比特币[分叉](https://www.reddit.com/r/BitcoinPrivate/comments/7todw0/historical_bitcoin_private_hard_fork_snapshot/)出了[Bitcoin Private](https://btcprivate.org/) (BTCP)，就是合并了ZClassicCoin (ZCL)和BTC主链的一个分叉，采用的也是zkSNARKs。可见该证明机制已在区块链领域广泛应用，在保护隐私的同时，免去了混合交易的中间商，也就加强了信任的流通传递。
+
+为了解决zkSNARKs的短板，最近两年有了新的尝试ZK-STARKs。这里的 T 表示 “transparent”，代表无需“可信启动”。同时也带来了更加简单的密码学假设，避免了使用椭圆曲线，而是完全基于哈希和信息论。这也意味着满足了抗量子计算攻击的能力。新设计的核心是多项式采样验证，假设需要验证的数据被编码在了一个1,000,000次幂的多项式里，那么任意选取1,000,001个点都可以恢复这批数据。但这样验证起来太繁琐，我们把需要证明拥有的多项式P(x)，转化为两个多项式Z(x)和D(x)的乘积，并取x在1~1亿之间随机验证几次。由于原多项式P(x)被保护起来，而且极大的放大了检查空间，所以随便检查1次，作弊者蒙对的概率都不到1%。检查16次后，该方案的欺骗难度和哈希碰撞一样高。具体构造过程如下：
+
+```
+你有一个多项式P，对于从 1~1百万 之间的所有x，P(x)是一个整数
+	这个P(x)相当于私钥，可以把某些数据编码进去，也可以本身就是某种计算规则
+	你想要在不公布P的情况下，证明P的函数特性
+		比如 0 <= P(x) <= 9
+构造一个检查多项式C(x)，使得C(P(x))在P满足特性的情况下，恒等于0
+	范围约束的检查多项式可以简单构造为 C(x) = x·(x-1)·(x-2)...(x-9) 
+		如果P(x)的范围超过0~9 那C(P(x))则肯定不为0
+	关联约束比如斐波那契的检查多项式要引入多变量： C(x1, x2, x3) = x3 - x2 - x1
+		则 C(P(x)) = C(P(x), P(x+1), P(x+2)) = 0
+任何等于零的多项式都是 Z(x)的一个乘积，所以原证明转变为 C(P(x)) = Z(x) * D(x)
+	x的检查空间在 1~10亿 之间
+	Z(x)是由C(P(x))的根组成的多项式，需要提供给验证者，类似加密“公钥”的作用
+		Z(X)数据量庞大，所以一般公开编码进Merkle Tree，客户端只保存Merkle root
+	D(x)由多项式除法 C(P(x)) / Z(x) 得到，基于傅里叶变换
+	P(X)和D(x)由证明者自己编码Merkle Tree，同样公开Merkle root的哈希
+		这里令等式成立的有效值只有 100万/10亿 = 0.001 的命中率
+验证者在1~10亿间随机选择16个x
+证明者提供这16个x在P(x)和D(x) Merkle Tree的分支
+验证者检查：
+	分支与之前提供的 Merkle 根相匹配
+	C(P(x)) 在所有 16 种情况下都等于 Z(x) * D(x)
+	一个坏的p(x)通过检查的概率，在经过16次检查后会缩小到 1- 10^-32
+```
+
+除了例子里的情况，其他不同的多项式特征，都要对应不同的检查多项式。有些还需要对特定值进行边缘检查。遇到特别大的数值，还需要使用有限域（finite field）的算数规则。这些都使得这种证明变得复杂，一个zk证明的大小将从 288 bytes 上升到几百kb。此外还需要对一些非多项式的逆工程攻击做防御，最后推广到一般特性的证明。详情可以看Vtalik博客的翻译版本（[Part1](https://www.jianshu.com/p/ffb6b475312a)，[Part2](https://www.jianshu.com/p/2d49ac518228))，还有未翻译的[Part3](https://vitalik.ca/general/2018/07/21/starks_part_3.html)。
 
 ### Ring signature 环签名&群签名
 
@@ -665,9 +694,9 @@ C对于A、B两人账户的加法盲证明：
 | Prover time   | FFT + Elliptic Curve | FFT          | Linear       |
 | Verifier time | Efficient            | Efficient    | Linear       |
 | Trusted setup | Required             | Not required | Not Required |
-| Practical     | Yes                  | No           | Yes          |
+| Practical     | Yes                  | improving    | Yes          |
 
-从zk-SNARKs到zk-STARKs是空间换时间的取舍，虽然都不完美，但都在持续进化。这一方案最大的优点是不挑机器，可以在任何矿工网络运行，以数学来保证隐私。但最大的缺点就是性能不足，目前大规模应用仅限在匿名交易平台，还无法支撑更加复杂的场景。所以在平衡三角里，**ZKP阵营选择了隐私+通用性**。站在这一阵营的首先有扩展智能合约匿名计算的[Origo](https://origo.network)，迈出了从交易匿名到计算匿名的重要一步。为了达到这个效果，需要将智能合约代码与ZKP系统在编译层进行整合。通过Arithmetic Circuits计算电路的抽象，将复杂的代码还原到基础计算流程，并在流程里生成对应的同态证明和验证。为此他们对EVM也进行了改造，可以兼容一般代码的执行，和加密执行与验证。这个概念2016年Hawk的[论文](https://ieeexplore.ieee.org/document/7546538/)就以剪刀石头布等为例进行了推演。游戏双方的“出招”作为合约输入，分别同态加密起来防止作弊。智能合约执行的时候，分多次循环匹配可能的结果。通过验证后进行裁决，保证参与多方的匿名性和结果的有效性。
+从zk-SNARKs到zk-STARKs是空间换时间的取舍，虽然都不完美，但都在持续进化。这一方案最大的优点是不挑机器，可以在任何矿工网络运行，以数学来保证隐私。但最大的缺点就是性能不足，目前大规模应用仅限在匿名交易平台，还无法支撑更加复杂的场景。所以在平衡三角里，**ZKP阵营选择了隐私+通用性**。站在这一阵营的首先有扩展智能合约匿名计算的[Origo](https://origo.network)，迈出了从交易匿名到计算匿名的重要一步。为了达到这个效果，需要将智能合约代码与ZKP系统在编译层进行整合。通过Arithmetic Circuits计算门电路的抽象，将复杂的代码还原到基础计算流程，并在流程里生成对应的同态证明和验证。为此他们对EVM也进行了改造，可以兼容一般代码的执行，和加密执行与验证。这个概念2016年Hawk的[论文](https://ieeexplore.ieee.org/document/7546538/)就以剪刀石头布等为例进行了推演。游戏双方的“出招”作为合约输入，分别同态加密起来防止作弊。智能合约执行的时候，分多次循环匹配可能的结果。通过验证后进行裁决，保证参与多方的匿名性和结果的有效性。
 
 把这个模式进一步推广就是通用数据流的安全计算，热门项目[covalent.ai](http://covalent.ai/)就是2018年成立在这个方向的探索。其中除了尝试完全同态加密(FHE)和零知识证明（zk-STARK版本）外，也包含了可信执行环境（TEE）。一方面他链上第一个应用是医疗数据交易平台medata，利用同态加密来保护交易，用IPFS实现分布式存储，最终想定义去中心化数据交易的标准。另一方面他又有AI的野心，涉及智能算力（运行Caffe RNN这样的深度学习模型），所以基于TEE的沙盒必不可少。这里就会发现，真正大规模算力的应用，是**TEE阵营的专长，他们选择了隐私+高效**。这个方案的优点不言而喻，在安全环境内，不存在共识和加解密验证的负担，可以最大效率转化芯片的算力。但缺点也很明显，参与贡献的矿工必须使用TEE技术的芯片，而芯片的缓存大小直接限制了安全区的使用效能。
 
