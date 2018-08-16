@@ -367,7 +367,7 @@ $$
 
 ### VBFT匿名委任共识
 
-要超越这个平衡，以人的恶意为基础是非常困难的。我们需要进一步缩小人的作恶空间，用算法来约束流程。在POW/POS保证了“公平”，代理机制提供“高效”的同时，用可验证随机函数Verifiable random function [VRFs](https://en.wikipedia.org/wiki/Verifiable_random_function)来加强“可信”这个角。这一方法源自于图灵奖得主[Silvio Micali](https://en.wikipedia.org/wiki/Silvio_Micali)在2017年发表的一篇论文 “[Algorand: Scaling Byzantine Agreements for Cryptocurrencies](https://eprint.iacr.org/2017/454)”。其中提出了基于 VRFs的代理人选举方式，当然VRF的概念他们早在1999年就提出过，只是在DPOS里发现了应用场景。在区块链委任共识里，按照VRF选出的区块提名者和验证者，是匿名当选的，只有当选人自己完成第一次确认。这让权力蒙上了面纱，腐败和贿赂很难渗透进决策流程。而且当选单次有效，当选者提名区块的同时，揭示自己的选票，由验证者来确认其当选身份和区块有效性。验证完成后该次选举结束，选票自动失效，所以无法形成多人串通，难以持续保留权力。
+可见以人的恶意假设为基础，要超越三角平衡是非常困难的。我们需要进一步缩小人的作恶空间，用算法来约束流程。在POW/POS保证了“公平”，代理机制提供“高效”的同时，用可验证随机函数Verifiable random function [VRFs](https://en.wikipedia.org/wiki/Verifiable_random_function)来加强“可信”这个角。这一方法源自于图灵奖得主[Silvio Micali](https://en.wikipedia.org/wiki/Silvio_Micali)在2017年发表的一篇论文 “[Algorand: Scaling Byzantine Agreements for Cryptocurrencies](https://eprint.iacr.org/2017/454)”。其中提出了基于 VRFs的代理人选举方式，当然VRF的概念他们早在1999年就提出过，只是在DPOS里发现了应用场景。在区块链委任共识里，按照VRF选出的区块提名者和验证者，是匿名当选的，只有当选人自己完成第一次确认。这让权力蒙上了面纱，腐败和贿赂很难渗透进决策流程。而且当选单次有效，当选者提名区块的同时，揭示自己的选票，由验证者来确认其当选身份和区块有效性。验证完成后该次选举结束，选票自动失效，所以无法形成多人串通，难以持续保留权力。
 
 应用该算法的[Algorand](https://www.algorand.com)项目是比较纯粹的，通过一个随机数发生器来随机决定下一个区块的生成者是谁。这种VRFs随机数发生器不需要广播，不需要见证，仅凭验证函数就能达成共识。而提名者的选中概率根据其余额权重分布(POS)，任何人（包括上个区块的发布者）都无法预测下一个发布者是谁。在提名区块的同时，也会提名下一次随机函数的SEED，这样将共识不断传递下去。接收到的提名区块，通过自创的Byzantine Agreement (BA)  来达成共识，类似PBFT，在2/3以上诚实节点时可避免Sybil attack的风险。最终这种共识机制可以实现弱同步(weak synchrony) 下的共识，就是说可以异步一段时间，但需要跟随足够的强同步（短于异步时长）来维持共识状态。正常同步态下是4次交互达成共识，而在最差情况下也可以保证13步以内达成共识。
 
