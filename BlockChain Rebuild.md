@@ -402,13 +402,17 @@ IOTA的第二个改造是一个可加密的消息广播通道。他的MAM (Maske
 
 ### 微支付的应用
 
+生活在中国的消费者，被微信和支付宝宠坏了，体会不到区块链微支付的作用。
+
+这种链外的交易通道模式还可以用来做跨链、跨币种的交易[Atomic Swap](https://www.cryptocompare.com/coins/guides/what-are-atomic-swaps/)，目前已经公布了测试网络[代码](https://github.com/decred/atomicswap/pull/37)。2017年底发布了Bitcoin到Litecoin的[测试版](https://blog.lightning.engineering/announcement/2017/11/16/ln-swap.html)，以及Bitcoin到Ethereum的智能合约版本。闪电网络本身的加速，加上转移到LTC的灵活性，使得区块链经济体的交易已经具备冷热层次。之后我们讨论区块链货币，就不只有比特币和现在热门的一些货币，更是一个完整的支付生态。比特币单价高、交易慢但是安全好比存折；LTC莱特币交易快、币值可靠好比银行卡；闪电网络好比网路银行；中心化交易所好比取款机只用于小额提现；和现有移动微支付体系打通的话，就可以让区块链货币渗透到当下的移动支付场景里。但也可能区块链微支付和中心化移动支付会激发一场较量。
+
 ### 去中心化交易所
 
-这种链外的交易通道模式还可用来做跨链、跨币种的交易[Atomic Swap](https://www.cryptocompare.com/coins/guides/what-are-atomic-swaps/)，目前已经公布了测试网络[代码](https://github.com/decred/atomicswap/pull/37)。2017年底发布了Bitcoin到Litecoin的[测试版](https://blog.lightning.engineering/announcement/2017/11/16/ln-swap.html)，以及Bitcoin到Ethereum的智能合约版本。闪电网络本身的加速，加上转移到LTC的灵活性，使得区块链经济体的交易已经具备冷热层次。之后我们讨论区块链货币，就不只有比特币和现在热门的一些货币，更是一个完整的支付生态。比特币单价高、交易慢但是安全好比存折，LTC莱特币交易快、币值可靠好比银行卡，闪电网络好比网路银行，中心化交易所好比取款机只用于小额提现，甚至和现有移动微支付体系打通的话，就可以让区块链货币渗透到当下的移动支付场景里。这个从协议层到链外的通道层我们定义为从layer1 到 Layer2的扩展。[L4 Research](https://l4.ventures)基于此设计了一种更通用的[Generalized State Channels](https://medium.com/l4-media/generalized-state-channels-on-ethereum-de0357f5fb44)。根据Li Xuanji在2018年2月ETHDenver会议上分享的Counterfactual Instantiation：联合签名Multisig钱包，使用Registry接口注册counterfactual address，协议执行和签名只需在参与方的机器上执行即可。
+交易加速从协议层到链外的通道层我们定义为从layer1 到 Layer2的扩展，这个扩展不只是运用在微支付。多链和Layer2的扩展，使得完全去中心化的交易所得以实现。Plasma项目组就孵化了[OmiseGO](https://www.omise.co/go)这个去中心化的跨链交易所，发币代码OMG。他可以跨链，跨钱包交易。在多币种间进行高维排单的最优化。[L4 Research](https://l4.ventures)更进一步设计了一种更通用的[Generalized State Channels](https://medium.com/l4-media/generalized-state-channels-on-ethereum-de0357f5fb44)。根据Li Xuanji在2018年2月ETHDenver会议上分享的Counterfactual Instantiation：联合签名Multisig钱包，使用Registry接口注册counterfactual address，协议执行和签名只需在参与方的机器上执行即可。
 
-多链和Layer2的扩展，使得完全去中心化的交易所得以实现。Plasma项目组就孵化了[OmiseGO](https://www.omise.co/go)这个去中心化的跨链交易所，发币代码OMG。他可以跨链，跨钱包交易。在多币种间进行高维排单的最优化。
+去中心化是否是交易所的进化方向呢？2014年BM创建的[bitshares](https://bitshares.org)就最早提出去中心交易所这个概念，现在不论layer1还是layer2都有很多这类尝试。但到目前为止，这些项目上的交易规模比中心化的还差很远，可以说不成气候。是因为没有需求吗？中心化交易所每年都有被黑客攻破和卷款潜逃的案例，每年都有人提去中心的改造。但去中心化目前只作为市场的补充而存在，很大程度还是受产品体验的影响。我们知道开源项目最擅长做的是架构和基础设施，而用户端产品一直都是互联网企业的强项。因为交互流程，产品体验，视觉设计，金融规则等方面的人才在开源社区非常少，基于开源的技术框架，用企业化的包装和运营，可以更有效的抢占市场。区块链钱包是这样，交易所也是。而且这两者都有规模效应，当中心化企业占据一定市场规模后，支持的币种多，交易规模大，体验会越来越好，后来者很难追赶。
 
-但是对于项目的评估不能只依赖数据，要看人看团队，所以虽然技术上可以去中心化，但是人的影响无法忽略。交易所目前还离不开人的运营。在人的操作下，fcoin完成了一次漂亮的韭菜收割。在社会信息没有完全数字化和透明化的情况下，去中心化市场是无法达到经济学设想的完全理性和有效的。
+但只要中心化企业收取过度的垄断利润，就会有低价的挑战者出现。2018年新项目fcoin，提出交易即挖矿的概念，将手续费收入返还用户，通过分利的方式试图同时满足中心化的效率，和去中心的利益分配。这个理念吸引了很多链圈开发者和老用户。但在缺乏监管的市场里，惨遭分身攻击，通俗讲就是被黄牛党薅了羊毛。项目团队也短视，顺势完成了一次漂亮的韭菜收割，让人怀疑之前刷单的会不会就是庄家自己。在规模经济的规律笼罩下，在团队信息不透明，市场短视的大环境下，去中心化交易所目前还无法达到设想的高效和安全。
 
 ## 空间的扩展
 当交易越来越普及，区块链里的账本也会越来越大。为了保持系统的信任和公平，不能轻易删除这些信息。还好在比特币最早的设计里已经考虑到这种情况，设计了Merkel Tree的分叉树存储结构。交易挂在Merkle Tree的叶子节点，从叶子节点往上每一层的数值都是下面关联子节点的组合哈希值。一层一层最后所有的节点汇集到一起，最后得到的哈希值就是Merkle Root。比特币每10分钟一个的区块block只需将这个Merkle Root保存到区块头(block Header)即可。对历史交易复查验证的时候，将需要验证的交易信息从叶节点往上追溯，只要追到认证的Merkle Root即可。所以这种方式是一种用计算时间换空间的置换。  
