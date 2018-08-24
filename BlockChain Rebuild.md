@@ -402,13 +402,13 @@ IOTA的第二个改造是一个可加密的消息广播通道。他的MAM (Maske
 
 ### 微支付的应用
 
-生活在中国的消费者，被微信和支付宝宠坏了，体会不到区块链微支付的作用。
+生活在中国的消费者，被微信和支付宝宠坏了，体会不到区块链微支付的作用。其实东南亚很多国家现在还大量使用纸币，比如泰国就是以现金为主。好在围绕纸币的外汇兑换铺在旅游区已经比较普及，但纸币带来的安全和结算问题始终存在。也许隔两个街区，泰铢的柜台汇率就会有差异。但其实泰国的年轻人已经人手一部智能手机，网络技术的渗透早已不是问题。可惜基础金融设施的落后，目前无法提供快捷的微支付和在线跨境结算服务。这里区块链高效跨境支付的作用得以凸显，和微信或者支付宝可以在同一起跑线齐头并进。除了东南亚，通信和金融设施发达的欧美，也并没有形成便捷的微支付通道。这主要是因为长期依赖信用支票和信用卡的实体支付方式已经非常普及，解决了线下支付的便捷和安全问题。也许随着年轻一代的成长，手机移动支付市场和区块链微支付市场才会在欧美迎来春天。
 
-这种链外的交易通道模式还可以用来做跨链、跨币种的交易[Atomic Swap](https://www.cryptocompare.com/coins/guides/what-are-atomic-swaps/)，目前已经公布了测试网络[代码](https://github.com/decred/atomicswap/pull/37)。2017年底发布了Bitcoin到Litecoin的[测试版](https://blog.lightning.engineering/announcement/2017/11/16/ln-swap.html)，以及Bitcoin到Ethereum的智能合约版本。闪电网络本身的加速，加上转移到LTC的灵活性，使得区块链经济体的交易已经具备冷热层次。之后我们讨论区块链货币，就不只有比特币和现在热门的一些货币，更是一个完整的支付生态。比特币单价高、交易慢但是安全好比存折；LTC莱特币交易快、币值可靠好比银行卡；闪电网络好比网路银行；中心化交易所好比取款机只用于小额提现；和现有移动微支付体系打通的话，就可以让区块链货币渗透到当下的移动支付场景里。但也可能区块链微支付和中心化移动支付会激发一场较量。
+这种链外的交易通道除了在跨境法币间建立结算桥梁，还可以用来做跨链、跨数字币种的交易[Atomic Swap](https://www.cryptocompare.com/coins/guides/what-are-atomic-swaps/)，目前已经公布了测试网络[代码](https://github.com/decred/atomicswap/pull/37)。2017年底发布了Bitcoin到Litecoin的[测试版](https://blog.lightning.engineering/announcement/2017/11/16/ln-swap.html)，以及Bitcoin到Ethereum的智能合约版本。闪电网络本身的加速，加上转移到LTC的灵活性，使得区块链经济体的交易已经具备冷热层次。之后我们讨论区块链货币，就不只有比特币和现在热门的一些货币，更是一个完整的支付生态。比特币单价高、交易慢但是安全好比存折；LTC莱特币交易快、币值可靠好比银行卡；闪电网络好比网路银行；中心化交易所好比取款机只用于小额提现；和现有移动微支付体系打通的话，就可以让区块链货币渗透到当下的移动支付场景里。
 
 ### 去中心化交易所
 
-交易加速从协议层到链外的通道层我们定义为从layer1 到 Layer2的扩展，这个扩展不只是运用在微支付。多链和Layer2的扩展，使得完全去中心化的交易所得以实现。Plasma项目组就孵化了[OmiseGO](https://www.omise.co/go)这个去中心化的跨链交易所，发币代码OMG。他可以跨链，跨钱包交易。在多币种间进行高维排单的最优化。[L4 Research](https://l4.ventures)更进一步设计了一种更通用的[Generalized State Channels](https://medium.com/l4-media/generalized-state-channels-on-ethereum-de0357f5fb44)。根据Li Xuanji在2018年2月ETHDenver会议上分享的Counterfactual Instantiation：联合签名Multisig钱包，使用Registry接口注册counterfactual address，协议执行和签名只需在参与方的机器上执行即可。
+交易加速从协议层到链外的通道层我们定义为从layer1 到 Layer2的扩展，这个扩展不只是运用在微支付。多链和Layer2的扩展，还使得完全去中心化的交易所得以实现。Plasma项目组就孵化了[OmiseGO](https://www.omise.co/go)这个去中心化的跨链交易所，发币代码OMG。他可以跨链，跨钱包交易。在多币种间进行高维排单的最优化。[L4 Research](https://l4.ventures)更进一步设计了一种更通用的[Generalized State Channels](https://medium.com/l4-media/generalized-state-channels-on-ethereum-de0357f5fb44)。根据Li Xuanji在2018年2月ETHDenver会议上分享的Counterfactual Instantiation：联合签名Multisig钱包，使用Registry接口注册counterfactual address，协议执行和签名只需在参与方的机器上执行即可。
 
 去中心化是否是交易所的进化方向呢？2014年BM创建的[bitshares](https://bitshares.org)就最早提出去中心交易所这个概念，现在不论layer1还是layer2都有很多这类尝试。但到目前为止，这些项目上的交易规模比中心化的还差很远，可以说不成气候。是因为没有需求吗？中心化交易所每年都有被黑客攻破和卷款潜逃的案例，每年都有人提去中心的改造。但去中心化目前只作为市场的补充而存在，很大程度还是受产品体验的影响。我们知道开源项目最擅长做的是架构和基础设施，而用户端产品一直都是互联网企业的强项。因为交互流程，产品体验，视觉设计，金融规则等方面的人才在开源社区非常少，基于开源的技术框架，用企业化的包装和运营，可以更有效的抢占市场。区块链钱包是这样，交易所也是。而且这两者都有规模效应，当中心化企业占据一定市场规模后，支持的币种多，交易规模大，体验会越来越好，后来者很难追赶。
 
