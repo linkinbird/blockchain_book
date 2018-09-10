@@ -540,6 +540,7 @@ BTC和ETH目前都是保留全纪录，但是iota的snapshot会清理空账户�
   * 第一条链是Hub，作为中心链和管理员，类似master节点，但本身有去中心化保证
   * 其余的Zone是子链，重要性和Hub是不平等的
   * IBC是Zone和Hub间交互的协议，Hub不限制Zone的实现，只要是通过IBC协议和Hub交互就是一个合法的Zone
+  * 在其之上[irisnet](https://www.irisnetwork.cn)整合了包括ipfs在内的实用工具，为特定的应用场景做优化和服务接口
 * ELA ([Elastos](https://www.elastos.org)) 联合NEO和Bitmain的[G3](https://neonewstoday.com/events/g3-summit-event-report/)联盟
   * NEO的POS协议逐渐成熟了，但是Elastos的所谓区块链操作系统还不见踪影
   * Elastos声称将主链（用于交易确认）和侧链（用于执行智能合约）分离，而且Runtime支持OS, EM 和 SDK
@@ -606,6 +607,7 @@ ETH从2016年开始也计划着类似的分叉（升级）EIPs (Ethereum Improve
   * 由之前的深度学习云平台演化而来，基于以太发工资
   * 2018年6月宣布和SingularityNET建立了[合作](http://www.cointime.com/blockchain/10744.html)，使奇点的AI agent可以选择调用深脑链的算力。
 * 迅雷的玩客云OneCloud号称类似方向，但实际只做了存储
+
   * 基于共享硬件，500块卖设备，其实是类似共享NAS的概念
 * 2018年新成立的项目[OasisLabs](https://www.oasislabs.com)，主打安全计算
   * University of California, Berkeley and 
@@ -617,8 +619,13 @@ ETH从2016年开始也计划着类似的分叉（升级）EIPs (Ethereum Improve
 * 上海交大团队的TEEX 可信计算区块链
 * Ray [RLlib](https://ray.readthedocs.io/en/latest/rllib.html): Scalable Reinforcement Learning
   * 非区块链的分布式AI架构，类似的就罗列了
+* [PlatON](https://www.platon.network/)不认为TEE是足够安全的（确实爆出[漏洞](https://www.bleepingcomputer.com/news/security/sgxspectre-attack-can-extract-data-from-intel-sgx-enclaves/)，但也及时修复了），所以他们聚焦在mpc算法做优化
+  * 经过两年研发，他们基于逻辑门电路的编译层加密来隐私和算力
+  * 很像做智能合约隐私的Origo项目
 
 还有不少像[difinity](https://dfinity.org)和Cardano这样的layer1 扩展项目，以及Danku这样layer2的扩展项目，静待发展吧
+
+预言像cosmos和irisnet这种多链的扩展，对细分行业应用更加够好，能够更快的推广。各种不同共识机制的创新和匿名保护以及智能算力的应用都可以放在这个多链框架内，有点一统江湖的感觉。
 
 # 弱点与攻防
 ## 操纵交易
