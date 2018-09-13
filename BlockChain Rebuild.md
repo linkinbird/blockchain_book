@@ -255,7 +255,7 @@ $$
 
 如果说密码学是区块链的左腿，那分布式系统就是区块链的右腿。这个计算机领域的热门话题包含了寻址协议，网络通信，传输协议，一致性校验等等问题，复杂度并不逊与密码学。其中皇冠上的明珠就是拜占庭容错的分布式，这个拜占庭问题源于一个流传久远的段子。始作俑者是莱斯利·兰伯特（Leslie Lamport），他是微软研究院的首席研究员，曾获得2013年图灵奖——计算机界的诺贝尔奖。这家伙觉得故事让问题变得受欢迎，因此他在提出观点和问题时常用故事背景吸引眼球，拜占庭将军的故事就是兰伯特在研究分布式系统容错性的时候编出的一个故事，原文如下：
 
-> We imagine that several divisions of the Byzantine army are camped outside an enemy city, each division commanded by its own general. The generals can communicate with one another only by messenger. After observing the enemy, they must decide upon a common plan of action. However, some of the generals may be traitors, trying to prevent the loyal generals from reaching agreement.  
+> We imagine that several divisions of the Byzantine army are camped outside an enemy city, each division commanded by its own general. The generals can communicate with one another only by messenger. After observing the enemy, they must decide upon a common plan of action. However, some of the generals may be traitors, trying to prevent the loyal generals from reaching agreement.
 >
 > 假设拜占庭帝国的几支军队在敌人的城池外扎营，每支军队听命于自己的将军，这些将军之间只能通过信使传递消息。在对敌军进行侦察后，将军们必须制订一份共同行动计划。但是，有些将军可能是叛徒，这些叛徒会阻碍那些忠诚的将军达成共识。
 
@@ -265,7 +265,7 @@ $$
 
 拜占庭的故事构造的如此成功，区块链开发者无人不知。Lamport尝到了甜头，后来在《The Part-time Parliament》的论文中又讲了一个虚构的故事。这个故事发生在古希腊一个名叫Paxos的岛屿，作者将分布式一致性的问题比喻为岛上的立法机构如何对一项决议达成一致的问题。本来觉得用故事加以描述更易理解，但其结果完全相反，这篇文章的评审根本不吃这一套。当时的理论过于复杂，几乎没有人看懂，被埋没了多年，原文1998年才得以发表。后来Lamport又重新“正儿八经”地写了一篇《Paxos Made Simple》，似乎要做个简化版来照顾大家的智商。但这个题目和摘要真的害死人：
 
-> Abstract:
+> Abstract:  
 > The Paxos algorithm, when presented in plain English, is very simple
 
 论文的标题和摘要都说的很清楚了，简单啊！但作者其实十分恶意的讽刺了所有读者。我们引用另一篇文章中关于Paxos算法的描述，摘自USENIX ATC 2013的Best paper《In Search of an Understandable Consensus Algorithm》，大致含义说：Paxos真的太难懂了，很少有人不付出极大努力就能完全理解。在另一个高水平会议NSDI上，不少人对Paxos感到不爽。连点评者自己都和它做了很久的斗争，所以他这篇文章取名为“寻找一种易懂的一致性算法”...意思是还在寻找中，根本不像Lamport说的那么简单。后人无不感到Lamport深深的恶意，我们且来看看这个Paxos岛上到底发生了什么：
