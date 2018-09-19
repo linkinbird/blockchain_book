@@ -534,19 +534,6 @@ BTC和ETH目前都是保留全纪录，但是iota的snapshot会清理空账户�
 * 三角矿机[Acute Angle PC](http://www.acuteangle.com/home.html)有自己的主链网络Acute Angle Cloud(AAC)，他的逼格设备，更像是睡莲网络的节点
 * 朋友圈 杨明做的星空矿机，目前还没有上市
 
-## 虚拟机的算力扩展
-现在几乎所有的智能合约平台都无法实现EVM虚拟机的并行化，开放的节点政策和恶意节点的存在，使这个问题异常复杂。目前有一些宣称往这个方向的项目，但是普遍都没有成型：
-* [COSMOS](https://cosmos.network)是基于多链并行项目
-  * 第一条链是Hub，作为中心链和管理员，类似master节点，但本身有去中心化保证
-  * 其余的Zone是子链，重要性和Hub是不平等的
-  * IBC是Zone和Hub间交互的协议，Hub不限制Zone的实现，只要是通过IBC协议和Hub交互就是一个合法的Zone
-  * 在其之上[irisnet](https://www.irisnetwork.cn)整合了包括ipfs在内的实用工具，为特定的应用场景做优化和服务接口
-* ELA ([Elastos](https://www.elastos.org)) 联合NEO和Bitmain的[G3](https://neonewstoday.com/events/g3-summit-event-report/)联盟
-  * NEO的POS协议逐渐成熟了，但是Elastos的所谓区块链操作系统还不见踪影
-  * Elastos声称将主链（用于交易确认）和侧链（用于执行智能合约）分离，而且Runtime支持OS, EM 和 SDK
-    * 实际上侧链就是一个state channel
-* Telegram的TON也是多链和sharding公用的方案
-
 ## 综合算力扩展
 ### 比特币架构扩展
 算力和共识机制是无法完全割裂的，因为如果是在proof of work框架下，算力扩展是很困难的，这就是在2017年比特币面临的两次分叉：
@@ -625,7 +612,23 @@ ETH从2016年开始也计划着类似的分叉（升级）EIPs (Ethereum Improve
 
 还有不少像[difinity](https://dfinity.org)和Cardano这样的layer1 扩展项目，以及Danku这样layer2的扩展项目，静待发展吧
 
-预言像cosmos和irisnet这种多链的扩展，对细分行业应用更加够好，能够更快的推广。各种不同共识机制的创新和匿名保护以及智能算力的应用都可以放在这个多链框架内，有点一统江湖的感觉。
+### 虚拟机和多链扩展
+现在几乎所有的智能合约平台都无法实现EVM虚拟机的并行化，开放的节点政策和恶意节点的存在，使这个问题异常复杂。目前有一些宣称往这个方向的项目，预言像cosmos和irisnet这种多链的扩展，对细分行业应用更加够好，能够更快的推广。各种不同共识机制的创新和匿名保护以及智能算力的应用都可以放在这个多链框架内，有点一统江湖的感觉，即使普遍都没有成型：
+
+* [COSMOS](https://cosmos.network)是基于多链并行项目
+  * 第一条链是Hub，作为中心链和管理员，类似master节点，但本身有去中心化保证
+  * 其余的Zone是子链，重要性和Hub是不平等的
+  * IBC是Zone和Hub间交互的协议，Hub不限制Zone的实现，只要是通过IBC协议和Hub交互就是一个合法的Zone
+  * 在其之上[irisnet](https://www.irisnetwork.cn)整合了包括ipfs在内的实用工具，为特定的应用场景做优化和服务接口，都为Go的开发环境
+* [Lisk](https://lisk.io) 定制侧链平台
+  * 基于模板的定制，包括了发币和功能为一体
+  * 对JavaScript，NodeJS和web apps的重点支持
+  * [Ark](https://ark.io)是Lisk的DPOS克隆，而Lisk起源于[Crypti](https://github.com/borispovod/crypti)项目，是这一技术线的脉络
+* ELA ([Elastos](https://www.elastos.org)) 联合NEO和Bitmain的[G3](https://neonewstoday.com/events/g3-summit-event-report/)联盟
+  * NEO的POS协议逐渐成熟了，但是Elastos的所谓区块链操作系统还不见踪影
+  * Elastos声称将主链（用于交易确认）和侧链（用于执行智能合约）分离，而且Runtime支持OS, EM 和 SDK
+    * 实际上侧链就是一个state channel
+* Telegram的TON也是多链和sharding公用的方案
 
 # 弱点与攻防
 ## 操纵交易
