@@ -491,6 +491,8 @@ Sharding算是大区自制，按照某种高效而随机的方式把节点分为
   - 2018-03-05 Coordinator把milestone发放速度从2分钟加快到了1分钟，这样交易可以更快的被milestone引用，意味着更快的交易确认
 * 在进行网络攻击的时候，攻防的胜负是概率事件，防御理论尚未完善。
 
+还有[Emin Gün Sirer](https://twitter.com/el33th4xor)教授一直在[推荐](https://twitter.com/el33th4xor/status/10493558966802104330)的[Avalanche consensus](https://hackernoon.com/protocol-spotlight-avalanche-3f5dfd366a26)，和微软研究院早年推出的[Avalanche P2P](https://www.microsoft.com/en-us/research/project/avalanche-file-swarming-with-network-coding/)网络不知道是否有关系。
+
 ## 空间扩展
 从协议层到平行的储存策略，也有一个发展历程。
 ### 分叉树结构 Merkel Tree
