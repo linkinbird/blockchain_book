@@ -860,6 +860,12 @@ ETH也是可以挖矿的，因为[Ethash](https://github.com/ethereum/wiki/wiki/
 ### 加密经济
 星云链[Nebulas](https://nebulas.io)推出一种经济指标，并以此来标定不同账户对经济总量的贡献度。他们的星云指数公式是账户资产余额中值和账户交易出入度的乘积。经济体要交易，也要稳定。回顾常见的Coin age加权，在一定时间内将交易次数乘以距离上次交易的时间再累加，会导致一定时间内交易10次和交易1次的效用无差异。这种coin age的经济指标只和资产总量相关，并没有鼓励交易。但同样过快的交易也有刷单嫌疑，所以交易的综合效用函数应该是两头低，中间高的。这种效果正是通过余额和交易的混合激励来实现：账户指数 = 余额中值 x 交易总金额。账户余额中值即统计时间内持有时间过半以上的余额，以此防止同一笔钱在两个账户互倒获得翻倍效果。结合交易的流出和流入额，在持有和交易间让用户自己平衡。以合计为10的余额为例，相乘结果最大的情况是对半 $$5*5$$，就是保留一半，交易一半，也就实现了中间高，两头低的效果。
 
+经典货币理论有这样的数量公式：$$M \times V = P \times Y$$。这里M为货币总量，V为流通速度，P是物价水平，Y是经济产量。Chris Burniske提出了类似的理论[公式](https://medium.com/@cburniske/cryptoasset-valuations-ac83479ffca7)：$$M \times V = P \times Q​$$。
+* M = size of the asset base
+* V = velocity of the asset
+* P = price of the digital resource being provisioned
+* Q = quantity of the digital resource being provisioned
+
 其他还需要更多的经济指标来配合，不论作为调控政策的依据，还是币值定价的参考。从欧元区学来一些除了利率，汇率之外的候选指标和概念：
 * 消费端
   * 消费者信心指数
