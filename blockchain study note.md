@@ -236,6 +236,7 @@ $$
 * 2016年10月发布的[ZCash](https://z.cash)也是使用类似技术，优化了交易速度，弥补了部分这个技术的短板
   * Sapling的升级版本用了特指的elliptic curve椭圆函数：[Jubjub](https://z.cash/technology/jubjub.html)，据[测试](https://blog.z.cash/cultivating-sapling-faster-zksnarks/)节省了80%的运行时间
 * 2017年9月ETH 的Byzantium版本[支持](https://www.reddit.com/r/ethereum/comments/712idt/ethereum_testnet_just_verified_a_zcash_transaction/)了zk-snark proof
+  * 主网有人通过智能合约实现了一个应用层的版本[AZTEC.sol](https://github.com/AztecProtocol/AZTEC)，通过独有的AZTEC Note作为中间体对交易金额进行join-split匿名化。后续甚至可以支持广义的匿名合约计算。
 * 2018年2月底从比特币[分叉](https://www.reddit.com/r/BitcoinPrivate/comments/7todw0/historical_bitcoin_private_hard_fork_snapshot/)出了[Bitcoin Private](https://btcprivate.org/) (BTCP) 就是merge了ZClassicCoin (ZCL)和BTC主链的一个分叉，采用的也是zkSNARKs
 * JPMorgan的[Quorum](https://www.jpmorgan.com/country/US/EN/Quorum)链是基于ETH的金融应用改造，也加入了[ZSL](https://github.com/jpmorganchase/quorum/wiki/ZSL) (zero-knowledge security layer) 和对特定监管节点透明的子版本
   * 子版本作者Simon Liu也是ZCash的贡献者，git上叫[bitcartel](https://github.com/bitcartel)，同时也是MultiChain背后公司[Coin Sciences](https://www.multichain.com/about-coin-sciences-ltd/)的区块链顾问，个人[博客](https://makebitcoingreatagain.wordpress.com/about/)非常低调
@@ -563,7 +564,7 @@ ETH从2016年开始也计划着类似的分叉（升级）EIPs (Ethereum Improve
   - 但最近的core team会议里（2018-02），parallelization安全问题太多，可能不纳入到Constantinople分叉
   - Prysmatic团队提出了一个两步走的[sharding方案](https://medium.com/@rauljordan/ethereum-sharding-update-prysmatic-labs-implementation-roadmap-c625cd013aeb)（2018-03-07）
   - 新加坡的[Zilliqa](https://www.zilliqa.com)团队基于新加坡国立研究的[Secure Sharding protocol](https://dl.acm.org/citation.cfm?id=2978389)，扩容的同时只可以承受25%的恶意节点，和Vitalik也在合作
-  - 分布式依赖的随机生成RNG会用到[RANDAO](https://ethresear.ch/t/rng-exploitability-analysis-assuming-pure-randao-based-main-chain/1825)方案，经过一些预防串通和预防懒节点的优化，似乎可以应用了
+  - 分布式依赖的随机生成RNG会用到[RANDAO](https://github.com/randao/randao)方案，经过一些预防串通和预防懒节点的优化，似乎可以应用了
   - Telegram的区块项目TON里明确了sharding的计划
 
 此外L4 Research提出的[Layer 2](https://medium.com/l4-media/making-sense-of-ethereums-layer-2-scaling-solutions-state-channels-plasma-and-truebit-22cb40dcc2f4) 解决方案也很有价值：
