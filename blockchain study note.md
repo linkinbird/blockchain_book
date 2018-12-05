@@ -374,8 +374,35 @@ IOTA 的MAM机制 Masked Authenticated Message
 ## P2P
 比特币用的是Gossip网络，大家每个周期内随机找个其他节点互相同步彼此不知道的状态，从概率上最终一定会收敛成所有节点都拿到最新的状态，只不过节点越多收敛越慢，肯定是最终一致性。2014年某次实验37天发现了872,648 个IP地址，但是高度不稳定，在线的一般几千个 [比特币实时网络节点](https://bitnodes.earn.com/nodes/live-map/)。如何在节点间达成共识，比特币用的是定义难，按时验证容易的一个证明题POW。
 
-以太坊用的是[Kademila](https://www.jianshu.com/p/f2c31e632f1d)基于分布式哈希地址的索引。节点按照有顺序的异或距离（就是[汉明距离](https://blog.csdn.net/akadiao/article/details/79767113)，在二进制里与欧式距离等续）组成二叉树，在树的每一层级记录1个或几个友邻节点。这样查询任何一个目标ID的时候，都可以快速从高层级逐步下降，落到具体的叶子节点。这个结构可以在n位ID的二叉树下，每个节点只要记录n的近邻，在最多n次查询就能找到任意节点，整个树的容量有2^n。这种索引的几何意义就是按方向查找，从0~90度均匀铺设链接，角度小的邻居少，角度大的邻居多。通过有限近邻，及有限传递（2进制高维空间的紧凑性）就可以到达任意点。
+### 比特币的三步广播
 
+为了高效的利用网络带宽，在交易广播时分为三步：
+* Inventory messages (inv=h(tx))
+* Get data messages (getdata) 最多等待2分钟
+* Transaction messages (tx)
+
+每个节点会维护自己的UTXO未消费账户池，同时彼此更新的交易先放进Mempool进行核对。有时交易有前后次序，万一上家的钱还没打给我，我打给下家的交易已经广播出去了，这就会出现一个无法关联历史账本的孤儿交易。这种交易存在MapOrphanTransactions的缓存里，一旦上家的交易来了，就会完成串联，完成前后交易的验证。
+
+通过同时利用重复消费不广播的特性，和孤儿交易池会忽略inv消息请求的特点，我们可以嗅探节点间的网络链路，这就是[TxProbe](https://arxiv.org/abs/1812.00942)技术：  
+![edge_inferring](https://raw.githubusercontent.com/linkinbird/blockchain_book/master/pic/Basic_edge_inferring_technique.png)
+
+1. 创建数组相互冲突的重复消费交易parents和 flood交易
+2. 在parents交易基础上创建二次交易markers
+   1. 如果提前收到了flood交易，就会排除冲突交易parents
+   2. 当再次收到后续交易markers的时候，因为缺少了parents交易，所以markers被计入孤儿交易缓存
+   3. 多次构造markers以选取比较低的交易哈希，因为Mempool在满载后会随机剔除超过某个randomhash的交易
+3. 将要探测的网络分为source和sink组
+   1. source的规模要小一些，是孤儿交易广播的出发点
+4. 广播构造的交易
+   1. parents和markers进入source组
+   2. flood进入sink组
+   3. 为了阻止在开始探测前两个组提前交互，需要使用invblock，利用getdata的2分钟间隔，广播我们不希望他们知道的inv=h(tx)
+   4. 只有markers交易时我们允许在两个组之间流转的，也是探测其关联的依据
+
+### 以太坊的K桶寻址
+以太坊和IPFS一样用的是[Kademila](https://www.jianshu.com/p/f2c31e632f1d)基于分布式哈希地址的索引。节点按照有顺序的异或距离（就是[汉明距离](https://blog.csdn.net/akadiao/article/details/79767113)，在二进制里与欧式距离等续）组成二叉树，在树的每一层级记录1个或几个友邻节点。这样查询任何一个目标ID的时候，都可以快速从高层级逐步下降，落到具体的叶子节点。这个结构可以在n位ID的二叉树下，每个节点只要记录n的近邻，在最多n次查询就能找到任意节点，整个树的容量有2^n。这种索引的几何意义就是按方向查找，从0~90度均匀铺设链接，角度小的邻居少，角度大的邻居多。通过有限近邻，及有限传递（2进制高维空间的紧凑性）就可以到达任意点。
+
+### DAG DMT和其他
 IOTA使用的有向无环图 [Directed acyclic graph](https://en.wikipedia.org/wiki/Directed_acyclic_graph) DAG是另一种传播网络，将生产者和消费者的角色融合，形成不停增长的账簿。其中的共识机制基于随机游走，虽然单点效率上不如近邻广播，但是集群总体有极强的扩展性。已经有不少[项目](https://coinpickings.com/dag-alternative-ledger-system-cryptocurrencies/)在运用这种协议了。
 
 分布式数据系统用的是ZooKeeper的Zookeeper Atomic Broadcast（ZAB）原子广播协议。在ZooKeeper群集中，其中一个节点具有领导角色，其余的则具有追随者角色。领导者负责接受来自客户端的所有进入状态更改，并将其复制到自己和跟随者。读请求在所有跟随者和领导者之间进行负载平衡。 
@@ -428,6 +455,13 @@ consensus是经常提到的词，因为除了证明你的工作能力以外，�
 POS 前面提到过的Proof of Stake 机制是按照财富进行了权利分配，当然在联机时长等细节做了优化。
 
 新秀[Qtum](https://qtum.org)就是结合了比特币和以太坊的优点，形成Decentralized Governance Protocol ([DGP](https://qtum.org/en/blog/qtum-s-decentralized-governance-protocol))管理的平台，通过自认知smart contract定制block size, Gas Price, Gas Limit 的POS共识体系
+
+与POW时间的本质不同，POS更多是在使用经济规则
+* 当POW加密币价格上涨的时候，矿机增加，算力增加，难度也增加，维持一个投入产出的平衡。币价下跌矿机撤出，算力减弱，但矿机收益反而增长，也会回到一个平衡
+* 同样POS币价下跌，stake持有者退场时，剩余玩家人均收入分配就会增加。币价上涨时则相反
+  * 但和POW矿机的单一功能不同，矿机算力难以快速迁移，所以矿力是长期稳定的
+  * 但Stake本身具有高流动性，参与节点验证相当于买了国债，有固定收益率，但不一定是市场最高。所以当有更好的投资机会时，POS参与方会更加倾向于转移阵地。不一定是卖币，可能是使用货币交易实体商品和服务。当外部市场机会随着资金增加导致收益率收窄时，国债收益率上升，最终两者还是会平衡，维持一定数量的Stake保证网络验证有效性。
+  * 法币的利率是和通胀率挂钩的，所以在总体通胀情况下对利率会非常敏感。但数字币本身是通胀稳定的，所以加入Stake就是最好也是最简单的抗通胀资产。
 
 ### DPOS委任共识-普选
 [EOS](https://eos.io)声称解决多核并行，并结合了空间扩展和 DPOS (delegated proof-of-stake )机制，目标做成分布式的操作系统(EOSIO)。其中全体持币者票选委任节点(supernodes) 既保证了去中心化，又保证了效率和灵活性。从参数选择到分叉都有所设计。但普选的过程是否存在作恶和贿赂的现象，现在还难以断定。
@@ -555,11 +589,11 @@ BTC和ETH目前都是保留全纪录，但是iota的snapshot会清理空账户�
 ETH从2016年开始也计划着类似的分叉（升级）EIPs (Ethereum Improvement Proposal) 代号"Metropolis"，2017年完成了第一步[Byzantium](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-609.md)，2018计划完成第二步Constantinople聚焦在两个方向，一起解决共识机制和算力的扩展问题：
 * [carsper](https://github.com/ethereum/casper) POS
   - FFG (Friendly Finality Gadget) partial consensus mechanism combining proof-of-stake algorithm by Vitalik
-  	- Hybrid POW/POS, every 50th block is going to be a POS
-  	- Bet on block discover, failed(malicious) ones will get their stake slashed off
+    - Hybrid POW/POS, every 50th block is going to be a POS
+    - Bet on block discover, failed(malicious) ones will get their stake slashed off
   - CBC (Correct By Construction) partially specified protocol by Vlad
-  	- 部分定义的动态协议，通过"ideal adversay"来最终达到平衡的完整协议
-  	- 还是一种理想化的概念设计，有点像GAN神经网络的训练思路
+    - 部分定义的动态协议，通过"ideal adversay"来最终达到平衡的完整协议
+    - 还是一种理想化的概念设计，有点像GAN神经网络的训练思路
 * [sharding](https://ethresear.ch/c/sharding) 分布式扩展，来源于数据库技术
   - 但最近的core team会议里（2018-02），parallelization安全问题太多，可能不纳入到Constantinople分叉
   - Prysmatic团队提出了一个两步走的[sharding方案](https://medium.com/@rauljordan/ethereum-sharding-update-prysmatic-labs-implementation-roadmap-c625cd013aeb)（2018-03-07）
