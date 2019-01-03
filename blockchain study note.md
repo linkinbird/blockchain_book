@@ -400,6 +400,11 @@ IOTA 的MAM机制 Masked Authenticated Message
    3. 为了阻止在开始探测前两个组提前交互，需要使用invblock，利用getdata的2分钟间隔，广播我们不希望他们知道的inv=h(tx)
    4. 只有markers交易时我们允许在两个组之间流转的，也是探测其关联的依据
 
+#### block relay 的带宽和压缩优化
+Bitcoin Relay Network 为了应对TCP协议丢包的情况，使用UDP-based transmission在每个包里额外增加一些信息，用来在少量丢包时可以用额外信息进行补全，而无需重复传递。这种方法叫Forward Error Correction, or FEC。实践证明额外传递信息的成本要低于丢包了重新连接和传递的成本，该方法在实时性要求很高的视频会议系统里已经有应用。
+
+[FIBRE](http://bitcoinfibre.org)项目最近更新的[统计数据](http://bitcoinfibre.org/stats.html)显示，应用最新的网络和压缩技术，块广播的传递延迟可以在毫秒级，大大加快了交易处理能力。有人乐观的认为这会带来更高的TPS，当然还要依赖其他多方面技术的更新。
+
 ### 以太坊的K桶寻址
 以太坊和IPFS一样用的是[Kademila](https://www.jianshu.com/p/f2c31e632f1d)基于分布式哈希地址的索引。节点按照有顺序的异或距离（就是[汉明距离](https://blog.csdn.net/akadiao/article/details/79767113)，在二进制里与欧式距离等续）组成二叉树，在树的每一层级记录1个或几个友邻节点。这样查询任何一个目标ID的时候，都可以快速从高层级逐步下降，落到具体的叶子节点。这个结构可以在n位ID的二叉树下，每个节点只要记录n的近邻，在最多n次查询就能找到任意节点，整个树的容量有2^n。这种索引的几何意义就是按方向查找，从0~90度均匀铺设链接，角度小的邻居少，角度大的邻居多。通过有限近邻，及有限传递（2进制高维空间的紧凑性）就可以到达任意点。
 
