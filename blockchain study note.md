@@ -372,6 +372,8 @@ IOTA 的MAM机制 Masked Authenticated Message
 # 网络与协作
 因为交易本身是完全匿名的，所以网络也是设计成unstructured overlay 通过addr消息部分的广播其友邻网络，通过DNS bootstrapping 来寻找友邻。当然也有人把区块链1.0看成是寻找广播的最优路径，但是在不信任状况下的广播，必然涉及容错和共识，所以关于广播结构放在网络共识章节介绍。
 
+对比分布式数据系统用的是ZooKeeper的Zookeeper Atomic Broadcast（ZAB）原子广播协议。在ZooKeeper群集中，其中一个节点具有领导角色，其余的则具有追随者角色。领导者负责接受来自客户端的所有进入状态更改，并将其复制到自己和跟随者。读请求在所有跟随者和领导者之间进行负载平衡。而区块链的网络层去掉了这种领导节点的角色。
+
 ## P2P
 比特币用的是Gossip网络，大家每个周期内随机找个其他节点互相同步彼此不知道的状态，从概率上最终一定会收敛成所有节点都拿到最新的状态，只不过节点越多收敛越慢，肯定是最终一致性。2014年某次实验37天发现了872,648 个IP地址，但是高度不稳定，在线的一般几千个 [比特币实时网络节点](https://bitnodes.earn.com/nodes/live-map/)。如何在节点间达成共识，比特币用的是定义难，按时验证容易的一个证明题POW。
 
@@ -403,31 +405,36 @@ IOTA 的MAM机制 Masked Authenticated Message
 #### block relay 的带宽和压缩优化
 Bitcoin Relay Network 为了应对TCP协议丢包的情况，使用UDP-based transmission在每个包里额外增加一些信息，用来在少量丢包时可以用额外信息进行补全，而无需重复传递。这种方法叫Forward Error Correction, or FEC。实践证明额外传递信息的成本要低于丢包了重新连接和传递的成本，该方法在实时性要求很高的视频会议系统里已经有应用。
 
-[FIBRE](http://bitcoinfibre.org)项目最近更新的[统计数据](http://bitcoinfibre.org/stats.html)显示，应用最新的网络和压缩技术，块广播的传递延迟可以在毫秒级，大大加快了交易处理能力。有人乐观的认为这会带来更高的TPS，当然还要依赖其他多方面技术的更新。
+[FIBRE](http://bitcoinfibre.org)项目最近更新的[统计数据](http://bitcoinfibre.org/stats.html)显示，应用最新的网络和压缩技术，块广播的传递延迟可以在毫秒级，大大加快了交易处理能力。但其中关于cut-through routing的设计是否参考了先前的[BloXroute](https://bloxroute.com)和更早的[Falcon](https://www.falcon-net.org)一直存在[争议](https://twitter.com/el33th4xor/status/1080700582590115841)。有人乐观的认为这会带来更高的TPS，当然还要依赖其他多方面技术的更新。
 
 ### 以太坊的K桶寻址
 以太坊和IPFS一样用的是[Kademila](https://www.jianshu.com/p/f2c31e632f1d)基于分布式哈希地址的索引。节点按照有顺序的异或距离（就是[汉明距离](https://blog.csdn.net/akadiao/article/details/79767113)，在二进制里与欧式距离等续）组成二叉树，在树的每一层级记录1个或几个友邻节点。这样查询任何一个目标ID的时候，都可以快速从高层级逐步下降，落到具体的叶子节点。这个结构可以在n位ID的二叉树下，每个节点只要记录n的近邻，在最多n次查询就能找到任意节点，整个树的容量有2^n。这种索引的几何意义就是按方向查找，从0~90度均匀铺设链接，角度小的邻居少，角度大的邻居多。通过有限近邻，及有限传递（2进制高维空间的紧凑性）就可以到达任意点。
 
-### DAG DMT和其他
-IOTA使用的有向无环图 [Directed acyclic graph](https://en.wikipedia.org/wiki/Directed_acyclic_graph) DAG是另一种传播网络，将生产者和消费者的角色融合，形成不停增长的账簿。其中的共识机制基于随机游走，虽然单点效率上不如近邻广播，但是集群总体有极强的扩展性。已经有不少[项目](https://coinpickings.com/dag-alternative-ledger-system-cryptocurrencies/)在运用这种协议了。
+## 数据结构
+在P2P协议上，传递和计算的数据结构是另外一个独立的设计元素。他们可以是链表，可以是二叉树，可以是有向无环图。
 
-分布式数据系统用的是ZooKeeper的Zookeeper Atomic Broadcast（ZAB）原子广播协议。在ZooKeeper群集中，其中一个节点具有领导角色，其余的则具有追随者角色。领导者负责接受来自客户端的所有进入状态更改，并将其复制到自己和跟随者。读请求在所有跟随者和领导者之间进行负载平衡。 
+### DAG
+IOTA使用的有向无环图 [Directed acyclic graph](https://en.wikipedia.org/wiki/Directed_acyclic_graph) DAG作为新的数据结构，也是一种新的传播网络。将生产者和消费者的角色融合，形成不停增长的账簿。其中的共识机制基于随机游走，虽然单点效率上不如近邻广播，但是集群总体有极强的扩展性。已经有不少[项目](https://coinpickings.com/dag-alternative-ledger-system-cryptocurrencies/)在运用这种协议了。
 
+### DMT
 Dynamic Multi-tree（DMT）也是一种偏中心化的广播网络模式。虽然信息传播很高效，但是共识达成和DPOS类似，树的根节点需要分权轮替。
 
-## Proof of work
+## 分权与防刷
+按照常规理解，这部分所讨论的POW和POS是共识协议的范畴，但是严格意义上，按照Emin Gün Sirer教授的[解释](https://twitter.com/el33th4xor/status/1006931729679044608)，他们只是防止女巫攻击的分权机制，其中关于如何投票和达成共识并不涉及。所以这里我们也将他们分开导论，但要知道分权和投票永远是组合在一起的，权力的分配和行使原则要放在一起考虑。所以大众统称他们为共识协议也可以理解。只是当这些机制交叉组合的时候会感觉有些奇怪，这个我们稍后举例。‏
+
+### Proof of work
 网络节点以算力为基础，接受新的交易以后，寻找满足某个Hash条件（以N个0开头）的nonce，找到以后对交易验证并叠加最长的链条上。整个网络都可以验证这个nonce的有效性，并且在最长链条上继续叠加。
 
 新的block大概每10分钟生成一个，需要在产生新块之前，完成对旧块交易的确认。但是算力太高，生成太快也不行，因为网络可能还没来得及达成共识。所以每2016个块以后，都要调整认证算法的难度，极少数情况会降低，但是随着网络的扩大，大部分情况都是在上调难度  
 ![Confirmation Time and difficulty](https://raw.githubusercontent.com/linkinbird/blockchain_book/master/pic/bitcoin-difficulty.png)
 
-### 算法扩展
+#### 算法扩展
 * litecoin(LTC 莱特币）：除了比特币默认的SHA256挖矿算法以外，使用了另外一种对CPU和内存资源要求更平衡的scrypt算法，力求避免GPU大矿池的垄断。同时也把块认证时间提升到了2.5分钟。目前有人统计，LTC已经成为暗网的[主流代币](https://www.recordedfuture.com/dark-web-currency/)。
 * 还有人为了让计算资源有意义，开发了Primecoin ([XPM](http://primecoin.io))。这里认证算法是要求找出连续的质数链Cunningham chains
 * Proof of Stake：一种基于coin age的激励算法，使用类似签到抽奖的机制，给予货币持有者一定的激励机会，在领取激励以后，这个机会coin age清空重新积累。Peercoin ([PPC](http://peercoin.net))就是这种币，网络节点无需再以无效的算力去竞争激励，而改为轮流抽奖。但也有作弊空间，就是偶尔联网收取激励，但大部分时间下线，这样coin age同样会增长。所以有proof of stake velocity使coin age非线性的增长，最后增加率降为0。
 * Proof of Activity：除了有coin age积累以外，改变自主领奖为被动领奖。要求在发奖的时候点名，有N个人可以被点到，如果不在线就无法签名接受。这个点名过程叫做"follow-the-satoshi"
 
-### 硬件扩展
+#### 硬件扩展
 因为Proof of work是高度依赖CPU资源的计算，所以比特币矿工都已经单独定制ASIC(application-specific integrated circuit)芯片来挖矿。虽然代码是开源的，但是速度优化的代码面临专利诉讼风险。
 * AsicBoost在2018年发起了最具争议的[专利行动](https://bitcoinmagazine.com/articles/there-bitcoin-patent-war-going-initiative-could-end-it/)
   - 他们有提高哈希效率30%的专利，几乎所有矿工都会使用
@@ -452,22 +459,34 @@ Dynamic Multi-tree（DMT）也是一种偏中心化的广播网络模式。虽�
 
 浏览器的潜力还很大，耶鲁归来的张旋创立[Cloudacc](http://www.cloudacc-inc.com/)，使用web P2P技术来加速流媒体分发。通过flash/html5即可运行，无需任何客户端或插件，是睡莲网络的理想载体。他的另一个新项目[闪电盒子](http://www.jobui.com/company/14000595/)把战场转移到移动端，通过应用层虚拟化MAV（Mobile App Application-level Virtualization）无需下载，在远端直接运行原生的Android应用程序。通过借鉴趣头条的激励模式，融合积分墙打入应用分发和流量入口的领域。
 
-## 网络共识
-consensus是经常提到的词，因为除了证明你的工作能力以外，还需要团队协作以达成一致的决策和目标。这里还要面对恶意节点的攻击，所以抽象化为BFT consensus (Byzantine fault tolerance)。在去中心化的世界里，解决的方案也逃不出人类的历史，分为民主派和集权派：
-
-比特币共识网络是最典型的全民主型，要求50%以上的节点重复认证同一个交易，这里有太多的冗余，速度受到慢节点的瓶颈影响，难以扩展
-
-### POS共识
-POS 前面提到过的Proof of Stake 机制是按照财富进行了权利分配，当然在联机时长等细节做了优化。
+### Proof of Stake
+POS 机制是按照财富进行了权利分配，当然在联机时长等细节做了优化。
 
 新秀[Qtum](https://qtum.org)就是结合了比特币和以太坊的优点，形成Decentralized Governance Protocol ([DGP](https://qtum.org/en/blog/qtum-s-decentralized-governance-protocol))管理的平台，通过自认知smart contract定制block size, Gas Price, Gas Limit 的POS共识体系
 
-与POW时间的本质不同，POS更多是在使用经济规则
-* 当POW加密币价格上涨的时候，矿机增加，算力增加，难度也增加，维持一个投入产出的平衡。币价下跌矿机撤出，算力减弱，但矿机收益反而增长，也会回到一个平衡
-* 同样POS币价下跌，stake持有者退场时，剩余玩家人均收入分配就会增加。币价上涨时则相反
-  * 但和POW矿机的单一功能不同，矿机算力难以快速迁移，所以矿力是长期稳定的
-  * 但Stake本身具有高流动性，参与节点验证相当于买了国债，有固定收益率，但不一定是市场最高。所以当有更好的投资机会时，POS参与方会更加倾向于转移阵地。不一定是卖币，可能是使用货币交易实体商品和服务。当外部市场机会随着资金增加导致收益率收窄时，国债收益率上升，最终两者还是会平衡，维持一定数量的Stake保证网络验证有效性。
-  * 法币的利率是和通胀率挂钩的，所以在总体通胀情况下对利率会非常敏感。但数字币本身是通胀稳定的，所以加入Stake就是最好也是最简单的抗通胀资产。
+与POW时间的本质不同，POS更多是在使用经济规则放分身刷单
+
+- 当POW加密币价格上涨的时候，矿机增加，算力增加，难度也增加，维持一个投入产出的平衡。币价下跌矿机撤出，算力减弱，但矿机收益反而增长，也会回到一个平衡
+- 同样POS币价下跌，stake持有者退场时，剩余玩家人均收入分配就会增加。币价上涨时则相反
+  - 但和POW矿机的单一功能不同，矿机算力难以快速迁移，所以矿力是长期稳定的
+  - 但Stake本身具有高流动性，参与节点验证相当于买了国债，有固定收益率，但不一定是市场最高。所以当有更好的投资机会时，POS参与方会更加倾向于转移阵地。不一定是卖币，可能是使用货币交易实体商品和服务。当外部市场机会随着资金增加导致收益率收窄时，国债收益率上升，最终两者还是会平衡，维持一定数量的Stake保证网络验证有效性。
+  - 法币的利率是和通胀率挂钩的，所以在总体通胀情况下对利率会非常敏感。但数字币本身是通胀稳定的，所以加入Stake就是最好也是最简单的抗通胀资产。
+
+## 网络共识
+consensus是经常提到的词，因为除了证明你的工作能力以外，还需要团队协作以达成一致的决策和目标。这里还要面对恶意节点的攻击，所以抽象化为BFT consensus (Byzantine fault tolerance)。在去中心化的世界里，解决的方案也逃不出人类的历史，分为民主派和集权派：
+
+比特币共识网络是最典型的全民主型，要求50%以上的节点重复认证同一个交易，这里有太多的冗余，速度受到慢节点的瓶颈影响，难以扩展。将共识机制和防刷机制交叉组合，可以产生非常多的变种：
+
+* 长链Longest chain共识和POW是天然的搭配
+  * 因为长链共识要求最长链尾部的增长速度超过分叉增长的速度，这个POW最能保证，而POS则无能为力
+  * 所以我们不会提到长链共识，只会说POW机制，因为这两个是强绑定的
+* 基于资源的POS分权可以搭配的共识或者投票机制很多，这些机制反过来其实也可以搭配POW使用
+  * PBFT
+  * Ben-Or
+  * Tendermint
+  * Avalanche
+
+还有一些分权和共识机制的组合具有代表性或代表某种设计思维，我们单独介绍
 
 ### DPOS委任共识-普选
 [EOS](https://eos.io)声称解决多核并行，并结合了空间扩展和 DPOS (delegated proof-of-stake )机制，目标做成分布式的操作系统(EOSIO)。其中全体持币者票选委任节点(supernodes) 既保证了去中心化，又保证了效率和灵活性。从参数选择到分叉都有所设计。但普选的过程是否存在作恶和贿赂的现象，现在还难以断定。
@@ -512,10 +531,6 @@ DPOS是一种综合机制，其实现的方法也有很多数据结构，阿里�
 
 模仿这个设计，2018年4月Ontology就发布了他们的[VBFT共识](https://medium.com/ontologynetwork/ontology-launches-vbft-a-next-generation-consensus-mechanism-becoming-one-of-the-first-vrf-based-91f782308db4)项目，是POS和VRF的合体。在VRF确保了随机性、匿名性、和瞬时性的基础上，可以大大加快共识过程就保证安全性不受损害。Cardano和Dfinity也都使用这个思想，可以说更加接近机器控制的共识，每个节点参与的操控力被大大限制了。
 
-### 区域自治共识
-Sharding算是大区自制，按照某种高效而随机的方式把节点分为不同的自治区，每个区处理分派给自己的任务  
-但这项技术还在很早期的阶段，ETH在努力的推进，预计2019年能够成熟
-
 ### 个体自治 共享共识
 更彻底的个体自治是单向网络图模式，主要的推进者是[IOTA](https://iota.org)，他们的动机是在物联网领域，需要提升网络效率。但这个模式还需要验证。单向图(DAG)基于当前未确认的交易节点进行后续链接，取消了Peer discovery，全局信息弱，这里很多问题值得讨论：
 * 混合了POW和POS
@@ -532,7 +547,19 @@ Sharding算是大区自制，按照某种高效而随机的方式把节点分为
   - 2018-03-05 Coordinator把milestone发放速度从2分钟加快到了1分钟，这样交易可以更快的被milestone引用，意味着更快的交易确认
 * 在进行网络攻击的时候，攻防的胜负是概率事件，防御理论尚未完善。
 
-还有[Emin Gün Sirer](https://twitter.com/el33th4xor)教授一直在[推荐](https://twitter.com/el33th4xor/status/10493558966802104330)的[Avalanche consensus](https://hackernoon.com/protocol-spotlight-avalanche-3f5dfd366a26)，和微软研究院早年推出的[Avalanche P2P](https://www.microsoft.com/en-us/research/project/avalanche-file-swarming-with-network-coding/)网络不知道是否有关系。
+### 其他组合共识的变种
+
+PoW+DAG+modified heaviest chain. That'd be GHOST.  这个套路的希伯来大学开发团队Yonatan Sompolinsky, Yoad Lewenberg, and Aviv Zohar同时也是IOTA的创始人，所以两者的机制听起来很像。这套机制还有一个很长的名字 “Serialization of Proof-of-work Events: Confirming Transactions via Recursive Elections” (SPECTRE)，但其实背后都是相同的人。之前还有个竞争对手[ByteBall](https://byteball.org)，不通过随机游走，而是在DAG里选择一条main chain来确定交易顺序，但是现在转型重点做钱包了。
+
+PoS+DAG+Avalanche, as in Ava coin. 是[Emin Gün Sirer](https://twitter.com/el33th4xor)教授一直在推荐的[Avalanche consensus](https://hackernoon.com/protocol-spotlight-avalanche-3f5dfd366a26)，和微软研究院早年推出的[Avalanche P2P](https://www.microsoft.com/en-us/research/project/avalanche-file-swarming-with-network-coding/)网络不知道是否有关系。而且和交大谷老师他们的选型也有点像。类似的也可以将 PoS + multisets + Avalanche组合，或者PoS+forests or chain+Snowball，都是类似的概念。当然性能优化的效果会有不同。
+
+Sharding在这里也可以算是数据结构和共识的一种新组合，类似政治里的大区自制。按照某种高效而随机的方式把节点分为不同的自治区，每个区处理分派给自己的任务。但这项技术还在很早期的阶段，ETH在努力的推进，预计2019年能够成熟
+
+# 性能扩展
+网络层，分身防刷，是底层基础，有一定扩展空间。  
+共识投票机制决定了投票权与分配，也有少量扩展空间。  
+运行在次之上的算力和应用，还有其独自可以扩展的地方。  
+这些全部组合在一起，就是区块链性能扩展的3个层次。
 
 ## 空间扩展
 从协议层到平行的储存策略，也有一个发展历程。
