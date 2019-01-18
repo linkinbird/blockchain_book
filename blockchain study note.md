@@ -405,7 +405,12 @@ IOTA 的MAM机制 Masked Authenticated Message
 #### block relay 的带宽和压缩优化
 Bitcoin Relay Network 为了应对TCP协议丢包的情况，使用UDP-based transmission在每个包里额外增加一些信息，用来在少量丢包时可以用额外信息进行补全，而无需重复传递。这种方法叫Forward Error Correction, or FEC。实践证明额外传递信息的成本要低于丢包了重新连接和传递的成本，该方法在实时性要求很高的视频会议系统里已经有应用。
 
-[FIBRE](http://bitcoinfibre.org)项目最近更新的[统计数据](http://bitcoinfibre.org/stats.html)显示，应用最新的网络和压缩技术，块广播的传递延迟可以在毫秒级，大大加快了交易处理能力。但其中关于cut-through routing的设计是否参考了先前的[BloXroute](https://bloxroute.com)和更早的[Falcon](https://www.falcon-net.org)一直存在[争议](https://twitter.com/el33th4xor/status/1080700582590115841)。有人乐观的认为这会带来更高的TPS，当然还要依赖其他多方面技术的更新。
+[FIBRE](http://bitcoinfibre.org)项目最近更新的[统计数据](http://bitcoinfibre.org/stats.html)显示，应用最新的网络和压缩技术，块广播的传递延迟可以在毫秒级，大大加快了交易处理能力。但其中关于cut-through routing的设计是否参考了先前的BloXroute和更早的[Falcon](https://www.falcon-net.org)一直存在[争议](https://twitter.com/el33th4xor/status/1080700582590115841)。有人乐观的认为这会带来更高的TPS，当然还要依赖其他多方面技术的更新。
+
+[BloXroute](https://bloxroute.com)除了优化传输协议，还做了实时转发，可以一边接收一边广播，但交易验证是个问题。2019年初他们和Rawpool矿池开始[合作](https://news.bitcoin.com/block-propagation-startup-bloxroute-partners-with-mining-operation-rawpool/)测试他们优化的BDN分发网络（Blockchain Distribution Network）。他们称relay networks有两大问题：
+* 能够监控个别节点，并产生差异服务，不够去中心化
+* 依赖志愿者节点，不够可靠
+  * 之前的 Fast Relay Network (FRN) 就是Matt Corallo提供的支援服务，但背后也有矿工社区的利益。后来被FIBRE取代了
 
 ### 以太坊的K桶寻址
 以太坊和IPFS一样用的是[Kademila](https://www.jianshu.com/p/f2c31e632f1d)基于分布式哈希地址的索引。节点按照有顺序的异或距离（就是[汉明距离](https://blog.csdn.net/akadiao/article/details/79767113)，在二进制里与欧式距离等续）组成二叉树，在树的每一层级记录1个或几个友邻节点。这样查询任何一个目标ID的时候，都可以快速从高层级逐步下降，落到具体的叶子节点。这个结构可以在n位ID的二叉树下，每个节点只要记录n的近邻，在最多n次查询就能找到任意节点，整个树的容量有2^n。这种索引的几何意义就是按方向查找，从0~90度均匀铺设链接，角度小的邻居少，角度大的邻居多。通过有限近邻，及有限传递（2进制高维空间的紧凑性）就可以到达任意点。
