@@ -237,6 +237,8 @@ $$
   * Sapling的升级版本用了特指的elliptic curve椭圆函数：[Jubjub](https://z.cash/technology/jubjub.html)，据[测试](https://blog.z.cash/cultivating-sapling-faster-zksnarks/)节省了80%的运行时间
 * 2017年9月ETH 的Byzantium版本[支持](https://www.reddit.com/r/ethereum/comments/712idt/ethereum_testnet_just_verified_a_zcash_transaction/)了zk-snark proof
   * 主网有人通过智能合约实现了一个应用层的版本[AZTEC.sol](https://github.com/AztecProtocol/AZTEC)，通过独有的AZTEC Note作为中间体对交易金额进行join-split匿名化。后续甚至可以支持广义的匿名合约计算。
+  * 但智能合约版本的椭圆曲线计算成本高、速度慢，只有通过预编译事先准备一个通用的椭圆曲线机器码，才能有效免去编译的耗时。但是这个提案（[EIP-1108](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1108.md)）需要等Constantinople后面的版本才能升级
+  * 然后有个AZTEC团队的疯狂小伙[Zac](https://medium.com/aztec-protocol/huffing-for-crypto-with-weierstrudel-9c9568c06901)投入了大量精力去优化，用Huff底层语言写了[weierstrudel](https://github.com/AztecProtocol/AZTEC/tree/master/packages/weierstrudel)这个新的椭圆曲线库。
 * 2018年2月底从比特币[分叉](https://www.reddit.com/r/BitcoinPrivate/comments/7todw0/historical_bitcoin_private_hard_fork_snapshot/)出了[Bitcoin Private](https://btcprivate.org/) (BTCP) 就是merge了ZClassicCoin (ZCL)和BTC主链的一个分叉，采用的也是zkSNARKs
   * 但年底爆出[丑闻](https://coinmetrics.io/bitcoin-private/)，通过shield pool藏匿了分叉时额外导出的UTXO output，总量达2,040,000 BTCP。相当于这些影藏账户预挖了这么多币，和白皮书描述的情况不符
 * JPMorgan的[Quorum](https://www.jpmorgan.com/country/US/EN/Quorum)链是基于ETH的金融应用改造，也加入了[ZSL](https://github.com/jpmorganchase/quorum/wiki/ZSL) (zero-knowledge security layer) 和对特定监管节点透明的子版本
