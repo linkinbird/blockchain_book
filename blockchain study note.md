@@ -199,8 +199,12 @@ PubKHash经过Hase58Check 得到公钥地址，去除了容易混淆的0、o、l
     * 泄露的address进行预警
 
 ## 匿名强化
+### Layer0 匿名架构
+[NYM](https://nymtech.net)项目号称自己是Layer0的隐私方案。他们的authentication protocol可以保护个人账户的属性和隐私，类似去中心加密的facebook connect。基于此可以建造很多的互联网应用。他们与Kryptik合作的mixnet就是类似洋葱Tor的一个虚拟代理网络，可以将网络请求很好的匿名保护起来。
+
 ### Layer1 匿名协议
-单笔交易本身只记录了address，已经是高度匿名的了，但是通过地址的追踪，还是可以观测到每个币的流向。这个时候有两种隐私需要保护：第一是谁付的钱，第二是付了多少钱
+
+单笔交易本身只记录了address，已经是高度匿名的了，但是通过地址的追踪，还是可以观测到每个币的流向。这个时候有两种隐私需要保护：第一是谁付的钱，第二是付了多少钱。这里有一篇[Overview of privacy in Crypto](https://thecontrol.co/an-overview-of-privacy-in-cryptocurrencies-893dc078d0d7)值得参考
 
 #### 支付金额匿名
 在协议层可以通过[zero-knowledge proof](https://en.wikipedia.org/wiki/Zero-knowledge_proof)的进化版 [Non-interactive zero-knowledge proof](https://en.wikipedia.org/wiki/Non-interactive_zero-knowledge_proof) 将交易验证过程匿名化，区块链里的应用叫做[zkSNARKs](https://blog.ethereum.org/2016/12/05/zksnarks-in-a-nutshell/)。基础原理是多项式同态（[中文原理](https://www.jianshu.com/p/b6a14c472cc1)）：
@@ -235,6 +239,7 @@ $$
 区块链里的应用很多：
 * 2016年10月发布的[ZCash](https://z.cash)也是使用类似技术，优化了交易速度，弥补了部分这个技术的短板
   * Sapling的升级版本用了特指的elliptic curve椭圆函数：[Jubjub](https://z.cash/technology/jubjub.html)，据[测试](https://blog.z.cash/cultivating-sapling-faster-zksnarks/)节省了80%的运行时间
+    * 据说背后偷偷补了2019年才被爆公布出来的infinite counterfeiting[漏洞](http://fortune.com/2019/02/05/zcash-vulnerability-cryptocurrency/)。
 * 2017年9月ETH 的Byzantium版本[支持](https://www.reddit.com/r/ethereum/comments/712idt/ethereum_testnet_just_verified_a_zcash_transaction/)了zk-snark proof
   * 主网有人通过智能合约实现了一个应用层的版本[AZTEC.sol](https://github.com/AztecProtocol/AZTEC)，通过独有的AZTEC Note作为中间体对交易金额进行join-split匿名化。后续甚至可以支持广义的匿名合约计算。
   * 但智能合约版本的椭圆曲线计算成本高、速度慢，只有通过预编译事先准备一个通用的椭圆曲线机器码，才能有效免去编译的耗时。但是这个提案（[EIP-1108](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1108.md)）需要等Constantinople后面的版本才能升级
@@ -244,8 +249,11 @@ $$
 * JPMorgan的[Quorum](https://www.jpmorgan.com/country/US/EN/Quorum)链是基于ETH的金融应用改造，也加入了[ZSL](https://github.com/jpmorganchase/quorum/wiki/ZSL) (zero-knowledge security layer) 和对特定监管节点透明的子版本
   * 子版本作者Simon Liu也是ZCash的贡献者，git上叫[bitcartel](https://github.com/bitcartel)，同时也是MultiChain背后公司[Coin Sciences](https://www.multichain.com/about-coin-sciences-ltd/)的区块链顾问，个人[博客](https://makebitcoingreatagain.wordpress.com/about/)非常低调
 * ING也有相同道路的项目[zkrangeproof](https://github.com/ing-bank/zkrangeproof)，但看起来有些凉了
+* 2019年新论文提出了一种叫[Sonic](https://eprint.iacr.org/2019/099)的zk-SNARK版本。太难了看不懂，等别人评价
 
 考虑到“可信启动”，“椭圆曲线”这些重度假设，最近两年有了新版本的尝试ZK-STARKs。详情可以看V神博客的翻译版本（[Part1](https://ethfans.org/posts/starks_part_1)，[Part2](https://ethfans.org/posts/starks_part_2))。当然，这也是有代价的：一个证明的大小将从 288 字节（b）上升到几百 千字节（kb）。
+
+其实并不一定要创新一个隐私币，早在2016年某个比特币开发者聊天室里就有人放出了[Mimblewimble](https://download.wpsoftware.net/bitcoin/wizardry/mimblewimble.txt)协议，经过改造可以直接提升比特币的容量和隐私保护。后来[Grin](https://grin-tech.org)这个项目做了一个轻量化的实现，并预计2019年主网上线。其中借鉴了最早[confidential transactions](https://www.mycryptopedia.com/what-are-confidential-transactions/)的思路，通过blinding factors加密交易金额。2019年初莱特币创始人Charlie Lee也在[考虑引入](https://twitter.com/SatoshiLite/status/1092983883715338241)Mimblewimble。
 
 #### 支付关系匿名
 有管理员的版本是[群签名](https://en.wikipedia.org/wiki/Group_signature)，由群管理者生成群公钥（Group Public Key）、私钥（Group Private Key）。加入该群的成员获得群管理者颁发的群证书（Group Certificate），就可以生成群签名。利用群公钥可以做验证，但是无法定位到具体的签名者。在争议爆发的时候，就需要群私钥解开签名提取真正的签名者。
@@ -554,6 +562,8 @@ DPOS是一种综合机制，其实现的方法也有很多数据结构，阿里�
   - 2018-03-05 Coordinator把milestone发放速度从2分钟加快到了1分钟，这样交易可以更快的被milestone引用，意味着更快的交易确认
 * 在进行网络攻击的时候，攻防的胜负是概率事件，防御理论尚未完善。
 
+和他们类似的[Phybr](http://phybr.tech)项目共识协议codename: Nikita也在预计2019年完成[POC](https://medium.com/@romansemko/phybr-consensus-on-iota-dag-641ea71ecf53)并开始研发。他们的目标是针对IoT行业的数字账本，应用在工业4.0场景下。
+
 ### 其他组合共识的变种
 
 PoW+DAG+modified heaviest chain. That'd be GHOST.  这个套路的希伯来大学开发团队Yonatan Sompolinsky, Yoad Lewenberg, and Aviv Zohar同时也是IOTA的创始人，所以两者的机制听起来很像。这套机制还有一个很长的名字 “Serialization of Proof-of-work Events: Confirming Transactions via Recursive Elections” (SPECTRE)，但其实背后都是相同的人。之前还有个竞争对手[ByteBall](https://byteball.org)，不通过随机游走，而是在DAG里选择一条main chain来确定交易顺序，但是现在转型重点做钱包了。
@@ -765,6 +775,17 @@ ETH从2016年开始也计划着类似的分叉（升级）EIPs (Ethereum Improve
 
 # 应用实例
 区块链的价值已经获得普遍认可，中国也在2018年3月由工信部[筹建全国首个区块链和分布式记账标准化技术委员会](https://www.leiphone.com/news/201803/hLtR0J38yfA9TduJ.html)
+
+## 钱包
+作为基础交易的终端，数字钱包是区块链应用的关键。但是复杂的秘钥管理对普通用户非常不友好，所以有很多这方面的优化探索。
+
+### 安全区私钥保存
+带指纹识别的手机一般都有ARM的TrustZone，可以在这里储存私钥，并进行简单的签名计算。外部应用只能提交请求和获得签名结果，而无法破解私钥和签名过程。
+
+### 社会化私钥管理
+M of N 社会化私钥管理，通过多个带有硬件安全区的手机终端，来分配私钥助记词。按照类似UDP协议的容错方案，可以在N个终端的网咯里，最少M个在线的情况下恢复私钥。
+
+目前HTC的[EXODUS](https://www.htcexodus.com/)手机和其中自带的ZION钱包，是市面上比较完成的软硬结合钱包方案，兼有安全区和社会化私钥管理的功能，受到V神的[推荐](https://twitter.com/VitalikButerin/status/1086464158319558657)。
 
 ## 交易结算
 正因为比特币不是实体，而是交易的记录，所以比特币网络更像是一个脱离于实体金融的匿名交易中间商。这里分为庄家和交易方：
