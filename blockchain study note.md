@@ -198,6 +198,33 @@ PubKHash经过Hase58Check 得到公钥地址，去除了容易混淆的0、o、l
     * 地址饱和后新建SEED
     * 泄露的address进行预警
 
+## Layer2 链外交易网络
+2019年的论文SoK: Off The Chain Transactions 详细对比和解释了Layer2交易的扩展方案。
+
+后续很多的匿名和协议脚本扩展都有基于Layer2的版本
+
+### 闪电网络 Lighting Network
+
+他基于并联加密，创建一个共同“基金” (two-party ledger entry)，支付双方提取定量的币值合并在一起。双方都可以快速的从这个基金签名交易，交易本身不对主链广播，只是不断刷新自己。任何一方都可以关闭这个基金，以最终结算金额同步到链上。这样只发生了两次区块链交易验证，但可以实际执行很多次的链外交易，大大降低了区块主链的负担。
+
+上述只是两个参与人的情况，类似商家预充值，实现相同场景重复消费的优化问题。那如果是多方转移，且各方之间没有直接建立共同基金，而要从中间人的lightning network做跳转的话，需要类似区块链储物盒那样的中间人义务和回滚协议，称为Hashed timelock contract (HTLC)。比如A要支付给D，A和D不熟也没有直接建立闪电网络，但是A和B有闪电链接，B和C有闪电链接，C和D有闪电链接的话，支付仍然可以完成。回忆艾莉岛上带锁的盒子，这里使用类似的哈希加密，加密结果作为快递盒子广播到这些中间人，而且有时间限制。具体流程如下：
+
+1. A和D谈好交易后，获得D的支付地址，以及D制作的几把带时间期限的哈希锁。
+2. A把D的收款地址发给B，并把该支付的金额先用AB间的闪电网络签名支付到B的账户，但是附加上这把哈希锁。
+3. B收到A的付款，但是因为有附加的锁，所以不能取用。按照协议，他知道这把锁是D制作的，找到D就能打开锁提取金额。他在网络里先找到和D之间的中间人C，为了让他传递钥匙，B先用自己的钱代付给C，并告知D的地址。这里A付出的钱加了锁因为怕B携款走人；B自己垫付了钱，如果A的锁打不开，那他就赔本了。所以B会把A用的那把锁，也同样附加在给C的付款上。这样只要C完成任务取走了B的付款，B同理也能取到A的付款，保证自己平账。
+4. 如此逐层传递，ABCD之间的转移均在各自的闪电网络里签发，如果超时则逐层回退，大家都没有损失。
+5. C和B一样，得用自己的钱先代付给D，并附上最初由D生成的哈希锁。
+6. D收到付款的同时，会看到当初由自己生成的那把锁。他显然可以提供哈希锁的钥匙以签收C的代付款，并完成实际上和A的交易。然后随时可以同步到主链以获得全网共识见证，或者退出闪电网络。
+7. C和D在同一个闪电网络，所以当D提供钥匙的时候，C也能看到并且验证。如果D的钥匙同步到主链，则A,B,C一同解锁。否则C要再把相同钥匙回传给B，逐层解锁和B的交易。最终C的出账和入账都获得确认，确保自己账户余额保持不变。
+8. 如此类推，B和C在同一个闪电网络，他获得钥匙也回传给A，完成最初A的付款。
+
+除了广播通信延迟带来的风险外，可以认为这种链外快速支付通道是安全的。为了激励中间人义务，甚至可以在逐层代付时附加少量中介费。代付通道越短，手续费越低。
+
+### 跨币种的交易
+本来比特币的交易就都是双向的，一边是币权转移，另一边伴随着物权 或者另一种主权币的转移。当另一方非数字化时，就需要物理的中间商介入，当双方都是数字币时，则存在去中心化的方案。
+
+Atomic Swap: 跨币种的交易可由[Lightning Network](https://lightning.network)或者[Altcoin Exchange](https://www.altcoin.io/)完成，其实也是中间网络，执行了交易合约。比如在跨币种网络建立lightning ledger entry 就可以完成跨币种交易，最后双方授权注销这个ledger entry。
+
 ## 匿名强化
 ### Layer0 匿名架构
 [NYM](https://nymtech.net)项目号称自己是Layer0的隐私方案。他们的authentication protocol可以保护个人账户的属性和隐私，类似去中心加密的facebook connect。基于此可以建造很多的互联网应用。他们与Kryptik合作的mixnet就是类似洋葱Tor的一个虚拟代理网络，可以将网络请求很好的匿名保护起来。
@@ -288,17 +315,6 @@ $$
 同样在Layer2的状态通道也可以在交易双方透明的情况下，保持对外部的匿名。但这里会存在double spending的风险，需要在绝对匿名和中心化第三方之间[寻找平衡](https://blockapps.net/multichains-and-privacy/)
 * Hyperledger Fabric的private channel就是类似原理
 
-## 跨币种的交易
-比特币的交易从来都是双向的，一边是币权转移，另一边伴随着物权 或者另一种主权币的转移。当另一方非数字化时，就需要物理的中间商介入，当双方都是数字币时，则存在去中心化的方案。
-
-Atomic Swap: 跨币种的交易可由[Lightning Network](https://lightning.network)或者[Altcoin Exchange](https://www.altcoin.io/)完成，其实也是中间网络，执行了交易合约。
-
-* lightning Network
-	- 基于并联加密，创建一个 two-party ledger entry，双方提取定量的币值合并在一起
-	- 双方都可以快速的从这个fund交易（要符合blockchain可解析的脚本协议），交易本身不对主链广播，只是不断刷新自己，任何一方都可以关闭这个fund
-	- 在跨币种网络建立lightning ledger entry 完成跨币种交易
-	- 最后双方授权注销这个ledger entry
-
 ## 协议脚本的扩展
 交易过程确认后执行的脚本，不只是记账而已，还可以做很多事情，比如访问某个外部接口，甚至注册一个域名，扩展到极致就是图灵完备的一个虚拟机。这一层被认为是**Layer1**核心扩展
 
@@ -342,19 +358,19 @@ Hyperledger的[chaincode](http://hyperledger-fabric.readthedocs.io/en/release-1.
 以太里的EVM虽然是状态机，但是区块记录的实际上是状态转移log，和记录交易日志一样。那UTXO的账户余额模式，也可以移植到状态机里，[Nervos](https://www.nervos.org/)项目就是基于状态结果而非日志事件的以太升级项目。其创始人Jan的[访谈](http://www.8btc.com/conversation-nervos)里可以看出，他们虽然从以太坊开发者社区来，但是对比特币的POW基础和能力推崇至极。项目底层Commom Knowledge Base (CKB) 的目标是分级客户端，可以运行在轻设备甚至light client运行在移动设备上。基于Cell（类似UTXO的不可修改状态，更新需要先复制再修改）, Validator, Generator等分工来优化并行，遵循新的混合共识机制。基于这样的事实，计算出答案和验证答案的复杂度差异很大。比如排序复杂度在$$O(NlogN)$$，而验证结果的复杂度只有$$O(N)$$。当计算和验证分工解耦之后，其对应的计算关系需要事先建立。对于任意计算的操作，需要自动生成验证计算。  
 ![state-focus](https://raw.githubusercontent.com/linkinbird/blockchain_book/master/pic/state-focus-design.png)
 
-## 状态通道 State Channel
+### 状态通道 State Channel
 除了链上的交易协议外，为了提升效率，还有一种离线的状态通道来支持快速的点对点交易和智能合约。跨币种交易使用的lightning network也是一种state channel。这一层被认为是**Layer2**的上层扩展
 
 [L4 Research](https://l4.ventures)(No.1 grant of Ethereum Foundation)在设计一种通用的[Generalized State Channels](https://medium.com/l4-media/generalized-state-channels-on-ethereum-de0357f5fb44)，根据Li Xuanji在2018年2月ETHDenver会议上的分享：
 * Counterfactual Instantiation
-	* 联合签名Multisig钱包，不区分是否是state channel
-	* 使用Registry接口注册counterfactual address
-	* 协议认证签名，本地执行代码部署（地址与上面关联）
+  * 联合签名Multisig钱包，不区分是否是state channel
+  * 使用Registry接口注册counterfactual address
+  * 协议认证签名，本地执行代码部署（地址与上面关联）
 * 实际执行只在参与方的机器上执行
 * 注销协议需要双方签名，或者一方发起另一方超时
-	* 支持跨平台的payment channel
+  * 支持跨平台的payment channel
 
-## 消息通道
+### 消息通道
 一般交易协议里都可以可以发消息的，但是每次发送交易后，用于验证的pubKey可能被恶意利用，所以建议更换地址，这样难以在同一个地址下连续广播签名消息。
 
 hyperledger fabric 就是使用相对传统的身份注册的消息通道，主要用于交易撮合ordering service(or atomic-broadcast channel)
