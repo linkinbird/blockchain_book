@@ -199,13 +199,24 @@ PubKHash经过Hase58Check 得到公钥地址，去除了容易混淆的0、o、l
     * 泄露的address进行预警
 
 ## Layer2 链外交易网络
-2019年的论文SoK: Off The Chain Transactions 详细对比和解释了Layer2交易的扩展方案。
+除了基础的比特币交易协议，为了扩展其性能，很多人设计了不需要每次交易都广播的链下方案。这类方案只在多次交易达到最终态时才和主链同步，以获得全球共识。2019年的论文SoK: Off The Chain Transactions 详细对比和解释了这类Layer2交易的扩展方案。其中对了层级的定义如下图：  
+![layers](https://raw.githubusercontent.com/linkinbird/blockchain_book/master/pic/layers.png)
+
+这种线下方案因为不能实时同步，所以存在短期分歧的可能。虽然最终都能保证回退以避免资金丢失，但是回退的方案各有不同，其安全性也有很大差异。论文中的评测是目前相对比较全面的：
+* Replace by Incentive (RbI)
+* Replace by Time Lock (RbT)
+* Replace by Revocation (RbR)
+  * 基础的lightning network在这个分类，并没有被完全证明安全
+* Replace by Version (RbV)
+  * 这类协议有一个自累加的计数器，以表示状态网络的version。这也使得争议处理变得更加容易
+  * [Sprites](https://blog.enuma.io/update/2018/05/24/sprites-state-channels.html)和[Perun](https://www.perun.network)是目前提交了安全证明的协议，也都受到以太坊基金会的支持
 
 后续很多的匿名和协议脚本扩展都有基于Layer2的版本
 
 ### 闪电网络 Lighting Network
 
-他基于并联加密，创建一个共同“基金” (two-party ledger entry)，支付双方提取定量的币值合并在一起。双方都可以快速的从这个基金签名交易，交易本身不对主链广播，只是不断刷新自己。任何一方都可以关闭这个基金，以最终结算金额同步到链上。这样只发生了两次区块链交易验证，但可以实际执行很多次的链外交易，大大降低了区块主链的负担。
+他基于并联加密，创建一个共同“基金” (two-party ledger entry)，支付双方提取定量的币值合并在一起。双方都可以快速的从这个基金签名交易，交易本身不对主链广播，只是不断刷新自己。任何一方都可以关闭这个基金，以最终结算金额同步到链上。这样只发生了两次区块链交易验证，但可以实际执行很多次的链外交易，大大降低了区块主链的负担。  
+![lightning_tx](https://raw.githubusercontent.com/linkinbird/blockchain_book/master/pic/lightning_network_tx.png)
 
 上述只是两个参与人的情况，类似商家预充值，实现相同场景重复消费的优化问题。那如果是多方转移，且各方之间没有直接建立共同基金，而要从中间人的lightning network做跳转的话，需要类似区块链储物盒那样的中间人义务和回滚协议，称为Hashed timelock contract (HTLC)。比如A要支付给D，A和D不熟也没有直接建立闪电网络，但是A和B有闪电链接，B和C有闪电链接，C和D有闪电链接的话，支付仍然可以完成。回忆艾莉岛上带锁的盒子，这里使用类似的哈希加密，加密结果作为快递盒子广播到这些中间人，而且有时间限制。具体流程如下：
 
@@ -218,7 +229,31 @@ PubKHash经过Hase58Check 得到公钥地址，去除了容易混淆的0、o、l
 7. C和D在同一个闪电网络，所以当D提供钥匙的时候，C也能看到并且验证。如果D的钥匙同步到主链，则A,B,C一同解锁。否则C要再把相同钥匙回传给B，逐层解锁和B的交易。最终C的出账和入账都获得确认，确保自己账户余额保持不变。
 8. 如此类推，B和C在同一个闪电网络，他获得钥匙也回传给A，完成最初A的付款。
 
-除了广播通信延迟带来的风险外，可以认为这种链外快速支付通道是安全的。为了激励中间人义务，甚至可以在逐层代付时附加少量中介费。代付通道越短，手续费越低。
+除了广播通信延迟带来的风险外，可以认为这种链外快速支付通道是安全的。为了激励中间人义务，甚至可以在逐层代付时附加少量中介费。代付通道越短，手续费越低。这里也无法避免当支付路径特别长的时候，抵押金额和手续费可能会过高。
+
+### commit chains
+单方面建立的链下通道，不需要联合账户的设立、更新、结算等步骤，更像是一个单人维护的持续更新的消息链。能起到类似闪电网络里payment channel hubs的角色。
+
+- [NOCUST](https://medium.com/@liquidity.network/nocust-101-2acfbc0be47b)
+  - 运行在其称为Liquidity Network上作为payment hubs
+  - 相当于一个机器人托管的中心化银行柜台。
+- Plasma Cash
+  - Plasma子链项目里的一个commit chains特例，但这是个持续发展的复杂项目，目前难以评定。
+
+### 通道网络路由
+通道间的消息协议确定好以后，还需要有一个通用的方式来确定多人网络下的传递路径。
+
+- Global View , source routing 全局网络路由
+  - Lightning，Raiden，SpiderNetwork
+- local routing 友邻路由
+  - Flare, cRoute, SilentWhispers, SpeedyMurmurs
+
+从有效性，扩展性，高效性，隐私性，和成本等等角度，这些网络路由方案都各有优劣，没有一个完美的解决方案。全局路由的性能强，但是扩展性低，友邻路由的扩展性高但是性能差。正因为这种路由的不确定性，衍生出了通道网络的代理服务：
+
+- WatchTower
+  - 协助监控通道网络的合规性
+- Channel Hubs
+  - 星型网络架构加速传播效率，也带来中心化风险
 
 ### 跨币种的交易
 本来比特币的交易就都是双向的，一边是币权转移，另一边伴随着物权 或者另一种主权币的转移。当另一方非数字化时，就需要物理的中间商介入，当双方都是数字币时，则存在去中心化的方案。
@@ -309,7 +344,8 @@ $$
 
 ### Layer2 匿名通道
 另一种简单的layer2的方法是一种mixing service中间商服务：把多个付款人，和多个收款人打乱，付款先付到资金池，然后随机轮转之后打乱支付给给收款方。
-* Dash的[PrivateSend](https://dashpay.atlassian.net/wiki/spaces/DOC/pages/1146924/PrivateSend)就是这种形式，其隐私性促使其成为暗网的流行交易代币。
+* [TumbleBit](https://cs-people.bu.edu/heilman/tumblebit/)通过匿名的Payment Hub作为中间服务
+* Dash的[PrivateSend](https://dashpay.atlassian.net/wiki/spaces/DOC/pages/1146924/PrivateSend)也是这种形式，其隐私性促使其成为暗网的流行交易代币。
 * 支付宝在银行的中间账户也可以扮演类似角色，对于央行来说直接隔离了资金流向的明细，所以现在央行要推网联，直接监管每一笔交易。
 
 同样在Layer2的状态通道也可以在交易双方透明的情况下，保持对外部的匿名。但这里会存在double spending的风险，需要在绝对匿名和中心化第三方之间[寻找平衡](https://blockapps.net/multichains-and-privacy/)
